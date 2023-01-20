@@ -17,6 +17,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Constants;
 import frc.robot.Constants.*;
 import frc.robot.utilities.FieldRelativeAccel;
 import frc.robot.utilities.FieldRelativeSpeed;
@@ -318,6 +319,11 @@ public class Drivetrain extends SubsystemBase {
       m_frontRight.getPosition(),
       m_backLeft.getPosition(),
       m_backRight.getPosition()};
+  }
+
+  public double getRoll() {
+
+    return ahrs.getRoll();
   }
 
 }

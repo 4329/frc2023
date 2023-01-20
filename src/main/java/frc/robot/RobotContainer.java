@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ChangeFieldOrientCommand;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ResetOdometryCommand;
@@ -50,6 +51,7 @@ public class RobotContainer {
   private final ResetOdometryCommand resetOdometryCommandForward;
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
+  private final BalanceCommand balanceCommand;
 
   private Command simpleAuto;
 
@@ -78,6 +80,7 @@ public class RobotContainer {
     resetOdometryCommandForward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(Math.PI)), drivetrain);
     resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)), drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
+    balanceCommand = new BalanceCommand(drivetrain);
 
     configureButtonBindings(); /*
     * Configure the button bindings to commands using configureButtonBindings
@@ -128,7 +131,7 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kA.value).whileTrue(exampleCommand);
     new JoystickButton(m_driverController, Button.kB.value).whileTrue(exampleCommand);
     new JoystickButton(m_driverController, Button.kX.value).whileTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kY.value).whileTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kY.value).whileTrue(balanceCommand);
 
     new POVButton(m_driverController, 180).onTrue(resetOdometryCommandForward);
     new POVButton(m_driverController, 0).onTrue(resetOdometryCommandBackward);
