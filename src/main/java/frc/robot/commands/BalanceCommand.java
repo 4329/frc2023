@@ -5,6 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Configrun;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.Drivetrain;
 
@@ -37,7 +38,7 @@ public class BalanceCommand extends CommandBase{
 
             drivetrain.unlock();
 
-            drivetrain.drive(-roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
+            drivetrain.drive(Configrun.get(-1, "rollDirection") * roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
         }
     }
 
