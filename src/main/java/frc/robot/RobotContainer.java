@@ -111,28 +111,28 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kRightBumper.value).whenPressed(() -> m_drive.changeFieldOrient());
 
       //Climber arm controls
-    new JoystickButton(m_driverController, Button.kY.value).whenPressed(exampleCommand);
-    new JoystickButton(m_driverController, Button.kX.value).whenPressed(exampleCommand);
-    new JoystickButton(m_driverController, Button.kB.value).whenPressed(exampleCommand);
-    new JoystickButton(m_driverController, Button.kA.value).whenHeld(exampleCommand);
+    new JoystickButton(m_driverController, Button.kY.value).onTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kX.value).onTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kB.value).onTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kA.value).whileTrue(exampleCommand);
 
       //Climber motor controls
-    new JoystickAnalogButton(m_driverController, false).whenHeld(exampleCommand);
-    new JoystickAnalogButton(m_driverController, true).whenHeld(exampleCommand);
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).whenPressed(exampleCommand);
+    new JoystickAnalogButton(m_driverController, false).whileTrue(exampleCommand);
+    new JoystickAnalogButton(m_driverController, true).whileTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(exampleCommand);
 
     //Operator Controller
       //Shoot
-    new JoystickButton(m_operatorController, Button.kY.value).whenHeld(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kBack.value).whenHeld(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kStart.value).whenHeld(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kA.value).whenHeld(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kY.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kBack.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kStart.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kA.value).whileTrue(exampleCommand);
       //Manage cargo
-    new JoystickButton(m_operatorController, Button.kX.value).whenHeld(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kB.value).whenHeld(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kB.value).whenReleased(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kRightBumper.value).whenHeld(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kLeftBumper.value).whenHeld(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kX.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kB.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kB.value).onFalse(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kLeftBumper.value).whileTrue(exampleCommand);
   }
 
 
