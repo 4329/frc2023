@@ -11,11 +11,14 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ChangeFieldOrientCommand;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.autos.SimpleAuto;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.JoystickAnalogButton;
@@ -44,6 +47,9 @@ public class RobotContainer {
 
   private final DriveByController m_drive;
   private final ExampleCommand exampleCommand;
+  private final ResetOdometryCommand resetOdometryCommandForward;
+  private final ResetOdometryCommand resetOdometryCommandBackward;
+  private final ChangeFieldOrientCommand changeFieldOrientCommand;
 
   private Command simpleAuto;
 
@@ -69,6 +75,9 @@ public class RobotContainer {
     swerveAlignment = new SwerveAlignment(drivetrain);
 
     exampleCommand = new ExampleCommand();
+    resetOdometryCommandForward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(Math.PI)), drivetrain);
+    resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)), drivetrain);
+    changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
 
     configureButtonBindings(); /*
     * Configure the button bindings to commands using configureButtonBindings
@@ -106,33 +115,38 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     //Driver Controller
-    new POVButton(m_driverController, 180).whenPressed(() -> m_robotDrive.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d(Math.PI))));
-    new POVButton(m_driverController, 0).whenPressed(() -> m_robotDrive.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d(0.0))));
-    new JoystickButton(m_driverController, Button.kRightBumper.value).whenPressed(() -> m_drive.changeFieldOrient());
+    new POVButton(m_driverController, 180).onTrue(resetOdometryCommandForward);
+    new POVButton(m_driverController, 0).onTrue(resetOdometryCommandBackward);
 
-      //Climber arm controls
-    new JoystickButton(m_driverController, Button.kY.value).onTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kX.value).onTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kB.value).onTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).onTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kRightBumper.value).onTrue(changeFieldOrientCommand);
+
     new JoystickButton(m_driverController, Button.kA.value).whileTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kB.value).whileTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kX.value).whileTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kY.value).whileTrue(exampleCommand);
 
-      //Climber motor controls
-    new JoystickAnalogButton(m_driverController, false).whileTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kStart.value).whileTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kBack.value).whileTrue(exampleCommand);
+
     new JoystickAnalogButton(m_driverController, true).whileTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(exampleCommand);
+    new JoystickAnalogButton(m_driverController, false).whileTrue(exampleCommand);
+
 
     //Operator Controller
-      //Shoot
-    new JoystickButton(m_operatorController, Button.kY.value).whileTrue(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kBack.value).whileTrue(exampleCommand);
     new JoystickButton(m_operatorController, Button.kStart.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kBack.value).whileTrue(exampleCommand);
+
     new JoystickButton(m_operatorController, Button.kA.value).whileTrue(exampleCommand);
-      //Manage cargo
-    new JoystickButton(m_operatorController, Button.kX.value).whileTrue(exampleCommand);
     new JoystickButton(m_operatorController, Button.kB.value).whileTrue(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kB.value).onFalse(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kX.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kY.value).whileTrue(exampleCommand);
+
     new JoystickButton(m_operatorController, Button.kLeftBumper.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(exampleCommand);
+
+    new JoystickAnalogButton(m_operatorController, true).whileTrue(exampleCommand);
+    new JoystickAnalogButton(m_operatorController, false).whileTrue(exampleCommand);
   }
 
 
@@ -150,10 +164,10 @@ public class RobotContainer {
 
     // Puts autos on Shuffleboard
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(2, 1).withPosition(0, 0);
+
     if (Configrun.get(false, "extraShuffleBoardToggle")) {
-      Shuffleboard.getTab("Autonomous").add("Documentation",
-          "Autonomous Modes at https://stem2u.sharepoint.com/sites/frc-4329/_layouts/15/Doc.aspx?sourcedoc={91263377-8ca5-46e1-a764-b9456a3213cf}&action=edit&wd=target%28Creating%20an%20Autonomous%20With%20Pathplanner%7Cb37e1a20-51ec-9d4d-87f9-886aa67fcb57%2F%29")
-          .withPosition(2, 2).withSize(4, 1);
+
+      
     }
   }
 
