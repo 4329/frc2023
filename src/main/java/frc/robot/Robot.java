@@ -119,5 +119,6 @@ public class Robot extends TimedRobot {
 
     m_swerveAlignment.updateSwerveAlignment();
 
+    drivetrain.coastMode();
   }
 }

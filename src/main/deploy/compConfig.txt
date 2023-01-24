@@ -27,3 +27,5 @@ PH_CAN_ID = 61
 extraShuffleBoardToggle = false
 
 Limelighturl = http://10.43.29.11:5800
+
+rollDirection = -1;
