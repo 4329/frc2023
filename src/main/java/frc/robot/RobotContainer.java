@@ -114,26 +114,33 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    
     //Driver Controller
-    new POVButton(m_driverController, 180).onTrue(resetOdometryCommandForward);
-    new POVButton(m_driverController, 0).onTrue(resetOdometryCommandBackward);
+    new JoystickAnalogButton(m_driverController, true).whileTrue(exampleCommand);
+    new JoystickAnalogButton(m_driverController, false).whileTrue(exampleCommand);
 
     new JoystickButton(m_driverController, Button.kLeftBumper.value).onTrue(exampleCommand);
     new JoystickButton(m_driverController, Button.kRightBumper.value).onTrue(changeFieldOrientCommand);
+
+    new JoystickButton(m_driverController, Button.kStart.value).whileTrue(exampleCommand);
+    new JoystickButton(m_driverController, Button.kBack.value).whileTrue(exampleCommand);
 
     new JoystickButton(m_driverController, Button.kA.value).whileTrue(exampleCommand);
     new JoystickButton(m_driverController, Button.kB.value).whileTrue(exampleCommand);
     new JoystickButton(m_driverController, Button.kX.value).whileTrue(exampleCommand);
     new JoystickButton(m_driverController, Button.kY.value).whileTrue(exampleCommand);
 
-    new JoystickButton(m_driverController, Button.kStart.value).whileTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kBack.value).whileTrue(exampleCommand);
-
-    new JoystickAnalogButton(m_driverController, true).whileTrue(exampleCommand);
-    new JoystickAnalogButton(m_driverController, false).whileTrue(exampleCommand);
+    new POVButton(m_driverController, 180).onTrue(resetOdometryCommandForward);
+    new POVButton(m_driverController, 0).onTrue(resetOdometryCommandBackward);
 
 
     //Operator Controller
+    new JoystickAnalogButton(m_operatorController, true).whileTrue(exampleCommand);
+    new JoystickAnalogButton(m_operatorController, false).whileTrue(exampleCommand);
+
+    new JoystickButton(m_operatorController, Button.kLeftBumper.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(exampleCommand);
+
     new JoystickButton(m_operatorController, Button.kStart.value).whileTrue(exampleCommand);
     new JoystickButton(m_operatorController, Button.kBack.value).whileTrue(exampleCommand);
 
@@ -141,12 +148,6 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, Button.kB.value).whileTrue(exampleCommand);
     new JoystickButton(m_operatorController, Button.kX.value).whileTrue(exampleCommand);
     new JoystickButton(m_operatorController, Button.kY.value).whileTrue(exampleCommand);
-
-    new JoystickButton(m_operatorController, Button.kLeftBumper.value).whileTrue(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(exampleCommand);
-
-    new JoystickAnalogButton(m_operatorController, true).whileTrue(exampleCommand);
-    new JoystickAnalogButton(m_operatorController, false).whileTrue(exampleCommand);
   }
 
 
