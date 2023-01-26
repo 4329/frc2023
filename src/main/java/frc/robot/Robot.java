@@ -4,11 +4,16 @@
 
 package frc.robot;
 
+import com.revrobotics.ColorSensorV3;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utilities.SwerveAlignment;
@@ -21,6 +26,13 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   private SwerveAlignment m_swerveAlignment;
   private Drivetrain drivetrain;
+
+  private final I2C.Port i2cPort = I2C.Port.kMXP;
+  private final ColorSensorV3 colorSensorV3 = new ColorSensorV3(i2cPort);
+  GenericEntry yes = Shuffleboard.getTab("yes").add("red", "3d").getEntry();
+  GenericEntry no = Shuffleboard.getTab("yes").add("green", 1).getEntry();
+  GenericEntry why = Shuffleboard.getTab("yes").add("blue", 1).getEntry();
+
 
   @Override
   public void robotInit() {
@@ -96,7 +108,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    
+    yes.setString("" + colorSensorV3.getColor());
+    no.setInteger(colorSensorV3.getRawColor().red);
+    why.setInteger(colorSensorV3.getProximity());
+
+    System.out.println("REDREDREDREDREDREDRED" + colorSensorV3.getColor().red);
+    System.out.println("greengreengreengreeengreen" + colorSensorV3.getGreen());
+    System.out.println("___________________blue" + colorSensorV3.getProximity());
   }
 
   @Override
