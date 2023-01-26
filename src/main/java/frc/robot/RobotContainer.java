@@ -20,12 +20,19 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ChangeFieldOrientCommand;
+import frc.robot.commands.ArmToFiftyCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.autos.SimpleAuto;
+<<<<<<< HEAD
 import frc.robot.subsystems.ColorDetector;
+=======
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
+>>>>>>> ea170d2 (starting arm and claw subsystems)
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.JoystickAnalogButton;
 import frc.robot.utilities.SwerveAlignment;
@@ -58,6 +65,9 @@ public class RobotContainer {
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final BalanceCommand balanceCommand;
+  private final MoveArmCommand armToFifty;
+  private final ArmSubsystem armSubsystem;
+  private final ClawSubsystem clawSubsystem;
 
   private Command simpleAuto;
 
@@ -72,6 +82,7 @@ public class RobotContainer {
     colorDetector = new ColorDetector();
     initializeCamera();
 
+    armSubsystem = new ArmSubsystem();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
     m_drive = new DriveByController(m_robotDrive, m_driverController);
@@ -89,6 +100,9 @@ public class RobotContainer {
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
+    armToFifty = new MoveArmCommand(armSubsystem, 50);
+
+    clawSubsystem = new ClawSubsystem();
 
     configureButtonBindings(); /*
                                 * Configure the button bindings to commands using configureButtonBindings
@@ -156,7 +170,7 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, Button.kStart.value).whileTrue(exampleCommand);
     new JoystickButton(m_operatorController, Button.kBack.value).whileTrue(exampleCommand);
 
-    new JoystickButton(m_operatorController, Button.kA.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kA.value).onTrue(armToFifty);
     new JoystickButton(m_operatorController, Button.kB.value).whileTrue(exampleCommand);
     new JoystickButton(m_operatorController, Button.kX.value).whileTrue(exampleCommand);
     new JoystickButton(m_operatorController, Button.kY.value).whileTrue(exampleCommand);

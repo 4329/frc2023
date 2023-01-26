@@ -31,14 +31,14 @@ public class BalanceCommand extends CommandBase{
 
         roll = drivetrain.getRoll() / Constants.DriveConstants.maxRampRoll;
 
-        if (Math.abs(roll) <= Constants.DriveConstants.maxRampDeviation || Math.abs(roll) >= Constants.DriveConstants.maxRampRoll + 5) {
+        if (/*Math.abs(roll) <= Constants.DriveConstants.maxRampDeviation ||*/ Math.abs(roll) >= Constants.DriveConstants.maxRampRoll + 5) {
 
             drivetrain.lock();
         } else {
 
             drivetrain.unlock();
 
-            drivetrain.drive(Configrun.get(-1, "rollDirection") * roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
+            drivetrain.drive(Configrun.get(1, "rollDirection") * roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
         }
     }
 
