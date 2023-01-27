@@ -25,6 +25,7 @@ import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.autos.SimpleAuto;
+import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.JoystickAnalogButton;
 import frc.robot.utilities.SwerveAlignment;
@@ -39,10 +40,11 @@ public class RobotContainer {
 
   private SwerveAlignment swerveAlignment;
 
-  //private final PneumaticHub pneumaticHub;
+  // private final PneumaticHub pneumaticHub;
 
   // The robot's subsystems
   private final Drivetrain m_robotDrive;
+  private final ColorDetector colorDetector;
   // private final TrackingTurretSubsystem trackingTurretSubsystem;
   // The driver's controllers
   final XboxController m_driverController;
@@ -67,7 +69,7 @@ public class RobotContainer {
   public RobotContainer(Drivetrain drivetrain) {
 
     m_robotDrive = drivetrain;
-
+    colorDetector = new ColorDetector();
     initializeCamera();
 
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -81,15 +83,17 @@ public class RobotContainer {
     swerveAlignment = new SwerveAlignment(drivetrain);
 
     exampleCommand = new ExampleCommand();
-    resetOdometryCommandForward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(Math.PI)), drivetrain);
-    resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)), drivetrain);
+    resetOdometryCommandForward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(Math.PI)),
+        drivetrain);
+    resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)),
+        drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
 
     configureButtonBindings(); /*
-    * Configure the button bindings to commands using configureButtonBindings
-    * function
-    */
+                                * Configure the button bindings to commands using configureButtonBindings
+                                * function
+                                */
   }
 
   /**
@@ -100,11 +104,13 @@ public class RobotContainer {
     CameraServer.startAutomaticCapture();
     // VideoSource[] enumerateSources = VideoSource.enumerateSources();
 
-    // if (enumerateSources.length > 0 && enumerateSources[0].getName().contains("USB")) {
-    //   Shuffleboard.getTab("RobotData").add("Camera", enumerateSources[0]).withPosition(5, 0).withSize(3, 3)
-    //       .withWidget(BuiltInWidgets.kCameraStream);
+    // if (enumerateSources.length > 0 &&
+    // enumerateSources[0].getName().contains("USB")) {
+    // Shuffleboard.getTab("RobotData").add("Camera",
+    // enumerateSources[0]).withPosition(5, 0).withSize(3, 3)
+    // .withWidget(BuiltInWidgets.kCameraStream);
     // }
-    
+
     HttpCamera limelight = new HttpCamera("Limelight", Configrun.get("http://10.43.29.11:5800", "Limelighturl"));
     System.out.println(Configrun.get("http://10.43.29.11:5800", "Limelighturl"));
     CameraServer.startAutomaticCapture(limelight);
@@ -121,8 +127,8 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    
-    //Driver Controller
+
+    // Driver Controller
     new JoystickAnalogButton(m_driverController, true).whileTrue(exampleCommand);
     new JoystickAnalogButton(m_driverController, false).whileTrue(exampleCommand);
 
@@ -140,8 +146,7 @@ public class RobotContainer {
     new POVButton(m_driverController, 180).onTrue(resetOdometryCommandForward);
     new POVButton(m_driverController, 0).onTrue(resetOdometryCommandBackward);
 
-
-    //Operator Controller
+    // Operator Controller
     new JoystickAnalogButton(m_operatorController, true).whileTrue(exampleCommand);
     new JoystickAnalogButton(m_operatorController, false).whileTrue(exampleCommand);
 
@@ -157,25 +162,21 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, Button.kY.value).whileTrue(exampleCommand);
   }
 
-
   /**
    * Pulls autos and configures the chooser
    */
   private void configureAutoChooser(Drivetrain drivetrain) {
-
 
     simpleAuto = new SimpleAuto(m_robotDrive);
 
     // Adds autos to the chooser
     m_chooser.addOption("simpleAuto", simpleAuto);
 
-
     // Puts autos on Shuffleboard
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(2, 1).withPosition(0, 0);
 
     if (Configrun.get(false, "extraShuffleBoardToggle")) {
 
-      
     }
   }
 
