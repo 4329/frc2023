@@ -157,6 +157,8 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeed, kMaxAngularAccel); // Creates a trapezoidal motion for the auto rotational commands
   }
-
+public static final class ColorConstants{
+  public static final double confidenceLevel = 1;
+}
 }
   
