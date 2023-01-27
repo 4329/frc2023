@@ -14,8 +14,8 @@ public class ColorDetector extends SubsystemBase {
 
     private final I2C.Port i2cPort;
     private final ColorSensorV3 colorSensorV3;
-    GenericEntry mrEmerick;
-    GenericEntry mrWall;
+    GenericEntry coneOrCube;
+    GenericEntry proximity;
     ColorMatch colorMatch;
     Color cube;
     Color cone;
@@ -31,11 +31,15 @@ public class ColorDetector extends SubsystemBase {
 
         colorMatch.addColorMatch(cube);
         colorMatch.addColorMatch(cone);
-        mrEmerick = Shuffleboard.getTab("RobotData").add("Mr. Emerick","NOTHIN").getEntry();
-        mrWall = Shuffleboard.getTab("RobotData").add("Mr. Wall", 1).getEntry();
+        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube?", "NOTHIN").getEntry();
+        proximity = Shuffleboard.getTab("RobotData").add("Proximity", 1).getEntry();
     }
-public enum FieldElement{CUBE,CONE}
-    public FieldElement what() {
+
+    public enum FieldElement {
+        CUBE, CONE
+    }
+
+    public FieldElement detectElement() {
 
         colorMatch.matchClosestColor(colorSensorV3.getColor());
         matchColor = colorMatch.matchClosestColor(colorSensorV3.getColor()).color;
@@ -48,18 +52,16 @@ public enum FieldElement{CUBE,CONE}
         } else {
             return null;
         }
-
     }
 
     public double distance() {
 
         return colorSensorV3.getProximity();
-
     }
 
     @Override
     public void periodic() {
-        mrEmerick.setString(what().toString());
-        mrWall.setDouble(distance());
+        coneOrCube.setString(detectElement().toString());
+        proximity.setDouble(distance());
     }
 }
