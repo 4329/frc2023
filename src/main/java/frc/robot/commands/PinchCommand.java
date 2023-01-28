@@ -10,7 +10,7 @@ public class PinchCommand extends CommandBase {
         this.clawSubsystem = clawSubsystem;
         addRequirements(clawSubsystem);
     }
-
+    @Override
     public void initialize() {
         clawSubsystem.release();
     }

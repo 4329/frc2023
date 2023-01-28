@@ -37,7 +37,7 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void outtake() {
-        double reverseSpeed = 0.1;
+        double reverseSpeed = 0.2;
         leftMotor.set(reverseSpeed);
         rightMotor.set(reverseSpeed);
     }
