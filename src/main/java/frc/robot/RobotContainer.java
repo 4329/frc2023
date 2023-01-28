@@ -28,6 +28,7 @@ import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.autos.SimpleAuto;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.JoystickAnalogButton;
 import frc.robot.utilities.SwerveAlignment;
@@ -62,17 +63,22 @@ public class RobotContainer {
   private final OuttakeCommand outtakeCommand;
   private final PinchCommand pinchCommand;
   private final ReleaseCommand releaseCommand;
-
+  private final ColorDetector colorDetector;
   private Command simpleAuto;
+
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
    * @param drivetrain
    */
-  public RobotContainer(Drivetrain drivetrain) {
 
+  
+  public RobotContainer(Drivetrain drivetrain) {
+    
     m_robotDrive = drivetrain;
+    colorDetector = new ColorDetector();
 
     initializeCamera();
 

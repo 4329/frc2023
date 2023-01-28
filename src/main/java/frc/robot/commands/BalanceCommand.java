@@ -31,7 +31,7 @@ public class BalanceCommand extends CommandBase{
 
         roll = drivetrain.getRoll() / Constants.DriveConstants.maxRampRoll;
 
-        if (/*Math.abs(roll) <= Constants.DriveConstants.maxRampDeviation ||*/ Math.abs(roll) >= Constants.DriveConstants.maxRampRoll + 5) {
+        if (Math.abs(roll) <= Constants.DriveConstants.maxRampDeviation || Math.abs(roll) >= Constants.DriveConstants.maxRampRoll + 5) {
 
             drivetrain.lock();
         } else {

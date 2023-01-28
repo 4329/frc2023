@@ -22,9 +22,6 @@ frontRightOffset = 4.58
 backLeftOffset = 5.245
 backRightOffset = 4.46
 
-# Solenoids
-# clawSolenoidID = 1
-
 PH_CAN_ID = 61
 
 extraShuffleBoardToggle = false
