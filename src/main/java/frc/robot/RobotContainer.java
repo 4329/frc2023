@@ -11,28 +11,26 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ChangeFieldOrientCommand;
-import frc.robot.commands.ArmToFiftyCommand;
+import frc.robot.commands.ArmToPositionCommand;
 import frc.robot.commands.BalanceCommand;
+import frc.robot.commands.ChangeFieldOrientCommand;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.MoveArmCommand;
+import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.PinchCommand;
+import frc.robot.commands.ReleaseCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.autos.SimpleAuto;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.commands.OuttakeCommand;
-import frc.robot.commands.PinchCommand;
-import frc.robot.commands.ReleaseCommand;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.JoystickAnalogButton;
 import frc.robot.utilities.SwerveAlignment;
-import frc.robot.subsystems.ColorDetector;
 
 /* (including subsystems, commands, and button mappings) should be declared here
 */
@@ -171,10 +169,10 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, Button.kBack.value).whileTrue(exampleCommand);
 
     new JoystickButton(m_operatorController, Button.kA.value).onTrue(armToFifty);
-    new JoystickButton(m_operatorController, Button.kB.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kB.value).onTrue(new ArmToPositionCommand(armSubsystem, 0));
     new JoystickButton(m_operatorController, Button.kX.value).whileTrue(intakeCommand);
     new JoystickButton(m_operatorController, Button.kY.value).whileTrue(outtakeCommand);
-  }
+  } 
 
   /* Pulls autos and configures the chooser */
   private void configureAutoChooser(Drivetrain drivetrain) {

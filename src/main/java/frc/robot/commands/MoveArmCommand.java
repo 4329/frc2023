@@ -6,18 +6,20 @@ import frc.robot.subsystems.ArmSubsystem;
 public class MoveArmCommand extends CommandBase {
 
     private ArmSubsystem armSubsystem;
+    private double setPoint;
 
     public MoveArmCommand(ArmSubsystem armSubsystem, double setPoint) {
 
         this.armSubsystem = armSubsystem;
-
+        this.setPoint = setPoint;
+        
         addRequirements(armSubsystem);
     }
 
     @Override
     public void initialize() {
 
-        armSubsystem.setArmPosition(50);
+        armSubsystem.setArmPosition(setPoint);
 
     }
 

@@ -3,21 +3,22 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class ArmToFiftyCommand extends CommandBase {
+public class ArmToPositionCommand extends CommandBase {
 
     private ArmSubsystem armSubsystem;
+    private double setPoint;
 
-    public ArmToFiftyCommand(ArmSubsystem armSubsystem, double setPoint) {
+    public ArmToPositionCommand(ArmSubsystem armSubsystem, double setPoint) {
 
         this.armSubsystem = armSubsystem;
-
+        this.setPoint = setPoint;
         addRequirements(armSubsystem);
     }
 
     @Override
     public void initialize() {
 
-        armSubsystem.setArmPosition(50);
+        armSubsystem.setArmPosition(setPoint);
 
     }
 

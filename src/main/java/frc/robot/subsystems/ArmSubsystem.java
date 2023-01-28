@@ -1,55 +1,52 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Configrun;
-import frc.robot.Constants;
-
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ArmSubsystem extends SubsystemBase {
 
-    private GenericEntry fjaflijefli;
     private CANSparkMax armMotor;
     private RelativeEncoder armEncoder;
-    private PIDController armPID;
+    private SparkMaxPIDController armPID;
 
     public ArmSubsystem() {
 
-        fjaflijefli = Shuffleboard.getTab("Ɛ>").add("wow so cool i love software", 0.4).getEntry();
         armMotor = new CANSparkMax(12, MotorType.kBrushless);
+        armMotor.restoreFactoryDefaults();
+        armPID = armMotor.getPIDController();
         armEncoder = armMotor.getEncoder();
+        armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        armMotor.setSoftLimit(SoftLimitDirection.kForward, 50);
+        armMotor.setSoftLimit(SoftLimitDirection.kReverse, -2);
         armEncoder.setPosition(0);
-        armPID = new PIDController(fjaflijefli.getDouble(0), 0.3, 0);
-        armPID.setTolerance(1);
-        armMotor.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit); // Set current limit for the drive
-                                                                                     // motor
-        armMotor.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation); // Enable voltage compensation
-                                                                                        // so
+        armMotor.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
+        armMotor.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
+        armPID.setP(0.1);
+        armPID.setI(1e-4);
+        armPID.setD(1);
+        armPID.setIZone(0);
+        armPID.setFF(0);
+        armPID.setOutputRange(-1, 1);
+        armMotor.burnFlash();
 
     }
 
-    public void setArmPosition(int setPoint) {
+    public void setArmPosition(Double setPoint) {
 
-        armPID.setSetpoint(setPoint);
-    }
-
-    @Override
-    public void periodic() {
-
-        double armPosition = armEncoder.getPosition();
-        double output = armPID.calculate(armPosition, armPID.getSetpoint());
-        armMotor.set(output);
+        armPID.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     }
 
     public boolean armAtSetpoint() {
 
-        return armPID.atSetpoint();
+        return false;
+        //how do we find out whether or not the PID controller is at the setpoint, and do we need to know that?
     }
 
 }
