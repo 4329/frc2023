@@ -17,23 +17,20 @@ public class ExtendRetractCommand extends CommandBase {
         this.armExtensionSubsystem = armExtensionSubsystem;
         this.controller = commandXboxController;
         addRequirements(armExtensionSubsystem);
-
     }
 
     @Override
     public void execute() {
+
         double extension = controller.getRightTriggerAxis();
         double retraction = controller.getLeftTriggerAxis();
         if (extension > 0.3) {
+
             armExtensionSubsystem.extend(extension * Constants.ArmConstants.armSpeed);
         } else if (retraction > 0.3) {
+
             armExtensionSubsystem.retract(retraction * Constants.ArmConstants.armSpeed);
         }
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-
     }
 
 }
