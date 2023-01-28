@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
@@ -20,6 +21,7 @@ import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.ChangeFieldOrientCommand;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ExtendRetractCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.OuttakeCommand;
@@ -68,7 +70,8 @@ public class RobotContainer {
   private final ReleaseCommand releaseCommand;
   private final ColorDetector colorDetector;
   private Command simpleAuto;
-
+  private final ExtendRetractCommand extendRetractCommand;
+  private final CommandXboxController commandXboxController;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
@@ -85,6 +88,7 @@ public class RobotContainer {
     armSubsystem = new ArmSubsystem();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
+    commandXboxController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     m_drive = new DriveByController(m_robotDrive, m_driverController);
     m_robotDrive.setDefaultCommand(m_drive); // Set drivetrain default command to "DriveByController"
 
@@ -108,6 +112,7 @@ public class RobotContainer {
     pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     armExtensionSubsystem = new ArmExtensionSubsystem();
+    extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, m_operatorController);
 
     configureButtonBindings(); /*
                                 * Configure the button bindings to commands using configureButtonBindings
@@ -166,8 +171,10 @@ public class RobotContainer {
     new POVButton(m_driverController, 0).onTrue(resetOdometryCommandBackward);
 
     // Operator Controller
-    new JoystickAnalogButton(m_operatorController, true).whileTrue(exampleCommand);
-    new JoystickAnalogButton(m_operatorController, false).whileTrue(exampleCommand);
+    new JoystickAnalogButton(m_operatorController, true).whileTrue(extendRetractCommand);
+    new JoystickAnalogButton(m_operatorController, false).whileTrue(extendRetractCommand);
+    commandXboxController.rightTrigger().whileTrue(extendRetractCommand);
+    commandXboxController.leftTrigger().whileTrue(extendRetractCommand);
 
     new JoystickButton(m_operatorController, Button.kLeftBumper.value).whileTrue(pinchCommand);
     new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(releaseCommand);

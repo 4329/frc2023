@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
@@ -14,6 +15,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private CANSparkMax extensionMotor;
     private RelativeEncoder extensionEncoder;
     private SparkMaxPIDController extensionPID;
+    private double setPoint;
 
     public ArmExtensionSubsystem() {
 
@@ -39,8 +41,20 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     }
 
     public void setExtensionLength(Double setPointDouble) {
+        setPoint = setPointDouble;
         extensionPID.setReference(setPointDouble, CANSparkMax.ControlType.kPosition);
 
+    }
+
+    public void extend() {
+        setPoint += 1.5;
+        extensionPID.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+
+    }
+
+    public void retract() {
+        setPoint -= 1.5;
+        extensionPID.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     }
 
 } 

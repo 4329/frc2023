@@ -3,7 +3,7 @@ package frc.robot.utilities;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.*;
 
-public class JoystickAnalogButton extends Button {
+public class JoystickAnalogButton extends Trigger {
 
   XboxController m_controller;
   private double m_threshold = 0.25;
