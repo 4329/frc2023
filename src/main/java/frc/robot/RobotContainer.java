@@ -27,12 +27,9 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.autos.SimpleAuto;
-<<<<<<< HEAD
 import frc.robot.subsystems.ColorDetector;
-=======
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
->>>>>>> ea170d2 (starting arm and claw subsystems)
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.JoystickAnalogButton;
 import frc.robot.utilities.SwerveAlignment;
