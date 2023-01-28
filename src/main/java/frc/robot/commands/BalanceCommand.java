@@ -38,7 +38,7 @@ public class BalanceCommand extends CommandBase{
 
             drivetrain.unlock();
 
-            drivetrain.drive(Configrun.get(-1, "rollDirection") * roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
+            drivetrain.drive(Configrun.get(1, "rollDirection") * roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
         }
     }
 

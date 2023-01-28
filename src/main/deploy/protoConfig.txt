@@ -26,4 +26,4 @@ PH_CAN_ID = 61
 
 extraShuffleBoardToggle = true
 
-rollDirection = 1;
+rollDirection = 1
