@@ -1,15 +1,11 @@
 package frc.robot;
 
-import com.revrobotics.ColorSensorV3;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -24,21 +20,21 @@ import frc.robot.commands.ArmToFiftyCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.autos.SimpleAuto;
-import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.PinchCommand;
+import frc.robot.commands.ReleaseCommand;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.JoystickAnalogButton;
 import frc.robot.utilities.SwerveAlignment;
+import frc.robot.subsystems.ColorDetector;
 
-/*
-* This class is where the bulk of the robot should be declared.  Since Command-based is a
-* "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
-* periodic methods (other than the scheduler calls).  Instead, the structure of the robot
-* (including subsystems, commands, and button mappings) should be declared here
+/* (including subsystems, commands, and button mappings) should be declared here
 */
 public class RobotContainer {
 
@@ -48,7 +44,6 @@ public class RobotContainer {
 
   // The robot's subsystems
   private final Drivetrain m_robotDrive;
-  private final ColorDetector colorDetector;
   // private final TrackingTurretSubsystem trackingTurretSubsystem;
   // The driver's controllers
   final XboxController m_driverController;
@@ -65,6 +60,10 @@ public class RobotContainer {
   private final MoveArmCommand armToFifty;
   private final ArmSubsystem armSubsystem;
   private final ClawSubsystem clawSubsystem;
+  private final IntakeCommand intakeCommand;
+  private final OuttakeCommand outtakeCommand;
+  private final PinchCommand pinchCommand;
+  private final ReleaseCommand releaseCommand;
 
   private Command simpleAuto;
 
@@ -76,7 +75,7 @@ public class RobotContainer {
   public RobotContainer(Drivetrain drivetrain) {
 
     m_robotDrive = drivetrain;
-    colorDetector = new ColorDetector();
+
     initializeCamera();
 
     armSubsystem = new ArmSubsystem();
@@ -100,6 +99,10 @@ public class RobotContainer {
     armToFifty = new MoveArmCommand(armSubsystem, 50);
 
     clawSubsystem = new ClawSubsystem();
+    intakeCommand = new IntakeCommand(clawSubsystem);
+    outtakeCommand = new OuttakeCommand(clawSubsystem);
+    pinchCommand = new PinchCommand(clawSubsystem);
+    releaseCommand = new ReleaseCommand(clawSubsystem);
 
     configureButtonBindings(); /*
                                 * Configure the button bindings to commands using configureButtonBindings
@@ -161,21 +164,19 @@ public class RobotContainer {
     new JoystickAnalogButton(m_operatorController, true).whileTrue(exampleCommand);
     new JoystickAnalogButton(m_operatorController, false).whileTrue(exampleCommand);
 
-    new JoystickButton(m_operatorController, Button.kLeftBumper.value).whileTrue(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kLeftBumper.value).whileTrue(pinchCommand);
+    new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(releaseCommand);
 
     new JoystickButton(m_operatorController, Button.kStart.value).whileTrue(exampleCommand);
     new JoystickButton(m_operatorController, Button.kBack.value).whileTrue(exampleCommand);
 
     new JoystickButton(m_operatorController, Button.kA.value).onTrue(armToFifty);
     new JoystickButton(m_operatorController, Button.kB.value).whileTrue(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kX.value).whileTrue(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kY.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kX.value).whileTrue(intakeCommand);
+    new JoystickButton(m_operatorController, Button.kY.value).whileTrue(outtakeCommand);
   }
 
-  /**
-   * Pulls autos and configures the chooser
-   */
+  /* Pulls autos and configures the chooser */
   private void configureAutoChooser(Drivetrain drivetrain) {
 
     simpleAuto = new SimpleAuto(m_robotDrive);
