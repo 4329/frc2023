@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ArmExtensionCommand;
 import frc.robot.commands.ArmToPositionCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.ChangeFieldOrientCommand;
@@ -26,6 +27,7 @@ import frc.robot.commands.PinchCommand;
 import frc.robot.commands.ReleaseCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.autos.SimpleAuto;
+import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
@@ -58,6 +60,7 @@ public class RobotContainer {
   private final BalanceCommand balanceCommand;
   private final MoveArmCommand armToFifty;
   private final ArmSubsystem armSubsystem;
+  private final ArmExtensionSubsystem armExtensionSubsystem;
   private final ClawSubsystem clawSubsystem;
   private final IntakeCommand intakeCommand;
   private final OuttakeCommand outtakeCommand;
@@ -66,17 +69,14 @@ public class RobotContainer {
   private final ColorDetector colorDetector;
   private Command simpleAuto;
 
-
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
    * @param drivetrain
    */
 
-  
   public RobotContainer(Drivetrain drivetrain) {
-    
+
     m_robotDrive = drivetrain;
     colorDetector = new ColorDetector();
 
@@ -107,6 +107,7 @@ public class RobotContainer {
     outtakeCommand = new OuttakeCommand(clawSubsystem);
     pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
+    armExtensionSubsystem = new ArmExtensionSubsystem();
 
     configureButtonBindings(); /*
                                 * Configure the button bindings to commands using configureButtonBindings
@@ -171,14 +172,16 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, Button.kLeftBumper.value).whileTrue(pinchCommand);
     new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(releaseCommand);
 
-    new JoystickButton(m_operatorController, Button.kStart.value).whileTrue(exampleCommand);
-    new JoystickButton(m_operatorController, Button.kBack.value).whileTrue(exampleCommand);
+    new JoystickButton(m_operatorController, Button.kStart.value)
+        .whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 10));
+    new JoystickButton(m_operatorController, Button.kBack.value)
+        .whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
 
     new JoystickButton(m_operatorController, Button.kA.value).onTrue(armToFifty);
     new JoystickButton(m_operatorController, Button.kB.value).onTrue(new ArmToPositionCommand(armSubsystem, 0));
     new JoystickButton(m_operatorController, Button.kX.value).whileTrue(intakeCommand);
     new JoystickButton(m_operatorController, Button.kY.value).whileTrue(outtakeCommand);
-  } 
+  }
 
   /* Pulls autos and configures the chooser */
   private void configureAutoChooser(Drivetrain drivetrain) {
