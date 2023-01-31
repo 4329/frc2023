@@ -1,14 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ArmRotationSubsystem;
 
 public class MoveArmCommand extends CommandBase {
 
-    private ArmSubsystem armSubsystem;
+    private ArmRotationSubsystem armSubsystem;
     private double setPoint;
 
-    public MoveArmCommand(ArmSubsystem armSubsystem, double setPoint) {
+    public MoveArmCommand(ArmRotationSubsystem armSubsystem, double setPoint) {
 
         this.armSubsystem = armSubsystem;
         this.setPoint = setPoint;

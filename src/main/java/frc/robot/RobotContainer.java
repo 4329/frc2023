@@ -28,7 +28,7 @@ import frc.robot.commands.ReleaseCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.autos.SimpleAuto;
 import frc.robot.subsystems.ArmExtensionSubsystem;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.swerve.Drivetrain;
@@ -56,7 +56,7 @@ public class RobotContainer {
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final BalanceCommand balanceCommand;
   private final MoveArmCommand armToFifty;
-  private final ArmSubsystem armSubsystem;
+  private final ArmRotationSubsystem armSubsystem;
   private final ArmExtensionSubsystem armExtensionSubsystem;
   private final ClawSubsystem clawSubsystem;
   private final IntakeCommand intakeCommand;
@@ -82,7 +82,7 @@ public class RobotContainer {
 
     initializeCamera();
 
-    armSubsystem = new ArmSubsystem();
+    armSubsystem = new ArmRotationSubsystem();
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
@@ -173,7 +173,7 @@ public class RobotContainer {
 
     operatorController.leftBumper().whileTrue(pinchCommand);
     operatorController.rightBumper().whileTrue(releaseCommand);
-    
+
     operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 10));
     operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
 

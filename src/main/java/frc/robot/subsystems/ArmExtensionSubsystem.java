@@ -19,7 +19,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public ArmExtensionSubsystem() {
 
-        extensionMotor = new CANSparkMax(15, MotorType.kBrushless);
+        extensionMotor = new CANSparkMax(Constants.CANIDConstants.armExtension, MotorType.kBrushless);
         extensionMotor.restoreFactoryDefaults();
         extensionPID = extensionMotor.getPIDController();
         extensionEncoder = extensionMotor.getEncoder();
@@ -52,8 +52,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     }
 
-    public void retract(extendAmount) {
-        setPoint -= 1.5;
+    public void retract(double retractAmount) {
+        setPoint -= retractAmount;
         extensionPID.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     }
 

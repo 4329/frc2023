@@ -1,8 +1,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 
 public class ExtendRetractCommand extends CommandBase {
@@ -13,7 +15,7 @@ public class ExtendRetractCommand extends CommandBase {
     public ExtendRetractCommand(ArmExtensionSubsystem armExtensionSubsystem, CommandXboxController commandXboxController) {
 
         this.armExtensionSubsystem = armExtensionSubsystem;
-        this.controller = controller;
+        this.controller = commandXboxController;
         addRequirements(armExtensionSubsystem);
 
     }
@@ -22,11 +24,10 @@ public class ExtendRetractCommand extends CommandBase {
     public void execute() {
         double extension = controller.getRightTriggerAxis();
         double retraction = controller.getLeftTriggerAxis();
-        System.out.println("is extending" + extension + "blah" + retraction);
         if (extension > 0.3) {
-            armExtensionSubsystem.extend();
+            armExtensionSubsystem.extend(extension * Constants.ArmConstants.armSpeed);
         } else if (retraction > 0.3) {
-            armExtensionSubsystem.retract();
+            armExtensionSubsystem.retract(retraction * Constants.ArmConstants.armSpeed);
         }
     }
 
