@@ -46,13 +46,13 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     }
 
-    public void extend() {
-        setPoint += 1.5;
+    public void extend(double extendAmount) {
+        setPoint += extendAmount;
         extensionPID.setReference(setPoint, CANSparkMax.ControlType.kPosition);
 
     }
 
-    public void retract() {
+    public void retract(extendAmount) {
         setPoint -= 1.5;
         extensionPID.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     }

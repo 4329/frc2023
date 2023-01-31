@@ -6,14 +6,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmExtensionCommand;
 import frc.robot.commands.ArmToPositionCommand;
@@ -34,7 +32,6 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.swerve.Drivetrain;
-import frc.robot.utilities.JoystickAnalogButton;
 import frc.robot.utilities.SwerveAlignment;
 
 /* (including subsystems, commands, and button mappings) should be declared here
@@ -49,8 +46,6 @@ public class RobotContainer {
   private final Drivetrain m_robotDrive;
   // private final TrackingTurretSubsystem trackingTurretSubsystem;
   // The driver's controllers
-  final XboxController m_driverController;
-  final XboxController m_operatorController;
 
   final SendableChooser<Command> m_chooser;
 
@@ -71,7 +66,9 @@ public class RobotContainer {
   private final ColorDetector colorDetector;
   private Command simpleAuto;
   private final ExtendRetractCommand extendRetractCommand;
-  private final CommandXboxController commandXboxController;
+  private final CommandXboxController driverController;
+  private final CommandXboxController operatorController;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
@@ -86,10 +83,9 @@ public class RobotContainer {
     initializeCamera();
 
     armSubsystem = new ArmSubsystem();
-    m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-    m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
-    commandXboxController = new CommandXboxController(OIConstants.kOperatorControllerPort);
-    m_drive = new DriveByController(m_robotDrive, m_driverController);
+    operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
+    driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+    m_drive = new DriveByController(m_robotDrive, driverController);
     m_robotDrive.setDefaultCommand(m_drive); // Set drivetrain default command to "DriveByController"
 
     m_chooser = new SendableChooser<>();
@@ -112,7 +108,7 @@ public class RobotContainer {
     pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     armExtensionSubsystem = new ArmExtensionSubsystem();
-    extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, m_operatorController);
+    extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, operatorController);
 
     configureButtonBindings(); /*
                                 * Configure the button bindings to commands using configureButtonBindings
@@ -153,41 +149,38 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    new JoystickAnalogButton(m_driverController, true).whileTrue(exampleCommand);
-    new JoystickAnalogButton(m_driverController, false).whileTrue(exampleCommand);
+    driverController.rightTrigger().whileTrue(exampleCommand);
+    driverController.leftTrigger().whileTrue(exampleCommand);
 
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).onTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kRightBumper.value).onTrue(changeFieldOrientCommand);
+    driverController.leftBumper().onTrue(exampleCommand);
+    driverController.rightBumper().onTrue(changeFieldOrientCommand);
 
-    new JoystickButton(m_driverController, Button.kStart.value).whileTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kBack.value).whileTrue(exampleCommand);
-
-    new JoystickButton(m_driverController, Button.kA.value).whileTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kB.value).whileTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kX.value).whileTrue(exampleCommand);
-    new JoystickButton(m_driverController, Button.kY.value).whileTrue(balanceCommand);
-
-    new POVButton(m_driverController, 180).onTrue(resetOdometryCommandForward);
-    new POVButton(m_driverController, 0).onTrue(resetOdometryCommandBackward);
+    driverController.start().whileTrue(exampleCommand);
+    driverController.back().whileTrue(exampleCommand);
+    
+    driverController.a().whileTrue(exampleCommand);
+    driverController.b().whileTrue(exampleCommand);
+    driverController.x().whileTrue(exampleCommand);
+    driverController.y().whileTrue(exampleCommand);
+    
+    driverController.povUp().onTrue(resetOdometryCommandForward);
+    driverController.povDown().onTrue(resetOdometryCommandBackward);
+    
 
     // Operator Controller
-    new JoystickAnalogButton(m_operatorController, true).whileTrue(extendRetractCommand);
-    new JoystickAnalogButton(m_operatorController, false).whileTrue(extendRetractCommand);
-    commandXboxController.rightTrigger().whileTrue(extendRetractCommand);
-    commandXboxController.leftTrigger().whileTrue(extendRetractCommand);
+    operatorController.rightTrigger().whileTrue(extendRetractCommand);
+    operatorController.leftTrigger().whileTrue(extendRetractCommand);
 
-    new JoystickButton(m_operatorController, Button.kLeftBumper.value).whileTrue(pinchCommand);
-    new JoystickButton(m_operatorController, Button.kRightBumper.value).whileTrue(releaseCommand);
+    operatorController.leftBumper().whileTrue(pinchCommand);
+    operatorController.rightBumper().whileTrue(releaseCommand);
+    
+    operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 10));
+    operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
 
-    new JoystickButton(m_operatorController, Button.kStart.value)
-        .whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 10));
-    new JoystickButton(m_operatorController, Button.kBack.value)
-        .whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
-
-    new JoystickButton(m_operatorController, Button.kA.value).onTrue(armToFifty);
-    new JoystickButton(m_operatorController, Button.kB.value).onTrue(new ArmToPositionCommand(armSubsystem, 0));
-    new JoystickButton(m_operatorController, Button.kX.value).whileTrue(intakeCommand);
-    new JoystickButton(m_operatorController, Button.kY.value).whileTrue(outtakeCommand);
+    operatorController.a().onTrue(armToFifty);
+    operatorController.b().onTrue(new ArmToPositionCommand(armSubsystem, 0));
+    operatorController.x().whileTrue(intakeCommand);
+    operatorController.y().whileTrue(outtakeCommand);
   }
 
   /* Pulls autos and configures the chooser */

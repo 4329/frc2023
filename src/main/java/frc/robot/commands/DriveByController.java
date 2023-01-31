@@ -10,6 +10,7 @@ import java.util.Map;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 /**
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
  */
 public class DriveByController extends CommandBase {
   private final Drivetrain m_robotDrive;
-  private final XboxController m_controller;
+  private final CommandXboxController m_controller;
   private boolean fieldOrient = true;
 
   private GenericEntry fieldOrientStatus = Shuffleboard.getTab("RobotData").add("Field Orient On", true).withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).withPosition(4, 2).getEntry();
@@ -31,7 +32,7 @@ public class DriveByController extends CommandBase {
    * @param controller is the user input controller object for controlling the
    *                   drivetrain
    */
-  public DriveByController(Drivetrain drive, XboxController controller) {
+  public DriveByController(Drivetrain drive, CommandXboxController controller) {
     m_robotDrive = drive; // Set the private member to the input drivetrain
     m_controller = controller; // Set the private member to the input controller
     addRequirements(m_robotDrive); // Because this will be used as a default command, add the subsystem which will
