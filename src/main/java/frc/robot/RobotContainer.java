@@ -207,4 +207,9 @@ public class RobotContainer {
     return m_chooser.getSelected();
   }
 
+  public void configureTestMode() {
+
+    m_robotDrive.setDefaultCommand(exampleCommand);
+  }
+
 }
