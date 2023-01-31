@@ -7,6 +7,7 @@ import frc.robot.utilities.LinearInterpolationTable;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 /**
  * Static method containing all constant values for the robot in one location
  */
@@ -18,7 +19,7 @@ public final class Constants {
   public static final class DriveConstants {
 
     public static final double kVoltCompensation = 12.0; // Sets a voltage compensation value ideally 12.0V
-    public static final double kLoopTime = 20.0; 
+    public static final double kLoopTime = 20.0;
 
     public static final int kFrontLeftDriveMotorPort = (Configrun.get(3, "frontLeftDriveMotorPort")); // CANID of the
                                                                                                       // Translation
@@ -52,11 +53,13 @@ public final class Constants {
     public static final int kFrontLeftTurningEncoderPort = (Configrun.get(1, "frontLeftTurningEncoderPort"));
     public static final int kFrontRightTurningEncoderPort = (Configrun.get(0, "frontRightTurningEncoderPort"));
     public static final int kBackLeftTurningEncoderPort = (Configrun.get(3, "backLeftTurningEncoderPort"));
-    public static final int kBackRightTurningEncoderPort = (Configrun.get(2, "backRightTurningEncoderPort")); 
+    public static final int kBackRightTurningEncoderPort = (Configrun.get(2, "backRightTurningEncoderPort"));
 
     public static final double kFrontLeftOffset = (Configrun.get(0.0, "frontLeftOffset")); // Encoder Offset in Radians
-    public static final double kFrontRightOffset = (Configrun.get(0.7853, "frontRightOffset")); // Encoder Offset in Radians
-    public static final double kBackLeftOffset = (Configrun.get(-0.0884, "backLeftOffset")); // Encoder Offset in Radians
+    public static final double kFrontRightOffset = (Configrun.get(0.7853, "frontRightOffset")); // Encoder Offset in
+                                                                                                // Radians
+    public static final double kBackLeftOffset = (Configrun.get(-0.0884, "backLeftOffset")); // Encoder Offset in
+                                                                                             // Radians
     public static final double kBackRightOffset = (Configrun.get(2.79, "backRightOffset")); // Encoder Offset in Radians
 
     public static final double[] kFrontLeftTuningVals = { 0.0150, 0.2850, 0.25, 0 };
@@ -122,14 +125,15 @@ public final class Constants {
     public static final int kDriveCurrentLimit = 30;
     public static final int kTurnCurrentLimit = 25;
 
-    public static final double[] kTurnPID = { 0.600, 0, 0 }; // should show some minor oscillation when no weight is loaded on the modules
+    public static final double[] kTurnPID = { 0.600, 0, 0 }; // should show some minor oscillation when no weight is
+                                                             // loaded on the modules
   }
 
   /**
-   * Static method containing all User I/O constants
+   * Static method containing all User O/I constants
    */
   public static final class OIConstants {
-  
+
     public static final int kDriverControllerPort = 0; // When making use of multiple controllers for drivers each
                                                        // controller will be on a different port
     public static final int kOperatorControllerPort = 1; // When making use of multiple controllers for drivers each
@@ -157,8 +161,23 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeed, kMaxAngularAccel); // Creates a trapezoidal motion for the auto rotational commands
   }
-public static final class ColorConstants{
-  public static final double confidenceLevel = 1;
+
+  public static final class ColorConstants {
+
+    public static final double confidenceLevel = 1;
+  }
+
+  public static final class ArmConstants {
+
+    public static final double armSpeed = 1.5;
+  }
+
+  public static final class CANIDConstants {
+
+    public static final int clawRight = 13;
+    public static final int clawLeft = 14;
+    public static final int armRotation1 = 15;
+    public static final int armRotation2 = 16;
+    public static final int armExtension = 20;
+  }
 }
-}
-  
