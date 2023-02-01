@@ -169,7 +169,7 @@ public final class Constants {
 
   public static final class ArmConstants {
 
-    public static final double armSpeed = 1.5;
+    public static final double armExtendSpeed = 1.5;
   }
 
   public static final class CANIDConstants {

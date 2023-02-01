@@ -23,6 +23,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.restoreFactoryDefaults();
         extensionPID = extensionMotor.getPIDController();
         extensionEncoder = extensionMotor.getEncoder();
+        extensionMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         extensionMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         extensionMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         extensionMotor.setSoftLimit(SoftLimitDirection.kForward, 50);
