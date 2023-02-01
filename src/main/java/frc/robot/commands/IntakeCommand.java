@@ -2,11 +2,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ColorDetector;
+
+import com.revrobotics.ColorSensorV3;
 
 public class IntakeCommand extends CommandBase {
-    private ClawSubsystem clawSubsystem = null;
 
-    public IntakeCommand(ClawSubsystem clawSubsystem) {
+    private ClawSubsystem clawSubsystem;
+    private ColorDetector colorDetector;
+
+    public IntakeCommand(ClawSubsystem clawSubsystem, ColorDetector colorDetector) {
+
+        this.colorDetector = colorDetector;
         this.clawSubsystem = clawSubsystem;
         addRequirements(clawSubsystem);
     }
@@ -19,13 +26,23 @@ public class IntakeCommand extends CommandBase {
     @Override
     public void execute() {
 
-        clawSubsystem.intake();
+        if (colorDetector.distance() < 150) {
+
+            clawSubsystem.intake();
+        }
     }
 
     @Override
     public boolean isFinished() {
 
-        return false;
+        if (colorDetector.distance() < 50) {
+
+            return true;
+        } else {
+
+            return false;
+        }
+
     }
 
     @Override
