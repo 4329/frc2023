@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmExtensionCommand;
-import frc.robot.commands.ArmToPositionCommand;
+import frc.robot.commands.ArmRotateCommand;
+import frc.robot.commands.ArmUnrotateCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.ChangeFieldOrientCommand;
 import frc.robot.commands.DriveByController;
@@ -64,6 +65,8 @@ public class RobotContainer {
   private final PinchCommand pinchCommand;
   private final ReleaseCommand releaseCommand;
   private final ColorDetector colorDetector;
+  private final ArmRotateCommand armRotateCommand;
+  private final ArmUnrotateCommand armUnrotateCommand;
   private Command simpleAuto;
   private final ExtendRetractCommand extendRetractCommand;
   private final CommandXboxController driverController;
@@ -100,7 +103,7 @@ public class RobotContainer {
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
-    armToFifty = new MoveArmCommand(armSubsystem, 50);
+    armToFifty = new MoveArmCommand(armSubsystem, -5);
 
     clawSubsystem = new ClawSubsystem();
     intakeCommand = new IntakeCommand(clawSubsystem);
@@ -109,7 +112,8 @@ public class RobotContainer {
     releaseCommand = new ReleaseCommand(clawSubsystem);
     armExtensionSubsystem = new ArmExtensionSubsystem();
     extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, operatorController);
-
+    armRotateCommand = new ArmRotateCommand(armSubsystem);
+    armUnrotateCommand = new ArmUnrotateCommand(armSubsystem);
     configureButtonBindings(); /*
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
@@ -176,11 +180,14 @@ public class RobotContainer {
 
     operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 10));
     operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
-
+    
     operatorController.a().onTrue(armToFifty);
-    operatorController.b().onTrue(new ArmToPositionCommand(armSubsystem, 0));
+    operatorController.b().onTrue(new MoveArmCommand(armSubsystem, 0));
     operatorController.x().whileTrue(intakeCommand);
     operatorController.y().whileTrue(outtakeCommand);
+
+    operatorController.povUp().onTrue(armRotateCommand);
+    operatorController.povDown().onTrue(armUnrotateCommand);
   }
 
   /* Pulls autos and configures the chooser */

@@ -22,41 +22,35 @@ public class ClawSubsystem extends SubsystemBase {
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
     }
 
-    @Override
-    public void periodic() {
-
-        /*
-         * armMotor.set(fjaflijefli.getDouble(0));
-         * armMotoryes.set(fjaflijefli.getDouble(0));
-         */
-    }
-
     public void intake() {
+
         double speed = -0.1;
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
 
     public void outtake() {
+
         double reverseSpeed = 0.2;
         leftMotor.set(reverseSpeed);
         rightMotor.set(reverseSpeed);
     }
 
     public void stop() {
+
         double stop = 0;
         leftMotor.set(stop);
         rightMotor.set(stop);
     }
 
     public void pinch() {
-        solenoid.set(Value.kForward);
 
+        solenoid.set(Value.kForward);
     }
 
     public void release() {
-        solenoid.set(Value.kReverse);
 
+        solenoid.set(Value.kReverse);
     }
 
 }
