@@ -61,7 +61,10 @@ public class ColorDetector extends SubsystemBase {
 
     @Override
     public void periodic() {
-        coneOrCube.setString(detectElement().toString());
+        FieldElement kraigElement = detectElement();
+        if (kraigElement != null) {
+            coneOrCube.setString(kraigElement.toString());
+        }
         proximity.setDouble(distance());
     }
 }

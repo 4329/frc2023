@@ -18,6 +18,7 @@ import frc.robot.commands.ArmRotateCommand;
 import frc.robot.commands.ArmUnrotateCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.ChangeFieldOrientCommand;
+import frc.robot.commands.CoastCommand;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendRetractCommand;
@@ -33,13 +34,11 @@ import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.swerve.Drivetrain;
-import frc.robot.utilities.SwerveAlignment;
 
 /* (including subsystems, commands, and button mappings) should be declared here
 */
 public class RobotContainer {
 
-  private SwerveAlignment swerveAlignment;
 
   // private final PneumaticHub pneumaticHub;
 
@@ -89,12 +88,10 @@ public class RobotContainer {
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
-    m_robotDrive.setDefaultCommand(m_drive); // Set drivetrain default command to "DriveByController"
 
     m_chooser = new SendableChooser<>();
     configureAutoChooser(drivetrain);
 
-    swerveAlignment = new SwerveAlignment(drivetrain);
 
     exampleCommand = new ExampleCommand();
     resetOdometryCommandForward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(Math.PI)),
@@ -206,9 +203,21 @@ public class RobotContainer {
     }
   }
 
+
+
+public void autonomousInit() {
+
+  m_robotDrive.setDefaultCommand(m_drive);
+}
+
+public void teleopInit() {
+
+  m_robotDrive.setDefaultCommand(m_drive);
+}
+
   /**
    * @return Selected Auto
-   */
+   */   
   public Command getAuto() {
 
     return m_chooser.getSelected();
@@ -216,7 +225,7 @@ public class RobotContainer {
 
   public void configureTestMode() {
 
-    m_robotDrive.setDefaultCommand(exampleCommand);
+    m_robotDrive.setDefaultCommand(new CoastCommand(m_robotDrive));
   }
 
 }
