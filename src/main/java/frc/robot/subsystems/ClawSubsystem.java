@@ -23,8 +23,7 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void intake() {
-
-        double speed = -0.1;
+        double speed = -0.2;
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
