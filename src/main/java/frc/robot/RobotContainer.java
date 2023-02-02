@@ -180,15 +180,14 @@ public class RobotContainer {
 
     operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 10));
     operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
+    
     operatorController.a().onTrue(armToFifty);
     operatorController.b().onTrue(new MoveArmCommand(armSubsystem, 0));
-    //operatorController.x().whileTrue(intakeCommand);
-    //operatorController.y().whileTrue(outtakeCommand);
-    operatorController.x().whileTrue(armRotateCommand);
-    operatorController.y().whileTrue(armUnrotateCommand);
+    operatorController.x().whileTrue(intakeCommand);
+    operatorController.y().whileTrue(outtakeCommand);
 
-    //operatorController.povUp().onTrue(resetOdometryCommandForward);
-    //operatorController.povDown().onTrue(resetOdometryCommandBackward);
+    operatorController.povUp().onTrue(armRotateCommand);
+    operatorController.povDown().onTrue(armUnrotateCommand);
   }
 
   /* Pulls autos and configures the chooser */
