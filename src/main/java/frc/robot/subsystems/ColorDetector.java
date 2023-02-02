@@ -55,7 +55,7 @@ public class ColorDetector extends SubsystemBase {
     }
 
     public double distance() {
-
+        
         return colorSensorV3.getProximity();
     }
 
