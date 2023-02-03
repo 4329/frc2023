@@ -19,12 +19,12 @@ public class ClawSubsystem extends SubsystemBase {
     private DoubleSolenoid solenoid;
     private ColorDetector colorDetector;
 
-    public ClawSubsystem() {
+    public ClawSubsystem(ColorDetector colorDetector) {
 
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
-        colorDetector = new ColorDetector();
+        this.colorDetector = colorDetector;
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
     }

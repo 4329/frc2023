@@ -104,7 +104,7 @@ public class RobotContainer {
     armToFive = new MoveArmCommand(armSubsystem, -5);
     armToZero = new MoveArmCommand(armSubsystem, 0);
 
-    clawSubsystem = new ClawSubsystem();
+    clawSubsystem = new ClawSubsystem(colorDetector);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem);
     pinchCommand = new PinchCommand(clawSubsystem);
