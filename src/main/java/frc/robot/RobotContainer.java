@@ -1,10 +1,21 @@
 package frc.robot;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
+import java.util.Map;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -56,7 +67,7 @@ public class RobotContainer {
   private final BalanceCommand balanceCommand;
   private final MoveArmCommand armToFive;
   private final MoveArmCommand armToZero;
-  private final ArmRotationSubsystem armSubsystem;
+  private final ArmRotationSubsystem armRotationSubsystem;
   private final ArmExtensionSubsystem armExtensionSubsystem;
   private final ClawSubsystem clawSubsystem;
   private final IntakeCommand intakeCommand;
@@ -84,7 +95,7 @@ public class RobotContainer {
 
     initializeCamera();
 
-    armSubsystem = new ArmRotationSubsystem();
+    armRotationSubsystem = new ArmRotationSubsystem();
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
@@ -100,8 +111,8 @@ public class RobotContainer {
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
-    armToFive = new MoveArmCommand(armSubsystem, -5);
-    armToZero = new MoveArmCommand(armSubsystem, 0);
+    armToFive = new MoveArmCommand(armRotationSubsystem, -5);
+    armToZero = new MoveArmCommand(armRotationSubsystem, 0);
 
     clawSubsystem = new ClawSubsystem(colorDetector);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
@@ -110,8 +121,8 @@ public class RobotContainer {
     releaseCommand = new ReleaseCommand(clawSubsystem);
     armExtensionSubsystem = new ArmExtensionSubsystem();
     extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, operatorController);
-    armRotateCommand = new ArmRotateCommand(armSubsystem);
-    armUnrotateCommand = new ArmUnrotateCommand(armSubsystem);
+    armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
+    armUnrotateCommand = new ArmUnrotateCommand(armRotationSubsystem);
     configureButtonBindings(); /*
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
@@ -140,6 +151,33 @@ public class RobotContainer {
     Shuffleboard.getTab("RobotData").add("Limelight Camera", limelight).withPosition(2, 0).withSize(2, 2)
         .withWidget(BuiltInWidgets.kCameraStream);
   }
+  
+/*Autonomous :D*/
+  private Map <String, Command> createEventMap()  {
+    Map <String, Command> eventMap = new HashMap<>();
+    eventMap.put("intakeCommand", intakeCommand);
+    eventMap.put("extendCommand", extendRetractCommand);
+    return eventMap;
+  }
+  
+  private SwerveAutoBuilder createAutoBuilder () {
+    
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      m_robotDrive::getPose, // Pose2d supplier
+      m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      createEventMap(),
+      false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      m_robotDrive, // The drive subsystem. Used to properly set the requirements of path following commands
+      clawSubsystem,
+      armExtensionSubsystem,
+      armRotationSubsystem
+    );
+    return autoBuilder;
+  } 
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -192,7 +230,11 @@ public class RobotContainer {
   private void configureAutoChooser(Drivetrain drivetrain) {
 
     //simpleAuto = new SimpleAuto(m_robotDrive);
-
+    File pathPlannerDirectory = new File(Filesystem.getDeployDirectory(), "pathplanner");
+    for (File pathFile : pathPlannerDirectory.listFiles())  {
+      //khai wuz here
+      System.out.println(pathFile);
+    }
 
     // Adds autos to the chooser
     m_chooser.addOption("simpleAuto", simpleAuto);
