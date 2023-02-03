@@ -185,8 +185,8 @@ public class RobotContainer {
     operatorController.x().whileTrue(intakeCommand);
     operatorController.y().whileTrue(outtakeCommand);
 
-    operatorController.povUp().onTrue(armRotateCommand);
-    operatorController.povDown().onTrue(armUnrotateCommand);
+    operatorController.povUp().whileTrue(armRotateCommand);
+    operatorController.povDown().whileTrue(armUnrotateCommand);
   }
 
   /* Pulls autos and configures the chooser */
