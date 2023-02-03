@@ -28,7 +28,6 @@ import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.PinchCommand;
 import frc.robot.commands.ReleaseCommand;
 import frc.robot.commands.ResetOdometryCommand;
-import frc.robot.commands.autos.SimpleAuto;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -67,11 +66,11 @@ public class RobotContainer {
   private final ColorDetector colorDetector;
   private final ArmRotateCommand armRotateCommand;
   private final ArmUnrotateCommand armUnrotateCommand;
-  private Command simpleAuto;
   private final ExtendRetractCommand extendRetractCommand;
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
-
+  private Command simpleAuto;
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    *
@@ -192,7 +191,8 @@ public class RobotContainer {
   /* Pulls autos and configures the chooser */
   private void configureAutoChooser(Drivetrain drivetrain) {
 
-    simpleAuto = new SimpleAuto(m_robotDrive);
+    //simpleAuto = new SimpleAuto(m_robotDrive);
+
 
     // Adds autos to the chooser
     m_chooser.addOption("simpleAuto", simpleAuto);
