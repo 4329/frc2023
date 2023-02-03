@@ -103,7 +103,7 @@ public class Drivetrain extends SubsystemBase {
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     rot = performKeepAngle(xSpeed, ySpeed, rot); // Calls the keep angle function to update the keep angle or rotate
                                                  // depending on driver input
-    xSpeed= slewX.calculate(xSpeed);
+    xSpeed = slewX.calculate(xSpeed);
     ySpeed = slewY.calculate(ySpeed);
     rot = slewRot.calculate(rot);
 
@@ -186,7 +186,7 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * @return Pose2d object containing the X and Y position and the heading of the
-   * robot.
+   *         robot.
    */
   public Pose2d getPose() {
 
@@ -297,10 +297,10 @@ public class Drivetrain extends SubsystemBase {
   public void lock() {
 
     SwerveModuleState[] steve = {
-      new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
-      new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
-      new SwerveModuleState(0, Rotation2d.fromDegrees(225)),
-      new SwerveModuleState(0, Rotation2d.fromDegrees(315))
+        new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
+        new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
+        new SwerveModuleState(0, Rotation2d.fromDegrees(225)),
+        new SwerveModuleState(0, Rotation2d.fromDegrees(315))
     };
 
     setModuleStates(steve);
@@ -315,10 +315,10 @@ public class Drivetrain extends SubsystemBase {
   public SwerveModulePosition[] getModulePositions() {
 
     return new SwerveModulePosition[] {
-      m_frontLeft.getPosition(),
-      m_frontRight.getPosition(),
-      m_backLeft.getPosition(),
-      m_backRight.getPosition()};
+        m_frontLeft.getPosition(),
+        m_frontRight.getPosition(),
+        m_backLeft.getPosition(),
+        m_backRight.getPosition() };
   }
 
   public double getRoll() {
