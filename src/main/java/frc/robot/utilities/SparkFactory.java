@@ -1,6 +1,7 @@
 package frc.robot.utilities;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ExternalFollower;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -26,7 +27,7 @@ public class SparkFactory {
     canToMake.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
     canToMake.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
     canToMake.setIdleMode(IdleMode.kBrake);
-    canToMake.follow(null);
+    canToMake.follow(ExternalFollower.kFollowerDisabled, 0);
     canToMake.burnFlash();
     return canToMake;
   }
