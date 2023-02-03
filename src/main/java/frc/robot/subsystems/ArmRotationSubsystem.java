@@ -39,8 +39,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armEncoder = armMotor1.getEncoder();
         armMotor1.enableSoftLimit(SoftLimitDirection.kForward, true);
         armMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        armMotor1.setSoftLimit(SoftLimitDirection.kForward, 2);
-        armMotor1.setSoftLimit(SoftLimitDirection.kReverse, -7);
+        armMotor1.setSoftLimit(SoftLimitDirection.kForward, 10);
+        armMotor1.setSoftLimit(SoftLimitDirection.kReverse, -1);
         armEncoder.setPosition(0);
         armMotor1.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         armMotor1.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
