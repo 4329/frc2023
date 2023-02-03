@@ -55,13 +55,16 @@ public class ColorDetector extends SubsystemBase {
     }
 
     public double distance() {
-
+        
         return colorSensorV3.getProximity();
     }
 
     @Override
     public void periodic() {
-        coneOrCube.setString(detectElement().toString());
+        FieldElement kraigElement = detectElement();
+        if (kraigElement != null) {
+            coneOrCube.setString(kraigElement.toString());
+        }
         proximity.setDouble(distance());
     }
 }

@@ -32,8 +32,6 @@ public class Robot extends TimedRobot {
   private SwerveAlignment m_swerveAlignment;
   private Drivetrain drivetrain;
 
- 
-
   @Override
   public void robotInit() {
     Configrun.loadconfig();
@@ -70,7 +68,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-
+    m_robotContainer.autonomousInit();
     m_autonomousCommand = m_robotContainer.getAuto();
 
     // schedule the autonomous command (example)
@@ -88,7 +86,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousExit() {
 
-    Command resetForTeliOp = new InstantCommand (()->drivetrain.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d(0.0))));
+    Command resetForTeliOp = new InstantCommand(
+        () -> drivetrain.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d(0.0))));
     resetForTeliOp.schedule();
   }
 
@@ -96,6 +95,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
 
     drivetrain.brakeMode();
+    m_robotContainer.teleopInit();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -108,7 +108,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    
   }
 
   @Override
@@ -131,7 +130,5 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
 
     m_swerveAlignment.updateSwerveAlignment();
-
-    drivetrain.coastMode();
   }
 }
