@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utilities.SparkFactory;
 
 public class ArmExtensionSubsystem extends SubsystemBase {
 
@@ -18,9 +19,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public ArmExtensionSubsystem() {
 
-        extensionMotor = new CANSparkMax(Constants.CANIDConstants.armExtension, MotorType.kBrushless);
-
-        extensionMotor.restoreFactoryDefaults();
+        extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
         extensionPID = extensionMotor.getPIDController();
         extensionEncoder = extensionMotor.getEncoder();
         extensionMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);

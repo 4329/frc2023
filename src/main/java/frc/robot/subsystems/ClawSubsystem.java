@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utilities.SparkFactory;
 
 public class ClawSubsystem extends SubsystemBase {
 
@@ -17,8 +18,8 @@ public class ClawSubsystem extends SubsystemBase {
 
     public ClawSubsystem() {
 
-        leftMotor = new CANSparkMax(Constants.CANIDConstants.clawLeft, MotorType.kBrushless);
-        rightMotor = new CANSparkMax(Constants.CANIDConstants.clawRight, MotorType.kBrushless);
+        leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
+        rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
     }
 

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utilities.SparkFactory;
 
 public class ArmRotationSubsystem extends SubsystemBase {
 
@@ -27,10 +28,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     public ArmRotationSubsystem() {
 
-        khaikun = Shuffleboard.getTab("yes").add("Motor1", 0).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("Upper Bound", 100, "Lower Bound", -100)).getEntry();
-        khaichan = Shuffleboard.getTab("yes").add("Motor2", 0).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("Upper Bound", 100, "Lower Bound", -100)).getEntry();
-        armMotor1 = new CANSparkMax(Constants.CANIDConstants.armRotation1, MotorType.kBrushless);
-        armMotor2 = new CANSparkMax(Constants.CANIDConstants.armRotation2, MotorType.kBrushless);
+        armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
+        armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
         armMotor1.restoreFactoryDefaults();
         armMotor2.restoreFactoryDefaults();
         armMotor1.setIdleMode(CANSparkMax.IdleMode.kBrake);

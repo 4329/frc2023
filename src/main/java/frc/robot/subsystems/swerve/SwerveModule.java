@@ -18,6 +18,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import frc.robot.Constants.*;
+import frc.robot.utilities.SparkFactory;
 
 /**
  * Implements a swerve module for the Robot
@@ -72,7 +73,7 @@ public class SwerveModule {
   public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoderChannel, double angularOffset,
       double[] tuningVals) {
 
-    m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless); // Define the drive motor as the SparkMAX
+    m_driveMotor = SparkFactory.createCANSparkMax(driveMotorChannel); // Define the drive motor as the SparkMAX
                                                                              // with the input driveMotorChannel
     m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveCurrentLimit); // Set current limit for the drive motor
     m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation); // Enable voltage compensation so
@@ -86,7 +87,7 @@ public class SwerveModule {
     m_driveMotor.burnFlash(); // Write these parameters to the SparkMAX so we can be sure the values are
                               // correct
 
-    m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless); // Define the drive motor as the
+    m_turningMotor = SparkFactory.createCANSparkMax(turningMotorChannel); // Define the drive motor as the
                                                                                  // SparkMAX with the input
                                                                                  // driveMotorChannel
     m_turningMotor.setSmartCurrentLimit(ModuleConstants.kTurnCurrentLimit); // Set current limit for the drive motor
