@@ -5,6 +5,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utilities.SparkFactory;
@@ -15,6 +17,7 @@ public class WristSubsystem extends SubsystemBase {
     private RelativeEncoder wristEncoder;
     private SparkMaxPIDController wristPID;
     private double setpoint;
+    public GenericEntry wristMotorSetpoint;
     
     public WristSubsystem() {
 
@@ -35,6 +38,7 @@ public class WristSubsystem extends SubsystemBase {
         wristPID.setOutputRange(-1, 1);
         wristMotor.burnFlash();
         setpoint = 0;
+        wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
     }
 
     public void setWristPosition(Double setpoint) {
@@ -63,6 +67,12 @@ public class WristSubsystem extends SubsystemBase {
     public boolean wristAtSetpoint() {
 
         return false;
+    }
+
+    @Override
+    public void periodic() {
+
+        wristMotorSetpoint.setDouble(setpoint);
     }
     
 }
