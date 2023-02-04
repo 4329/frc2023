@@ -27,7 +27,6 @@ public class ArmRotationSubsystem extends SubsystemBase {
         maxValue = 1f;
         minValue = -10f;
 
-
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
         armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
         armMotor1.restoreFactoryDefaults();
