@@ -19,8 +19,14 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private SparkMaxPIDController armPID;
     private double setpoint;
     public GenericEntry armMotorSetpoint;
+    public final float maxValue;
+    public final float minValue;
 
     public ArmRotationSubsystem() {
+
+        maxValue = 1f;
+        minValue = -10f;
+
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
         armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
@@ -33,8 +39,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armEncoder = armMotor1.getEncoder();
         armMotor1.enableSoftLimit(SoftLimitDirection.kForward, true);
         armMotor1.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        armMotor1.setSoftLimit(SoftLimitDirection.kForward, -10);
-        armMotor1.setSoftLimit(SoftLimitDirection.kReverse, 1);
+        armMotor1.setSoftLimit(SoftLimitDirection.kForward, maxValue);
+        armMotor1.setSoftLimit(SoftLimitDirection.kReverse, minValue);
         armEncoder.setPosition(0);
         armMotor1.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         armMotor1.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
@@ -63,12 +69,18 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     public void armRotate() {
 
-        setpoint -= armRotationSpeed; 
-        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        if (setpoint > minValue) {
+            setpoint -= armRotationSpeed; 
+            armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        }
     }
     public void armUnrotate(){
-        setpoint += armRotationSpeed; 
-        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+
+        if (setpoint < maxValue) {
+
+            setpoint += armRotationSpeed; 
+            armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        }
     }
     public void stop(){
         armMotor1.set(0);

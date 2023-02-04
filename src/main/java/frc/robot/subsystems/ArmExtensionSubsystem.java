@@ -18,8 +18,13 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private SparkMaxPIDController extensionPID;
     private double setpoint;
     public GenericEntry extensionMotorSetpoint;
+    public final float maxValue;
+    public final float minValue;
 
     public ArmExtensionSubsystem() {
+
+        maxValue = 50f;
+        minValue = -2f;
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
         extensionPID = extensionMotor.getPIDController();
@@ -27,8 +32,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         extensionMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         extensionMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        extensionMotor.setSoftLimit(SoftLimitDirection.kForward, 50);
-        extensionMotor.setSoftLimit(SoftLimitDirection.kReverse, -2);
+        extensionMotor.setSoftLimit(SoftLimitDirection.kForward, maxValue);
+        extensionMotor.setSoftLimit(SoftLimitDirection.kReverse, minValue);
         extensionEncoder.setPosition(0);
         extensionMotor.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         extensionMotor.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
@@ -53,14 +58,18 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public void extend(double extendAmount) {
 
-        setpoint += extendAmount;
-        extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        if (setpoint < maxValue) {
+            setpoint += extendAmount;
+            extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        }
     }
 
     public void retract(double retractAmount) {
 
-        setpoint -= retractAmount;
-        extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        if (setpoint > minValue) {
+            setpoint -= retractAmount;
+            extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        }
     }
 
     @Override
