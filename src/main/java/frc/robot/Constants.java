@@ -33,7 +33,6 @@ public final class Constants {
     public static final int kBackRightDriveMotorPort = (Configrun.get(7, "backRightDriveMotorPort")); // CANID of the
                                                                                                       // Translation
                                                                                                       // SparkMAX
-
     public static final int kFrontLeftTurningMotorPort = (Configrun.get(4, "frontLeftTurningMotorPort")); // CANID of
                                                                                                           // the
                                                                                                           // Rotation

@@ -232,7 +232,7 @@ public class RobotContainer {
     //simpleAuto = new SimpleAuto(m_robotDrive);
     File pathPlannerDirectory = new File(Filesystem.getDeployDirectory(), "pathplanner");
     for (File pathFile : pathPlannerDirectory.listFiles())  {
-      //khai wuz here
+
       System.out.println(pathFile);
     }
 

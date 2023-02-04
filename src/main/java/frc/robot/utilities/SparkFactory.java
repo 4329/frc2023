@@ -13,22 +13,25 @@ public class SparkFactory {
   /**
    * The default method to be used when creating a new CANSparkMax, which gives it
    * basic settings for ease of use.
+   *
+   * MAKE SURE TO BURN FLASH!!!
    * 
    * @param id
    * @return a new CAN object
    */
   public static CANSparkMax createCANSparkMax(int id) {
 
+    //something to the effect of we experimented with burn flash and reset to factory defaults, and it caused the drive motors to go bonkers
     CANSparkMax canToMake = new CANSparkMax(id, MotorType.kBrushless);
-    canToMake.restoreFactoryDefaults();
-    canToMake.clearFaults();
     canToMake.enableSoftLimit(SoftLimitDirection.kForward, false);
     canToMake.enableSoftLimit(SoftLimitDirection.kReverse, false);
-    canToMake.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
-    canToMake.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
     canToMake.setIdleMode(IdleMode.kBrake);
     canToMake.follow(ExternalFollower.kFollowerDisabled, 0);
-    canToMake.burnFlash();
+    canToMake.setInverted(false);
+    if (canToMake.isFollower()) {
+
+      System.out.println("CAN ID" + id + " is following somebody WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+    }
     return canToMake;
   }
 }
