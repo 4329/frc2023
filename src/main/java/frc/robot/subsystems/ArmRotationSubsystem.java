@@ -5,6 +5,8 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utilities.SparkFactory;
@@ -16,6 +18,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private RelativeEncoder armEncoder;
     private SparkMaxPIDController armPID;
     private double setpoint;
+    public GenericEntry armMotorSetpoint;
 
     public ArmRotationSubsystem() {
 
@@ -44,10 +47,12 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;
+
+        armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
         
     }
 
-    public void setArmPosition(Double setpoint) {
+    public void setArmPosition(double setpoint) {
 
         this.setpoint = setpoint;
 
@@ -74,6 +79,11 @@ public class ArmRotationSubsystem extends SubsystemBase {
         return false;
     }
 
+    @Override
+    public void periodic() {
+
+        armMotorSetpoint.setDouble(setpoint);
+    }
 }
 
 
