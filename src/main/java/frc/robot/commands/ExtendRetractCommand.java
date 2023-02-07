@@ -25,9 +25,9 @@ public class ExtendRetractCommand extends CommandBase {
         double extension = controller.getRightTriggerAxis();
         double retraction = controller.getLeftTriggerAxis();
         if (extension > 0.3) {
-            armExtensionSubsystem.extend(extension * Constants.ArmConstants.armExtendSpeed);
+            armExtensionSubsystem.extend();
         } else if (retraction > 0.3) {
-            armExtensionSubsystem.retract(retraction * Constants.ArmConstants.armExtendSpeed);
+            armExtensionSubsystem.retract();
         }
     }
 

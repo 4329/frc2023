@@ -115,7 +115,7 @@ public class RobotContainer {
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
-    armToFive = new MoveArmCommand(armRotationSubsystem, -5);
+    armToFive = new MoveArmCommand(armRotationSubsystem, 5);
     armToZero = new MoveArmCommand(armRotationSubsystem, 0);
     
     clawSubsystem = new ClawSubsystem(colorDetector);
@@ -269,6 +269,8 @@ public class RobotContainer {
   public void teleopInit() {
 
     m_robotDrive.setDefaultCommand(m_drive);
+    armExtensionSubsystem.resetSetpoint();
+    armRotationSubsystem.resetSetpoint();
   }
 
   public void autonomousPeriodic() {

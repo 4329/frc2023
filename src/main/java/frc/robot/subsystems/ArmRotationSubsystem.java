@@ -6,6 +6,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,13 +20,14 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private SparkMaxPIDController armPID;
     private double setpoint;
     public GenericEntry armMotorSetpoint;
+    public GenericEntry pidGraph;
     public final float maxValue;
     public final float minValue;
 
     public ArmRotationSubsystem() {
 
-        maxValue = 1f;
-        minValue = -10f;
+        maxValue = 28f;
+        minValue = 0f;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
         armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
@@ -53,6 +55,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor2.burnFlash();
         setpoint = 0;
 
+        pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
         
     }
@@ -64,7 +67,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
 
-    private double armRotationSpeed = 0.1;
+    private double armRotationSpeed = 0.03;
 
     public void armRotate() {
 
@@ -90,10 +93,17 @@ public class ArmRotationSubsystem extends SubsystemBase {
         return false;
     }
 
+    public void resetSetpoint() {
+
+        setpoint = 0;
+        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+    }
+
     @Override
     public void periodic() {
 
         armMotorSetpoint.setDouble(setpoint);
+        pidGraph.setDouble(armEncoder.getPosition());
     }
 }
 
