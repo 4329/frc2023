@@ -18,8 +18,14 @@ public class WristSubsystem extends SubsystemBase {
     private SparkMaxPIDController wristPID;
     private double setpoint;
     public GenericEntry wristMotorSetpoint;
+    public GenericEntry speed;
+    public final float maxValue;
+    public final float minValue;
     
     public WristSubsystem() {
+
+        maxValue = 57f;
+        minValue = -45f;
 
         wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate);
         wristPID = wristMotor.getPIDController();
@@ -27,8 +33,8 @@ public class WristSubsystem extends SubsystemBase {
         wristMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        wristMotor.setSoftLimit(SoftLimitDirection.kForward, -1);
-        wristMotor.setSoftLimit(SoftLimitDirection.kReverse, 1);
+        wristMotor.setSoftLimit(SoftLimitDirection.kForward, maxValue);
+        wristMotor.setSoftLimit(SoftLimitDirection.kReverse, minValue);
         wristEncoder.setPosition(0);
         wristPID.setP(0.1);
         wristPID.setI(1e-4);
@@ -39,6 +45,7 @@ public class WristSubsystem extends SubsystemBase {
         wristMotor.burnFlash();
         setpoint = 0;
         wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
+        speed =Shuffleboard.getTab("setpoints").add("speed", 1).getEntry();
     }
 
     public void setWristPosition(Double setpoint) {
@@ -49,14 +56,18 @@ public class WristSubsystem extends SubsystemBase {
     }
     public void wristUp() {
 
-        setpoint -= Constants.WristConstants.wristRotationSpeed; 
-        wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        if (setpoint > wristMotor.getSoftLimit(SoftLimitDirection.kReverse)) {
+            setpoint -= speed.getDouble(0); 
+            wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        }
     }
 
     public void wristDown() {
 
-        setpoint += Constants.WristConstants.wristRotationSpeed; 
-        wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        if (setpoint < wristMotor.getSoftLimit(SoftLimitDirection.kForward)) {
+            setpoint += speed.getDouble(0); 
+            wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        }
     }
 
     public void wristStop() {
