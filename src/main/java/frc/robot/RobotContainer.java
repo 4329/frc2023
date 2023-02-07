@@ -275,14 +275,9 @@ public class RobotContainer {
       if (pathFile.isFile() && pathFile.getName().endsWith(".path")) {
 
         String name = pathFile.getName().replace(".path", "");
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath(name,
-            new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-        // System.out.println("trajectory
-        // is_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-        // " + trajectory);
-
-        m_chooser.addOption(name, swerveAutoBuilder.fullAuto(trajectory));
-        // System.out.println("added " + pathFile + " as an auto option");
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath(name, new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
+        m_chooser.addOption(name, new SequentialCommandGroup(swerveAutoBuilder.fullAuto(trajectory), new BalanceCommand(m_robotDrive).withTimeout(10)));
+        System.out.println("added " + pathFile + " as an auto option");
 
       }
     }

@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,11 +15,12 @@ public class BalanceCommand extends CommandBase{
     Drivetrain drivetrain;
 
     private double roll;
+    private PIDController balancePID;
 
     public BalanceCommand(Drivetrain drivetrain) {
 
         this.drivetrain = drivetrain;
-        addRequirements(drivetrain);
+        // addRequirements(drivetrain);
     }
 
     @Override

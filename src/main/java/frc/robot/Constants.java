@@ -103,8 +103,8 @@ public final class Constants {
     public static final double[] kKeepAnglePID = { 0.550, 0, 0 };
 
     public static final double maxRampRoll = 15;
-    public static final double maxRampDeviation = 0.1;
-    public static final double maxRampSpeed = 0.5;
+    public static final double maxRampDeviation = 0.15;
+    public static final double maxRampSpeed = 0.4;
   }
 
   /**
