@@ -44,10 +44,13 @@ import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.PinchCommand;
 import frc.robot.commands.ReleaseCommand;
 import frc.robot.commands.ResetOdometryCommand;
+import frc.robot.commands.WristRotateDownCommand;
+import frc.robot.commands.WristRotateUpCommand;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
+import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.MathUtils;
 
@@ -59,6 +62,7 @@ public class RobotContainer {
   GenericEntry pid;
   // The robot's subsystems
   private final Drivetrain m_robotDrive;
+  private final WristSubsystem wristSubsystem;
   // private final TrackingTurretSubsystem trackingTurretSubsystem;
   // The driver's controllers
 
@@ -86,6 +90,8 @@ public class RobotContainer {
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
   private Command simpleAuto;
+  private final WristRotateUpCommand wristRotateUpCommand;
+  private final WristRotateDownCommand wristRotateDownCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -105,6 +111,7 @@ public class RobotContainer {
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
+    wristSubsystem = new WristSubsystem();
 
     m_chooser = new SendableChooser<>();
 
@@ -127,6 +134,8 @@ public class RobotContainer {
     extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, operatorController);
     armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
     armUnrotateCommand = new ArmUnrotateCommand(armRotationSubsystem);
+    wristRotateUpCommand = new WristRotateUpCommand(wristSubsystem);
+    wristRotateDownCommand = new WristRotateDownCommand(wristSubsystem);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
@@ -210,8 +219,8 @@ public class RobotContainer {
     driverController.start().whileTrue(exampleCommand);
     driverController.back().whileTrue(exampleCommand);
 
-    driverController.a().whileTrue(exampleCommand);
-    driverController.b().whileTrue(exampleCommand);
+    driverController.a().whileTrue(wristRotateUpCommand);
+    driverController.b().whileTrue(wristRotateDownCommand);
     driverController.x().whileTrue(exampleCommand);
     driverController.y().whileTrue(exampleCommand);
 
