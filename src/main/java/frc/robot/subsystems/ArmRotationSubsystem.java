@@ -129,4 +129,13 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotorSetpoint.setDouble(setpoint);
         pidGraph.setDouble(armEncoder.getPosition());
     }
+
+    public ArmHeight armLevel() {
+        if (setpoint > 8) {
+            return ArmHeight.HIGH;
+        } else {
+            //^^ Change this line to an else if when we add a low level intake/outtake setpoint
+            return ArmHeight.MID;
+        }
+    }
 }
