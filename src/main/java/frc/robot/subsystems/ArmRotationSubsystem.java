@@ -125,6 +125,11 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor1.set(0);
     }
 
+    public void armsetpointZero() {
+
+        setpoint = 0;
+    }
+
     public boolean armAtSetpoint() {
 
         return false;
@@ -139,9 +144,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-
         armMotorSetpoint.setDouble(setpoint);
         pidGraph.setDouble(armEncoder.getPosition());
+        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
 
     
