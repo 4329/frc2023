@@ -24,6 +24,14 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public final float maxValue;
     public final float minValue;
 
+    public enum ArmHeight {
+        HIGH,
+        MID,
+        LOW
+    }
+
+    public ArmHeight armheight;
+
     public ArmRotationSubsystem() {
 
         maxValue = 10f;
@@ -56,8 +64,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
         setpoint = 0;
 
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
-        armsetpointtois = Shuffleboard.getTab("setpoints").add("arm setpoint graph", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
-        
+        armsetpointtois = Shuffleboard.getTab("setpoints").add("arm setpoint graph", 0)
+                .withWidget(BuiltInWidgets.kGraph).getEntry();
+
     }
 
     public void setArmPosition(double setpoint) {
@@ -72,19 +81,35 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public void armRotate() {
 
         if (setpoint > minValue) {
-            setpoint += armRotationSpeed; 
+            setpoint += armRotationSpeed;
             armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
-    public void armUnrotate(){
+
+    public void armUnrotate() {
 
         if (setpoint < maxValue) {
 
-            setpoint -= armRotationSpeed; 
+            setpoint -= armRotationSpeed;
             armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
-    public void stop(){
+
+    public void highArmPosition() {
+
+        setpoint = 9;
+        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        armheight = ArmHeight.HIGH;
+    }
+
+    public void midArmPosition() {
+
+        setpoint = 7.75;
+        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        armheight = ArmHeight.MID;
+    }
+
+    public void stop() {
         armMotor1.set(0);
     }
 
@@ -106,5 +131,3 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
 }
-
-
