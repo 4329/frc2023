@@ -74,8 +74,8 @@ public class RobotContainer {
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final BalanceCommand balanceCommand;
-  private final MoveArmCommand armToFive;
-  private final MoveArmCommand armToZero;
+  private final MoveArmCommand highArmCommand;
+  private final MoveArmCommand midArmCommand;
   private final ArmRotationSubsystem armRotationSubsystem;
   private final ArmExtensionSubsystem armExtensionSubsystem;
   private final ClawSubsystem clawSubsystem;
@@ -122,8 +122,8 @@ public class RobotContainer {
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
-    armToFive = new MoveArmCommand(armRotationSubsystem, 9);
-    armToZero = new MoveArmCommand(armRotationSubsystem, 7.75);
+    highArmCommand = new MoveArmCommand(armRotationSubsystem, 9);
+    midArmCommand = new MoveArmCommand(armRotationSubsystem, 7.75);
     
     clawSubsystem = new ClawSubsystem(colorDetector);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
@@ -237,8 +237,8 @@ public class RobotContainer {
     operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 10));
     operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
 
-    operatorController.a().onTrue(armToFive);
-    operatorController.b().onTrue(armToZero);
+    operatorController.a().onTrue(highArmCommand);
+    operatorController.b().onTrue(midArmCommand);
     operatorController.x().whileTrue(intakeCommand);
     operatorController.y().whileTrue(outtakeCommand);
 
