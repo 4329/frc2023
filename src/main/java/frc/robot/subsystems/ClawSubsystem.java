@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utilities.SparkFactory;
+import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ColorDetector.FieldElement;
 
 public class ClawSubsystem extends SubsystemBase {
@@ -21,6 +22,7 @@ public class ClawSubsystem extends SubsystemBase {
     private DoubleSolenoid solenoid;
     private ColorDetector colorDetector;
     private GenericEntry clawOpen;
+    private ArmRotationSubsystem armRotationSubsystem;
 
     public ClawSubsystem(ColorDetector colorDetector) {
 
@@ -43,9 +45,32 @@ public class ClawSubsystem extends SubsystemBase {
     public void outtake() {
         double reverseSpeed;
         if (colorDetector.detectElement() == FieldElement.CUBE) {
-            reverseSpeed = 0.2;
+            if (armRotationSubsystem.armheight == ArmRotationSubsystem.ArmHeight.HIGH) {
+                reverseSpeed = 0.45;
+            }
+            // This is for later when we add low level
+            /*
+             * else if(armRotationSubsystem.armLevel() == ArmHeight.MID){
+             * reverseSpeed = 0.2;
+             * }
+             */
+            else {
+                reverseSpeed = 0.2;
+            }
+
         } else {
-            reverseSpeed = 0.6;
+            if (armRotationSubsystem.armheight == ArmRotationSubsystem.ArmHeight.HIGH) {
+                reverseSpeed = 0.43;
+            }
+
+            /*
+             * else if(armRotationSubsystem.armLevel() == ArmHeight.MID){
+             * reverseSpeed = 0.15;
+             * }
+             */
+            else {
+                reverseSpeed = 0.15;
+            }
         }
         leftMotor.set(reverseSpeed);
         rightMotor.set(reverseSpeed);
