@@ -6,6 +6,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,13 +20,14 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private SparkMaxPIDController armPID;
     private double setpoint;
     public GenericEntry armMotorSetpoint;
+    public GenericEntry armsetpointtois;
     public final float maxValue;
     public final float minValue;
 
     public ArmRotationSubsystem() {
 
-        maxValue = 1f;
-        minValue = -10f;
+        maxValue = 10f;
+        minValue = 0f;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
         armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
@@ -44,7 +46,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor1.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         armMotor1.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
         armPID.setP(0.1);
-        armPID.setI(1e-4);
+        armPID.setI(0);
         armPID.setD(1);
         armPID.setIZone(0);
         armPID.setFF(0);
@@ -54,6 +56,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         setpoint = 0;
 
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
+        armsetpointtois = Shuffleboard.getTab("setpoints").add("arm setpoint graph", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
         
     }
 
@@ -69,7 +72,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public void armRotate() {
 
         if (setpoint > minValue) {
-            setpoint -= armRotationSpeed; 
+            setpoint += armRotationSpeed; 
             armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
@@ -77,12 +80,17 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         if (setpoint < maxValue) {
 
-            setpoint += armRotationSpeed; 
+            setpoint -= armRotationSpeed; 
             armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
     public void stop(){
         armMotor1.set(0);
+    }
+
+    public void armsetpointZero() {
+
+        setpoint = 0;
     }
 
     public boolean armAtSetpoint() {
@@ -94,6 +102,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public void periodic() {
 
         armMotorSetpoint.setDouble(setpoint);
+        armsetpointtois.setDouble(armEncoder.getPosition());
+        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
 }
 
