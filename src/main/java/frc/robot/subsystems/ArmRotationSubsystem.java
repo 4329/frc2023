@@ -23,14 +23,13 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public GenericEntry armsetpointtois;
     public final float maxValue;
     public final float minValue;
-
     public enum ArmHeight {
         HIGH,
         MID,
         LOW
     }
 
-    public ArmHeight armheight;
+    public ArmHeight armheight = ArmHeight.LOW;
 
     public ArmRotationSubsystem() {
 
@@ -95,14 +94,14 @@ public class ArmRotationSubsystem extends SubsystemBase {
         }
     }
 
-    public void highArmPosition() {
+    public void highArmPosition(){
 
         setpoint = 9;
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         armheight = ArmHeight.HIGH;
     }
 
-    public void midArmPosition() {
+    public void midArmPosition(){
 
         setpoint = 7.75;
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
@@ -131,3 +130,5 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
 }
+
+
