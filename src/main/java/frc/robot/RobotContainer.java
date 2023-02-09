@@ -39,6 +39,7 @@ import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendRetractCommand;
 import frc.robot.commands.HighArmCommand;
+import frc.robot.commands.LowArmCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.MidArmCommand;
 import frc.robot.commands.MoveArmCommand;
@@ -75,6 +76,7 @@ public class RobotContainer {
   private final MoveArmCommand armToSetpoint;
   private final HighArmCommand highArmCommand;
   private final MidArmCommand midArmCommand;
+  private final LowArmCommand lowArmCommand;
   private final ArmRotationSubsystem armRotationSubsystem;
   private final ArmExtensionSubsystem armExtensionSubsystem;
   private final ClawSubsystem clawSubsystem;
@@ -122,8 +124,9 @@ public class RobotContainer {
     armToSetpoint = new MoveArmCommand(armRotationSubsystem, 9);
     highArmCommand = new HighArmCommand(armRotationSubsystem);
     midArmCommand = new MidArmCommand(armRotationSubsystem);
+    lowArmCommand = new LowArmCommand(armRotationSubsystem);
 
-    clawSubsystem = new ClawSubsystem(colorDetector);
+    clawSubsystem = new ClawSubsystem(colorDetector, armRotationSubsystem);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem);
     pinchCommand = new PinchCommand(clawSubsystem);
@@ -229,7 +232,7 @@ public class RobotContainer {
     operatorController.leftBumper().whileTrue(pinchCommand);
     operatorController.rightBumper().whileTrue(releaseCommand);
 
-    operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 10));
+    operatorController.start().whileTrue(lowArmCommand);
     operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
 
     operatorController.a().onTrue(highArmCommand);

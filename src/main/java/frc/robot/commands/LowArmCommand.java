@@ -6,14 +6,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
 
-public class MidArmCommand extends CommandBase {
+public class LowArmCommand extends CommandBase {
 
     private ArmRotationSubsystem armSubsystem;
 
-    public MidArmCommand(ArmRotationSubsystem armSubsystem) {
+    public LowArmCommand(ArmRotationSubsystem armSubsystem) {
 
         this.armSubsystem = armSubsystem;
-
+        
         addRequirements(armSubsystem);
         // armSetpoint = Shuffleboard.getTab("setpoints").add("arm setpoint", 7.75).getEntry();
     }
@@ -21,7 +21,7 @@ public class MidArmCommand extends CommandBase {
     @Override
     public void initialize() {
 
-        armSubsystem.setArmPosition(ArmHeight.MID);
+        armSubsystem.setArmPosition(ArmHeight.LOW);
 
     }
 
@@ -29,6 +29,6 @@ public class MidArmCommand extends CommandBase {
     public boolean isFinished() {
 
         return true;
-
+        
     }
 }

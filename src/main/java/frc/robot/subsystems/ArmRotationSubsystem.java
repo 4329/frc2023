@@ -24,6 +24,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public final float maxValue;
     public final float minValue;
 
+    public final double highPos;
+    public final double midPos;
+    public final double lowPos;
     public enum ArmHeight {
         HIGH,
         MID,
@@ -36,6 +39,10 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         maxValue = 28f;
         minValue = 0f;
+
+        highPos = 9;
+        midPos = 7.75;
+        lowPos = 0;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
         armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
@@ -53,12 +60,12 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armEncoder.setPosition(0);
         armMotor1.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         armMotor1.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
-        armPID.setP(0.1);
-        armPID.setI(1e-4);
-        armPID.setD(1);
+        armPID.setP(0.2);
+        armPID.setI(0);
+        armPID.setD(0);
         armPID.setIZone(0);
         armPID.setFF(0);
-        armPID.setOutputRange(-1, 1);
+        armPID.setOutputRange(-0.05, 1);
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;
@@ -79,7 +86,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     public void armRotate() {
 
-        if (setpoint > minValue) {
+        if (setpoint < maxValue) {
             setpoint += armRotationSpeed;
             armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
@@ -87,25 +94,31 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     public void armUnrotate() {
 
-        if (setpoint < maxValue) {
+        if (setpoint > minValue) {
 
             setpoint -= armRotationSpeed;
             armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
+    
+    private void calcEnums() {
 
-    public void highArmPosition() {
+        if (armheight == ArmHeight.HIGH) {
 
-        setpoint = 9;
-        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-        armheight = ArmHeight.HIGH;
+            setpoint = highPos;
+        } else if (armheight == ArmHeight.MID) {
+            
+            setpoint = midPos;
+        } else if (armheight == ArmHeight.LOW) {
+
+            setpoint = lowPos;
+        }
     }
 
-    public void midArmPosition() {
+    public void setArmPosition(ArmHeight armheight) {
 
-        setpoint = 7.75;
-        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-        armheight = ArmHeight.MID;
+        this.armheight = armheight;
+        calcEnums();
     }
 
     public void stop() {
@@ -125,6 +138,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
 
         armMotorSetpoint.setDouble(setpoint);
         pidGraph.setDouble(armEncoder.getPosition());

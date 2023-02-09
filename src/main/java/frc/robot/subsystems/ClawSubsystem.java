@@ -25,7 +25,7 @@ public class ClawSubsystem extends SubsystemBase {
     private GenericEntry clawOpen;
     private ArmRotationSubsystem armRotationSubsystem;
 
-    public ClawSubsystem(ColorDetector colorDetector) {
+    public ClawSubsystem(ColorDetector colorDetector, ArmRotationSubsystem armRotationSubsystem) {
 
         clawOpen = Shuffleboard.getTab("setpoints").add("Claw is Forward", true).getEntry();
 
@@ -33,6 +33,8 @@ public class ClawSubsystem extends SubsystemBase {
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
         this.colorDetector = colorDetector;
+        this.armRotationSubsystem = armRotationSubsystem;
+        rightMotor.setInverted(true);
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
     }

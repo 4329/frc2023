@@ -26,7 +26,7 @@ public class MoveArmCommand extends CommandBase {
     @Override
     public boolean isFinished() {
 
-        return armSubsystem.armAtSetpoint();
+        return true;
         
     }
 }
