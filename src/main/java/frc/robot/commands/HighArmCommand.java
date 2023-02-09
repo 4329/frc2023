@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmRotationSubsystem;
+import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
 
 public class HighArmCommand extends CommandBase {
 
@@ -20,14 +21,14 @@ public class HighArmCommand extends CommandBase {
     @Override
     public void initialize() {
 
-        armSubsystem.highArmPosition();
+        armSubsystem.setArmPosition(ArmHeight.HIGH);
 
     }
 
     @Override
     public boolean isFinished() {
 
-        return armSubsystem.armAtSetpoint();
+        return true;
         
     }
 }

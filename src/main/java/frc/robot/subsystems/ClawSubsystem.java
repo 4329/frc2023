@@ -25,12 +25,13 @@ public class ClawSubsystem extends SubsystemBase {
     private GenericEntry odsilj;
     private ArmRotationSubsystem armRotationSubsystem;
 
-    public ClawSubsystem(ColorDetector colorDetector) {
+    public ClawSubsystem(ColorDetector colorDetector, ArmRotationSubsystem armRotationSubsystem) {
 
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
         this.colorDetector = colorDetector;
+        this.armRotationSubsystem = armRotationSubsystem;
         rightMotor.setInverted(true);
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
