@@ -232,7 +232,7 @@ public class RobotContainer {
     operatorController.leftBumper().whileTrue(pinchCommand);
     operatorController.rightBumper().whileTrue(releaseCommand);
 
-    operatorController.start().whileTrue(lowArmCommand);
+    operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 275));
     operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
 
     operatorController.a().onTrue(highArmCommand);

@@ -23,8 +23,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public ArmExtensionSubsystem() {
 
-        maxValue = 200f;
-        minValue = -200f;
+        maxValue = 300f;
+        minValue = 0f;
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
         extensionPID = extensionMotor.getPIDController();
@@ -38,7 +38,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         extensionMotor.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
         extensionPID = extensionMotor.getPIDController();
-        extensionPID.setP(0.1);
+        extensionPID.setP(4);
         extensionPID.setI(1e-4);
         extensionPID.setD(1);
         extensionPID.setIZone(0);
