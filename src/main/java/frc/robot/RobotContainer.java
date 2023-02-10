@@ -38,6 +38,7 @@ import frc.robot.commands.CoastCommand;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendRetractCommand;
+import frc.robot.commands.GrabAndPlonkCommand;
 import frc.robot.commands.HighArmCommand;
 import frc.robot.commands.LowArmCommand;
 import frc.robot.commands.IntakeCommand;
@@ -86,6 +87,7 @@ public class RobotContainer {
   private final ClawSubsystem clawSubsystem;
   private final IntakeCommand intakeCommand;
   private final OuttakeCommand outtakeCommand;
+  private final GrabAndPlonkCommand grabAndPlonkCommand;
   private final PinchCommand pinchCommand;
   private final ReleaseCommand releaseCommand;
   private final ColorDetector colorDetector;
@@ -109,15 +111,12 @@ public class RobotContainer {
     pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph)
         .withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
     m_robotDrive = drivetrain;
-    colorDetector = new ColorDetector();
 
     initializeCamera();
 
-    armRotationSubsystem = new ArmRotationSubsystem();
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
-    wristSubsystem = new WristSubsystem();
 
     m_chooser = new SendableChooser<>();
 
@@ -126,19 +125,26 @@ public class RobotContainer {
         drivetrain);
     resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)),
         drivetrain);
+
+    //Initializing Subsystems
+    armRotationSubsystem = new ArmRotationSubsystem();
+    armExtensionSubsystem = new ArmExtensionSubsystem();
+    wristSubsystem = new WristSubsystem();
+    colorDetector = new ColorDetector();
+    clawSubsystem = new ClawSubsystem(colorDetector, armRotationSubsystem);
+
+    //Initializing Commands
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
     armToSetpoint = new MoveArmCommand(armRotationSubsystem, 9);
     highArmCommand = new HighArmCommand(armRotationSubsystem);
     midArmCommand = new MidArmCommand(armRotationSubsystem);
     lowArmCommand = new LowArmCommand(armRotationSubsystem);
-
-    clawSubsystem = new ClawSubsystem(colorDetector, armRotationSubsystem);
+    grabAndPlonkCommand = new GrabAndPlonkCommand(colorDetector, clawSubsystem);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem);
     pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
-    armExtensionSubsystem = new ArmExtensionSubsystem();
     extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, operatorController);
     armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
     armUnrotateCommand = new ArmUnrotateCommand(armRotationSubsystem);
@@ -247,7 +253,7 @@ public class RobotContainer {
     operatorController.a().onTrue(highArmCommand);
     operatorController.b().onTrue(midArmCommand);
     operatorController.x().whileTrue(intakeCommand);
-    operatorController.y().whileTrue(outtakeCommand);
+    operatorController.y().whileTrue(grabAndPlonkCommand);
 
     operatorController.povUp().whileTrue(armRotateCommand);
     operatorController.povDown().whileTrue(armUnrotateCommand);

@@ -24,6 +24,7 @@ public class ClawSubsystem extends SubsystemBase {
     private GenericEntry openClosed;
     private GenericEntry odsilj;
     private ArmRotationSubsystem armRotationSubsystem;
+    public boolean whaterver;
 
     public ClawSubsystem(ColorDetector colorDetector, ArmRotationSubsystem armRotationSubsystem) {
 
@@ -37,6 +38,55 @@ public class ClawSubsystem extends SubsystemBase {
         rightMotor.setIdleMode(IdleMode.kBrake);
         openClosed = Shuffleboard.getTab("setpoints").add("Claw is Open", true).getEntry();
         odsilj = Shuffleboard.getTab("setpoints").add("expelSpeed", 0.1).getEntry();
+    }
+
+    public void grabAndPlonk(double distance) {
+
+        if (distance < 200) {
+
+            double speed = -0.2;
+            leftMotor.set(speed);
+            rightMotor.set(speed);
+            whaterver = true;
+        } else {
+
+            whaterver = false;
+            double reverseSpeed;
+            if (colorDetector.detectElement() == FieldElement.CUBE) {
+
+                if (armRotationSubsystem.armheight == ArmRotationSubsystem.ArmHeight.HIGH) {
+
+                    reverseSpeed = 0.45;
+                } else {
+                    reverseSpeed = 0.2;
+                }
+
+            } else {
+
+                // This is for later when we add low level
+                /*
+                 * else if(armRotationSubsystem.armLevel() == ArmHeight.MID){
+                 * reverseSpeed = 0.2;
+                 * }
+                 */
+                if (armRotationSubsystem.armheight == ArmRotationSubsystem.ArmHeight.HIGH) {
+
+                    reverseSpeed = 0.43;
+                }
+
+                /*
+                 * else if(armRotationSubsystem.armLevel() == ArmHeight.MID){
+                 * reverseSpeed = 0.15;
+                 * }
+                 */
+                else {
+
+                    reverseSpeed = 0.15;
+                }
+            }
+            leftMotor.set(reverseSpeed);
+            rightMotor.set(reverseSpeed);
+        }
     }
 
     public void intake() {
