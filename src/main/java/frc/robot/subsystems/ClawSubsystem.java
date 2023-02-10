@@ -52,13 +52,13 @@ public class ClawSubsystem extends SubsystemBase {
                 reverseSpeed = 0.45;
             }
             // This is for later when we add low level
-            /*
-             * else if(armRotationSubsystem.armLevel() == ArmHeight.MID){
-             * reverseSpeed = 0.2;
-             * }
-             */
+            
+              else if(armRotationSubsystem.armheight == ArmRotationSubsystem.ArmHeight.MID){
+              reverseSpeed = 0.2;
+              }
+             
             else {
-                reverseSpeed = 0.2;
+                reverseSpeed = 0.15;
             }
 
         } else {
@@ -66,13 +66,12 @@ public class ClawSubsystem extends SubsystemBase {
                 reverseSpeed = 0.43;
             }
 
-            /*
-             * else if(armRotationSubsystem.armLevel() == ArmHeight.MID){
-             * reverseSpeed = 0.15;
-             * }
-             */
-            else {
+            else if(armRotationSubsystem.armheight == ArmRotationSubsystem.ArmHeight.MID){
                 reverseSpeed = 0.15;
+                }
+
+            else {
+                reverseSpeed = 0.1;
             }
         }
         leftMotor.set(reverseSpeed);
