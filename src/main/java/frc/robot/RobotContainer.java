@@ -33,6 +33,7 @@ import frc.robot.commands.ArmExtensionCommand;
 import frc.robot.commands.ArmRotateCommand;
 import frc.robot.commands.ArmUnrotateCommand;
 import frc.robot.commands.BalanceCommand;
+import frc.robot.commands.BopItTestItCommand;
 import frc.robot.commands.ChangeFieldOrientCommand;
 import frc.robot.commands.CoastCommand;
 import frc.robot.commands.DriveByController;
@@ -48,6 +49,7 @@ import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
+import frc.robot.subsystems.ZeroTestingSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.MathUtils;
 
@@ -85,7 +87,9 @@ public class RobotContainer {
   private final ExtendRetractCommand extendRetractCommand;
   private final CommandXboxController driverController;
   private final CommandXboxController operatorController;
+  private final ZeroTestingSubsystem zeroTestingSubsystem;
   private Command simpleAuto;
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -117,7 +121,7 @@ public class RobotContainer {
     balanceCommand = new BalanceCommand(drivetrain);
     armToFive = new MoveArmCommand(armRotationSubsystem, -5);
     armToZero = new MoveArmCommand(armRotationSubsystem, 0);
-    
+    zeroTestingSubsystem = new ZeroTestingSubsystem();
     clawSubsystem = new ClawSubsystem(colorDetector);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem);
@@ -211,7 +215,7 @@ public class RobotContainer {
     driverController.back().whileTrue(exampleCommand);
 
     driverController.a().whileTrue(exampleCommand);
-    driverController.b().whileTrue(exampleCommand);
+    driverController.b().whileTrue(new BopItTestItCommand(zeroTestingSubsystem));
     driverController.x().whileTrue(exampleCommand);
     driverController.y().whileTrue(exampleCommand);
 
