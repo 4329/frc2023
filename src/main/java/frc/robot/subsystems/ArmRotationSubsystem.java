@@ -61,7 +61,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armEncoder.setPosition(0);
         armMotor1.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         armMotor1.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
-        armPID.setP(0.2);
+        armPID.setP(0.5);
         armPID.setI(0);
         armPID.setD(0);
         armPID.setIZone(0);
@@ -144,7 +144,6 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotorSetpoint.setDouble(setpoint);
         armsetpointtois.setDouble(armEncoder.getPosition());
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-        armMotor1.set(whatIsThis.getDouble(0));
     }
 }
 
