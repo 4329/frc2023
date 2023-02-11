@@ -171,6 +171,11 @@ public final class Constants {
     public static final double armExtendSpeed = 0.05;
   }
 
+  public static final class WristConstants {
+    
+    public static final double wristRotationSpeed = 0.05;
+  }
+
   public static final class CANIDConstants {
 
     public static final int clawRight = 13;
@@ -178,5 +183,6 @@ public final class Constants {
     public static final int armRotation1 = 15;
     public static final int armRotation2 = 16;
     public static final int armExtension = 20;
+    public static final int wristRotate = 21;
   }
 }
