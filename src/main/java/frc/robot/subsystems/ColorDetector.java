@@ -65,6 +65,6 @@ public class ColorDetector extends SubsystemBase {
         if (kraigElement != null) {
             coneOrCube.setString(kraigElement.toString());
         }
-        proximity.setDouble(distance());
+        proximity.setDouble(colorSensorV3.getProximity());
     }
 }

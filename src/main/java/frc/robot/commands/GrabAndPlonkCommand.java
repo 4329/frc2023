@@ -40,4 +40,10 @@ public class GrabAndPlonkCommand extends CommandBase {
         }
     }
 
+    @Override
+    public void end(boolean interrupted) {
+       
+        clawSubsystem.stop();
+    }
+
 }

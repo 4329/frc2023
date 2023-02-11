@@ -25,6 +25,7 @@ public class ClawSubsystem extends SubsystemBase {
     private GenericEntry odsilj;
     private ArmRotationSubsystem armRotationSubsystem;
     public boolean whaterver;
+    private GenericEntry whateoiwbefEntry;
 
     public ClawSubsystem(ColorDetector colorDetector, ArmRotationSubsystem armRotationSubsystem) {
 
@@ -38,11 +39,12 @@ public class ClawSubsystem extends SubsystemBase {
         rightMotor.setIdleMode(IdleMode.kBrake);
         openClosed = Shuffleboard.getTab("setpoints").add("Claw is Open", true).getEntry();
         odsilj = Shuffleboard.getTab("setpoints").add("expelSpeed", 0.1).getEntry();
+        whateoiwbefEntry = Shuffleboard.getTab("RobotData").add("whatevertrue?", false).getEntry();
     }
 
     public void grabAndPlonk(double distance) {
 
-        if (distance < 200) {
+        if (distance < 300) {
 
             double speed = -0.2;
             leftMotor.set(speed);
@@ -146,5 +148,11 @@ public class ClawSubsystem extends SubsystemBase {
 
         solenoid.set(Value.kReverse);
         openClosed.setBoolean(true);
+    }
+
+    @Override
+    public void periodic() {
+
+        whateoiwbefEntry.setBoolean(whaterver);
     }
 }
