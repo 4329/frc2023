@@ -23,8 +23,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public ArmExtensionSubsystem() {
 
-        maxValue = 50f;
-        minValue = -2f;
+        maxValue = 200f;
+        minValue = -200f;
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
         extensionPID = extensionMotor.getPIDController();
@@ -56,20 +56,26 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     }
 
-    public void extend(double extendAmount) {
+    public void extend() {
 
         if (setpoint < maxValue) {
-            setpoint += extendAmount;
+            setpoint += Constants.ArmConstants.armExtendSpeed;
             extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
 
-    public void retract(double retractAmount) {
+    public void retract() {
 
         if (setpoint > minValue) {
-            setpoint -= retractAmount;
+            setpoint -= Constants.ArmConstants.armExtendSpeed;
             extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
+    }
+
+    public void resetSetpoint() {
+
+        setpoint = 0;
+        extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
 
     @Override
