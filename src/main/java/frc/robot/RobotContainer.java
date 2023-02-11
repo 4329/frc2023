@@ -42,6 +42,9 @@ import frc.robot.commands.HighArmCommand;
 import frc.robot.commands.LowArmCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.MidArmCommand;
+import frc.robot.commands.HighWristCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.LowWristCommand;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.PinchCommand;
@@ -49,6 +52,8 @@ import frc.robot.commands.ReleaseCommand;
 import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.WristRotateDownCommand;
 import frc.robot.commands.WristRotateUpCommand;
+import frc.robot.commands.WristToPositionCommand;
+import frc.robot.commands.WristZeroCommand;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -97,6 +102,8 @@ public class RobotContainer {
   private Command simpleAuto;
   private final WristRotateUpCommand wristRotateUpCommand;
   private final WristRotateDownCommand wristRotateDownCommand;
+
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -223,12 +230,12 @@ public class RobotContainer {
     driverController.leftBumper().onTrue(exampleCommand);
     driverController.rightBumper().onTrue(changeFieldOrientCommand);
 
-    driverController.start().whileTrue(exampleCommand);
-    driverController.back().whileTrue(exampleCommand);
+    driverController.start().whileTrue(wristRotateUpCommand);
+    driverController.back().whileTrue(wristRotateDownCommand);
 
-    driverController.a().whileTrue(wristRotateUpCommand);
-    driverController.b().whileTrue(wristRotateDownCommand);
-    driverController.x().whileTrue(exampleCommand);
+    driverController.a().onTrue(new HighWristCommand(wristSubsystem));
+    driverController.b().onTrue(new LowWristCommand(wristSubsystem));
+    driverController.x().onTrue(new WristZeroCommand(wristSubsystem));
     driverController.y().whileTrue(exampleCommand);
 
     driverController.povUp().onTrue(resetOdometryCommandForward);

@@ -24,24 +24,25 @@ public class WristSubsystem extends SubsystemBase {
     
     public WristSubsystem() {
 
-        maxValue = 57f;
-        minValue = -45f;
+        maxValue = 30f;
+        minValue = -30f;
 
         wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate);
         wristPID = wristMotor.getPIDController();
         wristEncoder = wristMotor.getEncoder();
-        wristMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        wristMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         wristMotor.setSoftLimit(SoftLimitDirection.kForward, maxValue);
         wristMotor.setSoftLimit(SoftLimitDirection.kReverse, minValue);
         wristEncoder.setPosition(0);
-        wristPID.setP(0.1);
-        wristPID.setI(1e-4);
-        wristPID.setD(1);
+        wristPID.setP(0.2);
+        wristPID.setI(0);
+        wristPID.setD(0);
         wristPID.setIZone(0);
         wristPID.setFF(0);
         wristPID.setOutputRange(-1, 1);
+        wristPID.setSmartMotionAllowedClosedLoopError(0.3, 0);
         wristMotor.burnFlash();
         setpoint = 0;
         wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
@@ -56,7 +57,7 @@ public class WristSubsystem extends SubsystemBase {
     }
     public void wristUp() {
 
-        if (setpoint > wristMotor.getSoftLimit(SoftLimitDirection.kReverse)) {
+        if (setpoint > minValue) {
             setpoint -= speed.getDouble(0); 
             wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
@@ -64,7 +65,7 @@ public class WristSubsystem extends SubsystemBase {
 
     public void wristDown() {
 
-        if (setpoint < wristMotor.getSoftLimit(SoftLimitDirection.kForward)) {
+        if (setpoint < maxValue) {
             setpoint += speed.getDouble(0); 
             wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
