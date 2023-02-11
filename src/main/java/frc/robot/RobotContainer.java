@@ -38,7 +38,10 @@ import frc.robot.commands.CoastCommand;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendRetractCommand;
+import frc.robot.commands.HighArmCommand;
+import frc.robot.commands.LowArmCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.MidArmCommand;
 import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.PinchCommand;
@@ -70,8 +73,10 @@ public class RobotContainer {
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final BalanceCommand balanceCommand;
-  private final MoveArmCommand armToFive;
-  private final MoveArmCommand armToZero;
+  private final MoveArmCommand armToSetpoint;
+  private final HighArmCommand highArmCommand;
+  private final MidArmCommand midArmCommand;
+  private final LowArmCommand lowArmCommand;
   private final ArmRotationSubsystem armRotationSubsystem;
   private final ArmExtensionSubsystem armExtensionSubsystem;
   private final ClawSubsystem clawSubsystem;
@@ -95,7 +100,8 @@ public class RobotContainer {
 
   public RobotContainer(Drivetrain drivetrain) {
 
-    pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
+    pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph)
+        .withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
     m_robotDrive = drivetrain;
     colorDetector = new ColorDetector();
 
@@ -115,10 +121,12 @@ public class RobotContainer {
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
-    armToFive = new MoveArmCommand(armRotationSubsystem, 5);
-    armToZero = new MoveArmCommand(armRotationSubsystem, 0);
-    
-    clawSubsystem = new ClawSubsystem(colorDetector);
+    armToSetpoint = new MoveArmCommand(armRotationSubsystem, 9);
+    highArmCommand = new HighArmCommand(armRotationSubsystem);
+    midArmCommand = new MidArmCommand(armRotationSubsystem);
+    lowArmCommand = new LowArmCommand(armRotationSubsystem);
+
+    clawSubsystem = new ClawSubsystem(colorDetector, armRotationSubsystem);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem);
     pinchCommand = new PinchCommand(clawSubsystem);
@@ -168,25 +176,24 @@ public class RobotContainer {
   private SwerveAutoBuilder createAutoBuilder() {
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-      m_robotDrive::getPose, // Pose2d supplier
-      m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-      Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-      new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation
+        m_robotDrive::getPose, // Pose2d supplier
+        m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+        Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+        new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation
                                                                            // error (used to create the X and Y PID
                                                                            // controllers)
-      new PIDConstants(Constants.AutoConstants.kPYController, 0.0, 0.0), // PID constants to correct for rotation
+        new PIDConstants(Constants.AutoConstants.kPYController, 0.0, 0.0), // PID constants to correct for rotation
                                                                            // error (used to create the rotation
                                                                            // controller)
-      m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
-      createEventMap(),
+        m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
+        createEventMap(),
         false, // Should the path be automatically mirrored depending on alliance color.
                // Optional, defaults to true
         m_robotDrive, // The drive subsystem. Used to properly set the requirements of path following
                       // commands
         clawSubsystem,
         armExtensionSubsystem,
-        armRotationSubsystem
-        );
+        armRotationSubsystem);
 
     return autoBuilder;
   }
@@ -225,33 +232,38 @@ public class RobotContainer {
     operatorController.leftBumper().whileTrue(pinchCommand);
     operatorController.rightBumper().whileTrue(releaseCommand);
 
-    operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 10));
+    operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 275));
     operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
 
-    operatorController.a().onTrue(armToFive);
-    operatorController.b().onTrue(armToZero);
+    operatorController.a().onTrue(highArmCommand);
+    operatorController.b().onTrue(midArmCommand);
     operatorController.x().whileTrue(intakeCommand);
     operatorController.y().whileTrue(outtakeCommand);
 
     operatorController.povUp().whileTrue(armRotateCommand);
     operatorController.povDown().whileTrue(armUnrotateCommand);
   }
-  //jonathan was here today 2/3/2023
+
+  // jonathan was here today 2/3/2023
   /* Pulls autos and configures the chooser */
   SwerveAutoBuilder swerveAutoBuilder;
+
   private void configureAutoChooser(Drivetrain drivetrain) {
 
     swerveAutoBuilder = createAutoBuilder();
     File pathPlannerDirectory = new File(Filesystem.getDeployDirectory(), "pathplanner");
-    for (File pathFile : pathPlannerDirectory.listFiles())  {
+    for (File pathFile : pathPlannerDirectory.listFiles()) {
 
       System.out.println(pathFile);
 
-      if (pathFile.isFile() && pathFile.getName().endsWith(".path")) {  
-        
+      if (pathFile.isFile() && pathFile.getName().endsWith(".path")) {
+
         String name = pathFile.getName().replace(".path", "");
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath(name, new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-        // System.out.println("trajectory is_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________ " + trajectory);
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath(name,
+            new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
+        // System.out.println("trajectory
+        // is_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+        // " + trajectory);
 
         m_chooser.addOption(name, swerveAutoBuilder.fullAuto(trajectory));
         // System.out.println("added " + pathFile + " as an auto option");
@@ -259,7 +271,7 @@ public class RobotContainer {
       }
     }
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(2, 1).withPosition(0, 0);
-  } 
+  }
 
   public void autonomousInit() {
 
@@ -278,11 +290,10 @@ public class RobotContainer {
     pid.setDouble(MathUtils.inchesToMeters(m_robotDrive.getPose().getX()));
   }
 
-
   public void teleopPeriodic() {
 
-
   }
+
   /**
    * @return Selected Auto
    */
