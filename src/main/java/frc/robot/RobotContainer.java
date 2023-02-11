@@ -236,7 +236,7 @@ public class RobotContainer {
     driverController.a().onTrue(new HighWristCommand(wristSubsystem));
     driverController.b().onTrue(new LowWristCommand(wristSubsystem));
     driverController.x().onTrue(new WristZeroCommand(wristSubsystem));
-    driverController.y().whileTrue(exampleCommand);
+    driverController.y().whileTrue(balanceCommand);
 
     driverController.povUp().onTrue(resetOdometryCommandForward);
     driverController.povDown().onTrue(resetOdometryCommandBackward);
@@ -276,7 +276,7 @@ public class RobotContainer {
 
         String name = pathFile.getName().replace(".path", "");
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(name, new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-        m_chooser.addOption(name, new SequentialCommandGroup(swerveAutoBuilder.fullAuto(trajectory), new BalanceCommand(m_robotDrive).withTimeout(10)));
+        // m_chooser.addOption(name, new SequentialCommandGroup(swerveAutoBuilder.fullAuto(trajectory), new BalanceCommand(m_robotDrive).withTimeout(10)));
         System.out.println("added " + pathFile + " as an auto option");
 
       }
