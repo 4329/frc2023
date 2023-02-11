@@ -292,6 +292,7 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(m_drive);
     armRotationSubsystem.armsetpointZero();
     armExtensionSubsystem.armsetpointZero();
+
   }
 
   public void autonomousPeriodic() {

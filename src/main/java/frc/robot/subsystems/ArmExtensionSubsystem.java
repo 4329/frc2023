@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utilities.SparkFactory;
 
-public class ArmExtensionSubsystem extends SubsystemBase {
+public class ArmExtensionSubsystem extends SubsystemBase implements ResetableSubsystem {
 
     private CANSparkMax extensionMotor;
     private RelativeEncoder extensionEncoder;
@@ -81,6 +81,26 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     public void periodic() {
 
         extensionMotorSetpoint.setDouble(setpoint);
+    }
+
+    @Override
+    public void moveToZero() {
+
+        extensionMotor.setSmartCurrentLimit(5);
+        extensionMotor.set(-0.05);
+        
+
+    }
+
+    @Override
+    public void resetSubsystem() {
+
+        setpoint = 0;
+        extensionMotor.set(0);
+        extensionEncoder.setPosition(0);
+        extensionMotor.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
+        extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        
     }
     
 }
