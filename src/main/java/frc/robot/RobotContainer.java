@@ -276,7 +276,7 @@ public class RobotContainer {
 
         String name = pathFile.getName().replace(".path", "");
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(name, new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-        // m_chooser.addOption(name, new SequentialCommandGroup(swerveAutoBuilder.fullAuto(trajectory), new BalanceCommand(m_robotDrive).withTimeout(10)));
+        // m_chooser.addOption(name, new SequentialCommandGroup(swerveAutoBuilder.fullAuto(trajectory), new BalanceCommand(drivetrain).withTimeout(10)));
         System.out.println("added " + pathFile + " as an auto option");
 
       }

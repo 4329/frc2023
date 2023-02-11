@@ -15,85 +15,47 @@ public class BalanceCommand extends CommandBase{
 
     Drivetrain drivetrain;
 
-    private double roll;
     private PIDController balancePID;
-    public GenericEntry rollyes;
-    public GenericEntry jfldsa;
-    public GenericEntry[] klasd; 
-    public GenericEntry das;
-    public GenericEntry sd;
-    public GenericEntry lkadsfj;
-    public GenericEntry dsljf;
-    public GenericEntry lofjiodsajfoosiad;
+    public GenericEntry atSetpoint;
+    public GenericEntry dilfs;
+    public GenericEntry commandRuningdkj;
 
     public BalanceCommand(Drivetrain drivetrain) {
 
         this.drivetrain = drivetrain;
 
-        balancePID = new PIDController(Constants.AutoConstants.kPXController, 0, 0);
-        balancePID.setTolerance(1.0);
+        balancePID = new PIDController(0.03, 0, 0);
+        balancePID.setTolerance(1);
         balancePID.setSetpoint(0);
 
-        rollyes = Shuffleboard.getTab("sdaff").add("fsaed", 0).getEntry();
-        jfldsa = Shuffleboard.getTab("sdaff").add("asd", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-        klasd = new GenericEntry[] {
-            Shuffleboard.getTab("sdaff").add("update p", 0.03).getEntry(),
-            Shuffleboard.getTab("sdaff").add("update i", 0).getEntry(),
-            Shuffleboard.getTab("sdaff").add("update d", 0).getEntry()
-        };
-        das = Shuffleboard.getTab("sdaff").add("shuffleboard output", 0).getEntry();
-        sd = Shuffleboard.getTab("sdaff").add("yes", 1).getEntry();
-        lkadsfj = Shuffleboard.getTab("sdaff").add("atsetpoint", false).getEntry();
-        dsljf = Shuffleboard.getTab("sdaff").add("jselkif", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
-        lofjiodsajfoosiad = Shuffleboard.getTab("sdaff").add("veloocityjiojiod", 0).getEntry();
-        
         addRequirements(drivetrain);
+
+        atSetpoint = Shuffleboard.getTab("RobotData").add("lrafjrld", false).getEntry();
+        dilfs = Shuffleboard.getTab("RobotData").add("pos error", 0).getEntry();
+        commandRuningdkj = Shuffleboard.getTab("RobotData").add("rjeao", false).getEntry();
     }
 
     @Override
     public void initialize() {
-
+        commandRuningdkj.setBoolean(true);
     }
     
     @Override
     public void execute() {
 
-        if (jfldsa.getBoolean(false)) {
-
-            balancePID = new PIDController(klasd[0].getDouble(0), klasd[1].getDouble(0), klasd[2].getDouble(0));
-            balancePID.setTolerance(sd.getDouble(1));
-            balancePID.setSetpoint(0);
-            
-            System.out.println(balancePID.getP() + "wefaujlkfjnsoidadjfwiajofjweoajfoijao;fjoiajifoj;waeoifjiwoae;fjoiasj;iofsaej");
-        }
-
-        rollyes.setDouble(drivetrain.getRoll());
-
-        das.setDouble(balancePID.calculate(drivetrain.getRoll()));
-        dsljf.setDouble(balancePID.getPositionError());
-
-        lkadsfj.setBoolean(balancePID.atSetpoint());
-        lofjiodsajfoosiad.setDouble(balancePID.getVelocityError());
-
         if (!balancePID.atSetpoint()) {
             
-            drivetrain.drive(balancePID.calculate(drivetrain.getRoll()), 0, 0, false);
+            drivetrain.drive(balancePID.calculate(drivetrain.getRoll()), 0, 0, true);
         }
-        
-        // roll = drivetrain.getRoll() / Constants.DriveConstants.maxRampRoll;
-        
-        // if (Math.abs(roll) <= Constants.DriveConstants.maxRampDeviation || Math.abs(roll) >= Constants.DriveConstants.maxRampRoll + 5) {
-            
-        //     drivetrain.lock();
-        // } else {
-            
-        //     drivetrain.unlock();
 
-        //     // drivetrain.drive(Configrun.get(1, "rollDirection") * roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
+        else {
 
-        // }
+            drivetrain.lock();
+        }
+
+        atSetpoint.setBoolean(balancePID.atSetpoint());
+        dilfs.setDouble(balancePID.getPositionError());
     }
-
 
     @Override
     public boolean isFinished() {
@@ -105,6 +67,7 @@ public class BalanceCommand extends CommandBase{
     public void end(boolean interrupted) {
 
         drivetrain.unlock();
+        commandRuningdkj.setBoolean(false);
     }
 
 
