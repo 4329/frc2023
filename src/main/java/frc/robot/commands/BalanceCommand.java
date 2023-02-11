@@ -24,6 +24,7 @@ public class BalanceCommand extends CommandBase{
     public GenericEntry sd;
     public GenericEntry lkadsfj;
     public GenericEntry dsljf;
+    public GenericEntry lofjiodsajfoosiad;
 
     public BalanceCommand(Drivetrain drivetrain) {
 
@@ -31,6 +32,7 @@ public class BalanceCommand extends CommandBase{
 
         balancePID = new PIDController(Constants.AutoConstants.kPXController, 0, 0);
         balancePID.setTolerance(1.0);
+        balancePID.setSetpoint(0);
 
         rollyes = Shuffleboard.getTab("sdaff").add("fsaed", 0).getEntry();
         jfldsa = Shuffleboard.getTab("sdaff").add("asd", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
@@ -43,6 +45,7 @@ public class BalanceCommand extends CommandBase{
         sd = Shuffleboard.getTab("sdaff").add("yes", 1).getEntry();
         lkadsfj = Shuffleboard.getTab("sdaff").add("atsetpoint", false).getEntry();
         dsljf = Shuffleboard.getTab("sdaff").add("jselkif", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
+        lofjiodsajfoosiad = Shuffleboard.getTab("sdaff").add("veloocityjiojiod", 0).getEntry();
         
         addRequirements(drivetrain);
     }
@@ -58,21 +61,23 @@ public class BalanceCommand extends CommandBase{
         if (jfldsa.getBoolean(false)) {
 
             balancePID = new PIDController(klasd[0].getDouble(0), klasd[1].getDouble(0), klasd[2].getDouble(0));
-            balancePID.setTolerance(sd.getDouble(0));
+            balancePID.setTolerance(sd.getDouble(1));
+            balancePID.setSetpoint(0);
             
             System.out.println(balancePID.getP() + "wefaujlkfjnsoidadjfwiajofjweoajfoijao;fjoiajifoj;waeoifjiwoae;fjoiasj;iofsaej");
         }
 
         rollyes.setDouble(drivetrain.getRoll());
 
-        das.setDouble(balancePID.calculate(drivetrain.getRoll(), 0));
+        das.setDouble(balancePID.calculate(drivetrain.getRoll()));
         dsljf.setDouble(balancePID.getPositionError());
 
         lkadsfj.setBoolean(balancePID.atSetpoint());
+        lofjiodsajfoosiad.setDouble(balancePID.getVelocityError());
 
         if (!balancePID.atSetpoint()) {
             
-            drivetrain.drive(balancePID.calculate(drivetrain.getRoll(), 0), 0, 0, false);
+            drivetrain.drive(balancePID.calculate(drivetrain.getRoll()), 0, 0, false);
         }
         
         // roll = drivetrain.getRoll() / Constants.DriveConstants.maxRampRoll;
