@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.WristSubsystem;
 
-public class WristToPositionCommand extends InstantCommand {
+public abstract class WristToPositionCommand extends InstantCommand {
 
     WristSubsystem wristSubsystem;
     double setpoint;
