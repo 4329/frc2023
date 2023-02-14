@@ -83,7 +83,6 @@ public class RobotContainer {
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final BalanceCommand balanceCommand;
-  private final MoveArmCommand armToSetpoint;
   private final HighArmCommand highArmCommand;
   private final MidArmCommand midArmCommand;
   private final LowArmCommand lowArmCommand;
@@ -136,7 +135,6 @@ public class RobotContainer {
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
-    armToSetpoint = new MoveArmCommand(armRotationSubsystem, 9);
     highArmCommand = new HighArmCommand(armRotationSubsystem);
     midArmCommand = new MidArmCommand(armRotationSubsystem);
     lowArmCommand = new LowArmCommand(armRotationSubsystem);

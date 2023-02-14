@@ -172,7 +172,7 @@ public final class Constants {
 
   public static final class WristConstants {
     
-    public static final double wristRotationSpeed = 0.05;
+    public static final double wristRotationSpeed = 1;
   }
 
   public static final class CANIDConstants {

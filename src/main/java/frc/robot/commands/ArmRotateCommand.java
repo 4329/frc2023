@@ -5,28 +5,19 @@ import frc.robot.subsystems.ArmRotationSubsystem;
 
 
 public class ArmRotateCommand extends CommandBase {
-    private ArmRotationSubsystem armRotationSubsystem = null;
+
+    private ArmRotationSubsystem armRotationSubsystem;
 
     public ArmRotateCommand(ArmRotationSubsystem armRotationSubsystem) {
+
         this.armRotationSubsystem = armRotationSubsystem;
         addRequirements(armRotationSubsystem);
-    }
-
-    @Override
-    public void initialize() {
-
     }
 
     @Override
     public void execute() {
 
         armRotationSubsystem.armRotate();
-    }
-
-    @Override
-    public boolean isFinished() {
-
-        return false;
     }
 
     @Override

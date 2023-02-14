@@ -18,7 +18,6 @@ public class WristSubsystem extends SubsystemBase {
     private SparkMaxPIDController wristPID;
     private double setpoint;
     public GenericEntry wristMotorSetpoint;
-    public GenericEntry speed;
     public final float maxValue;
     public final float minValue;
     
@@ -46,7 +45,6 @@ public class WristSubsystem extends SubsystemBase {
         wristMotor.burnFlash();
         setpoint = 0;
         wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
-        speed =Shuffleboard.getTab("setpoints").add("speed", 1).getEntry();
     }
 
     public void setWristPosition(Double setpoint) {
@@ -58,7 +56,7 @@ public class WristSubsystem extends SubsystemBase {
     public void wristUp() {
 
         if (setpoint > minValue) {
-            setpoint -= speed.getDouble(0); 
+            setpoint -= Constants.WristConstants.wristRotationSpeed; 
             wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
@@ -66,7 +64,7 @@ public class WristSubsystem extends SubsystemBase {
     public void wristDown() {
 
         if (setpoint < maxValue) {
-            setpoint += speed.getDouble(0); 
+            setpoint += Constants.WristConstants.wristRotationSpeed; 
             wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
