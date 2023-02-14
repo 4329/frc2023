@@ -2,16 +2,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ArmRotationSubsystem;
+import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
 
 public abstract class MoveArmCommand extends InstantCommand {
 
     private ArmRotationSubsystem armSubsystem;
-    private double setpoint;
+    private ArmHeight armHeight;
 
-    public MoveArmCommand(ArmRotationSubsystem armSubsystem, double setpoint) {
+    public MoveArmCommand(ArmRotationSubsystem armSubsystem, ArmHeight armHeight) {
 
         this.armSubsystem = armSubsystem;
-        this.setpoint = setpoint;
+        this.armHeight = armHeight;
 
         addRequirements(armSubsystem);
     }
@@ -19,6 +20,6 @@ public abstract class MoveArmCommand extends InstantCommand {
     @Override
     public void initialize() {
 
-        armSubsystem.setArmPosition(setpoint);
+        armSubsystem.setArmPosition(armHeight);
     }
 }

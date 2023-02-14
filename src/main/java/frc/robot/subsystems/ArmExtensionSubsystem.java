@@ -59,7 +59,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     public void extend() {
 
         if (setpoint < maxValue) {
-            setpoint += Constants.ArmConstants.armExtendSpeed;
+            setpoint += Constants.ArmExtendConstants.armExtendSpeed;
             extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
@@ -67,7 +67,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     public void retract() {
 
         if (setpoint > minValue) {
-            setpoint -= Constants.ArmConstants.armExtendSpeed;
+            setpoint -= Constants.ArmExtendConstants.armExtendSpeed;
             extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }

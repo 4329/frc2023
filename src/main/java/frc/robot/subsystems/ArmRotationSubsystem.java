@@ -23,12 +23,14 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public GenericEntry armMotorSetpoint;
     public GenericEntry pidGraph;
 
-    public final float maxValue;
-    public final float minValue;
+    private final float maxValue;
+    private final float minValue;
 
-    public final double highPos;
-    public final double midPos;
-    public final double lowPos;
+    private final double highPos;
+    private final double midPos;
+    private final double lowPos;
+
+    public ArmHeight currentArmHeight;
 
     public enum ArmHeight {
         HIGH,
@@ -36,7 +38,6 @@ public class ArmRotationSubsystem extends SubsystemBase {
         LOW
     }
 
-    public ArmHeight armHeight;
 
     public ArmRotationSubsystem() {
 
@@ -76,23 +77,18 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
-
     }
 
-    public void setArmPosition(double setpoint) {
+    public void setArmPosition(ArmHeight armHeight) {
 
-        this.setpoint = setpoint;
-
-        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        this.currentArmHeight = armHeight;
+        calcEnums();
     }
-
-    private double armRotationSpeed = 0.03;
 
     public void armRotate() {
 
         if (setpoint < maxValue) {
-            setpoint += armRotationSpeed;
-            armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+            setpoint += Constants.ArmRotationConstants.armRotateSpeed;
         }
     }
 
@@ -100,51 +96,39 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         if (setpoint > minValue) {
 
-            setpoint -= armRotationSpeed;
-            armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+            setpoint -= Constants.ArmRotationConstants.armRotateSpeed;
         }
     }
 
     private void calcEnums() {
 
-        if (ArmHeight.HIGH.equals(armHeight)) {
+        if (ArmHeight.HIGH.equals(currentArmHeight)) {
 
             setpoint = highPos;
-        } else if (ArmHeight.MID.equals(armHeight)) {
+        } else if (ArmHeight.MID.equals(currentArmHeight)) {
 
             setpoint = midPos;
-        } else if (ArmHeight.LOW.equals(armHeight)) {
+        } else if (ArmHeight.LOW.equals(currentArmHeight)) {
 
             setpoint = lowPos;
         }
     }
 
-    public void setArmPosition(ArmHeight armHeight) {
-
-        this.armHeight = armHeight;
-        calcEnums();
-    }
-
-    public void stop() {
-        armMotor1.set(0);
-    }
-
-    public void armsetpointZero() {
+    public void resetSetpoint() {
 
         setpoint = 0;
     }
 
+    public void stop() {
+
+        armMotor1.set(0);
+    }
+    
     public boolean armAtSetpoint() {
 
         return false;
     }
-
-    public void resetSetpoint() {
-
-        setpoint = 0;
-        armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-    }
-
+    
     @Override
     public void periodic() {
 

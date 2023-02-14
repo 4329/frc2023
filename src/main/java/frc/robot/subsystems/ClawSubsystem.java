@@ -50,9 +50,9 @@ public class ClawSubsystem extends SubsystemBase {
 
         if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
 
-            if (ArmHeight.HIGH.equals(armRotationSubsystem.armHeight)) {
+            if (ArmHeight.HIGH.equals(armRotationSubsystem.currentArmHeight)) {
                 reverseSpeed = 0.45;
-            } /* This is for later when we add low level*/ else if (ArmHeight.MID.equals(armRotationSubsystem.armHeight)) {
+            } /* This is for later when we add low level*/ else if (ArmHeight.MID.equals(armRotationSubsystem.currentArmHeight)) {
 
                 reverseSpeed = 0.2;
             } else {
@@ -62,10 +62,10 @@ public class ClawSubsystem extends SubsystemBase {
 
         } else {
 
-            if (ArmHeight.HIGH.equals(armRotationSubsystem.armHeight)) {
+            if (ArmHeight.HIGH.equals(armRotationSubsystem.currentArmHeight)) {
 
                 reverseSpeed = 0.43;
-            } else if (ArmHeight.MID.equals(armRotationSubsystem.armHeight)) {
+            } else if (ArmHeight.MID.equals(armRotationSubsystem.currentArmHeight)) {
 
                 reverseSpeed = 0.15;
             } else {

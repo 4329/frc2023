@@ -165,9 +165,14 @@ public final class Constants {
     public static final double confidenceLevel = 1;
   }
 
-  public static final class ArmConstants {
+  public static final class ArmExtendConstants {
 
     public static final double armExtendSpeed = 0.05;
+  }
+
+  public static final class ArmRotationConstants {
+
+    public static final double armRotateSpeed = 0.03;
   }
 
   public static final class WristConstants {
@@ -184,4 +189,5 @@ public final class Constants {
     public static final int armExtension = 20;
     public static final int wristRotate = 21;
   }
+
 }
