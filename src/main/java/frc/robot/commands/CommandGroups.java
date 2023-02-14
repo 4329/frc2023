@@ -29,7 +29,7 @@ import frc.robot.commands.wrist.WristZeroCommand;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.ColorDetector;
+import frc.robot.subsystems.ColorDetectorSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
 public class CommandGroups {
@@ -91,7 +91,8 @@ public class CommandGroups {
             )
         );
     }
-    public static CommandBase floorSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
+
+    public static CommandBase floorSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetectorSubsystem colorDetector) {
 
         return new SequentialCommandGroup(
 
@@ -105,7 +106,7 @@ public class CommandGroups {
         );
     }
 
-    public static CommandBase totalZero(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, WristSubsystem wristSubsystem, ClawSubsystem clawSubsystem, ColorDetector colorDetector) {
+    public static CommandBase totalZero(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, WristSubsystem wristSubsystem, ClawSubsystem clawSubsystem, ColorDetectorSubsystem colorDetector) {
 
         return new SequentialCommandGroup(
 

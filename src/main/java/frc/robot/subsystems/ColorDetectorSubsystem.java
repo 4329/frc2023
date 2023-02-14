@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ColorDetector extends SubsystemBase {
+public class ColorDetectorSubsystem extends SubsystemBase {
 
     private final I2C.Port i2cPort;
     private final ColorSensorV3 colorSensorV3;
@@ -34,8 +34,7 @@ public class ColorDetector extends SubsystemBase {
         CUBE, CONE, NOTHIN
     }
 
-    public ColorDetector() {
-
+    public ColorDetectorSubsystem() {
         i2cPort = I2C.Port.kMXP;
         colorSensorV3 = new ColorSensorV3(i2cPort);
         colorMatch = new ColorMatch();

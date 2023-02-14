@@ -3,15 +3,16 @@ package frc.robot.commands.claw;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.ColorDetector;
+import frc.robot.subsystems.ColorDetectorSubsystem;
+import frc.robot.subsystems.ColorDetectorSubsystem;
 
 public class ManualMidShotCommand extends CommandBase {
 
     private ClawSubsystem clawSubsystem;
     private CommandXboxController controller;
-    private ColorDetector colorDetector;
+    private ColorDetectorSubsystem colorDetector;
 
-    public ManualMidShotCommand(ClawSubsystem clawSubsystem, CommandXboxController commandXboxController, ColorDetector colorDetector) {
+    public ManualMidShotCommand(ClawSubsystem clawSubsystem, CommandXboxController commandXboxController, ColorDetectorSubsystem colorDetector) {
 
         this.controller = commandXboxController;
         this.colorDetector = colorDetector;

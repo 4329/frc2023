@@ -353,6 +353,12 @@ public class Drivetrain extends SubsystemBase {
   public double getOffsetRoll() {
 
     return ahrs.getRoll() - rollOffset;
+
+  }
+  
+  public double getYaw() {
+
+    return ahrs.getYaw();
   }
 
 }

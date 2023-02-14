@@ -12,15 +12,17 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ColorDetector.FieldElement;
 import frc.robot.utilities.SparkFactory;
+import frc.robot.subsystems.ArmRotationSubsystem;
+import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
+import frc.robot.subsystems.ColorDetectorSubsystem.FieldElement;
 
 public class ClawSubsystem extends SubsystemBase {
 
     private CANSparkMax leftMotor;
     private CANSparkMax rightMotor;
     private DoubleSolenoid solenoid;
-    private ColorDetector colorDetector;
+    private ColorDetectorSubsystem colorDetector;
     private GenericEntry clawOpen;
     private GenericEntry fdjsial;
     public boolean clawing;
@@ -28,7 +30,7 @@ public class ClawSubsystem extends SubsystemBase {
     public double speed;
     private GenericEntry intakafying;
 
-    public ClawSubsystem(ColorDetector colorDetector) {
+    public ClawSubsystem(ColorDetectorSubsystem colorDetector) {
 
         clawOpen = Shuffleboard.getTab("RobotData").add("Pinch Closed", true).withSize(4, 5).withPosition(11, 0).getEntry();
         intakafying = Shuffleboard.getTab("RobotData").add("intaking", false).withSize(4, 5).withPosition(7, 0).getEntry();
