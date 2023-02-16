@@ -22,6 +22,12 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public double setpoint;
     public GenericEntry armMotorSetpoint;
     public GenericEntry pidGraph;
+    public GenericEntry tolerance;
+    public GenericEntry jdisaflo;
+    public GenericEntry accel;
+    public GenericEntry veloc;
+    public GenericEntry up;
+    public GenericEntry stepNum;
 
     private final float maxValue;
     private final float minValue;
@@ -29,15 +35,16 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final double highPos;
     private final double midPos;
     private final double lowPos;
+    private final double initialPos;
 
     public ArmHeight currentArmHeight;
 
     public enum ArmHeight {
         HIGH,
         MID,
-        LOW
+        LOW,
+        INITIAL
     }
-
 
     public ArmRotationSubsystem() {
 
@@ -47,6 +54,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         highPos = 37.75;
         midPos = 37.5;
         lowPos = 0;
+        initialPos = 10;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
         armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
@@ -70,15 +78,24 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setD(0);
         armPID.setIZone(0);
         armPID.setFF(0);
-        armPID.setOutputRange(-0.05, 0.7);
+        armPID.setOutputRange(-0.5, 0.7);
+        // armPID.setSmartMotionMaxAccel(0, 0);
+        // armPID.setSmartMotionMaxVelocity(0, 0);
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;
 
-        //TODO decrease rotate forward power. slow drive speed when arm is extended. Keep arm at minimum possible extension. 
+        // TODO decrease rotate forward power. slow drive speed when arm is extended. Keep arm at minimum possible extension.
 
         pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
+        tolerance = Shuffleboard.getTab("setpoints").add("armrot tolerance", 0.2).getEntry();
+        jdisaflo = Shuffleboard.getTab("setpoints").add("alefij", false).getEntry();
+        accel = Shuffleboard.getTab("setpoints").add("ac", 0).getEntry();
+        veloc = Shuffleboard.getTab("setpoints").add("v", 0).getEntry();
+        up = Shuffleboard.getTab("setpoints").add("up", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+        stepNum = Shuffleboard.getTab("setpoints").add("stepnum", -1).getEntry();
+
     }
 
     public void setArmPosition(ArmHeight armHeight) {
@@ -113,6 +130,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
         } else if (ArmHeight.LOW.equals(currentArmHeight)) {
 
             setpoint = lowPos;
+        } else if (ArmHeight.INITIAL.equals(currentArmHeight)) {
+
+            setpoint = initialPos;
         }
     }
 
@@ -125,18 +145,34 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         armMotor1.set(0);
     }
-    
+
     public boolean armAtSetpoint() {
 
-        return false;
+        if (armEncoder.getPosition() <= setpoint + tolerance.getDouble(0)
+                && armEncoder.getPosition() >= setpoint - tolerance.getDouble(0)) {
+
+            jdisaflo.setBoolean(true);
+            return true;
+        } else {
+
+            jdisaflo.setBoolean(false);
+            return false;
+        }
     }
-    
+
     @Override
     public void periodic() {
 
         armMotorSetpoint.setDouble(setpoint);
         pidGraph.setDouble(armEncoder.getPosition());
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+        // armAtSetpoint();
+
+        if (up.getBoolean(false)) {
+
+            // armPID.setSmartMotionMaxAccel(accel.getDouble(0), 0);
+            // armPID.setSmartMotionMaxVelocity(veloc.getDouble(0), 0);
+        }
     }
 
 }

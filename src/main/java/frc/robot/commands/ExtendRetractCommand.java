@@ -31,4 +31,12 @@ public class ExtendRetractCommand extends CommandBase {
         }
     }
 
+    @Override
+    public boolean isFinished() {
+    
+        return armExtensionSubsystem.extendAtSetpoint();
+    }
+
+    
+
 }

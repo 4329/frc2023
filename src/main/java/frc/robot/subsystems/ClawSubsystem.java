@@ -96,4 +96,15 @@ public class ClawSubsystem extends SubsystemBase {
         clawOpen.setBoolean(false);
     }
 
+    public boolean outtakeSuccessful() {
+
+        if (colorDetector.distance() < 200) {
+
+            return true;
+        } else {
+
+            return false;
+        }
+    }
+
 }

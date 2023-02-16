@@ -18,6 +18,7 @@ public class WristSubsystem extends SubsystemBase {
     private SparkMaxPIDController wristPID;
     private double setpoint;
     public GenericEntry wristMotorSetpoint;
+    public GenericEntry tolerance;
     public final float maxValue;
     public final float minValue;
     
@@ -44,6 +45,8 @@ public class WristSubsystem extends SubsystemBase {
         wristPID.setSmartMotionAllowedClosedLoopError(0.3, 0);
         wristMotor.burnFlash();
         setpoint = 0;
+
+        tolerance = Shuffleboard.getTab("setpoints").add("wrtol", 0.1).getEntry();
         wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
     }
 
@@ -76,7 +79,13 @@ public class WristSubsystem extends SubsystemBase {
 
     public boolean wristAtSetpoint() {
 
-        return false;
+        if (wristEncoder.getPosition() <= setpoint + tolerance.getDouble(0) && wristEncoder.getPosition() >= setpoint - tolerance.getDouble(0)) {
+         
+            return true;
+        } else {
+
+            return false;
+        }
     }
 
     @Override

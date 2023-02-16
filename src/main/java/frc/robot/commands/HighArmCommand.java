@@ -5,9 +5,18 @@ import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
 
 public class HighArmCommand extends MoveArmCommand {
 
-    public HighArmCommand(ArmRotationSubsystem armSubsystem) {
-        
-        super(armSubsystem, ArmHeight.HIGH);
-    }
+    ArmRotationSubsystem armRotationSubsystem;
 
+    public HighArmCommand(ArmRotationSubsystem armRotationSubsystem) {
+        
+        super(armRotationSubsystem, ArmHeight.HIGH);
+        this.armRotationSubsystem = armRotationSubsystem;
+
+    }
+    @Override
+    public void execute() {
+        super.execute();
+
+        armRotationSubsystem.stepNum.setDouble(2);
+    }
 }

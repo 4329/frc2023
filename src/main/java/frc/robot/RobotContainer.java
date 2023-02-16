@@ -35,6 +35,7 @@ import frc.robot.commands.ArmUnrotateCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.ChangeFieldOrientCommand;
 import frc.robot.commands.CoastCommand;
+import frc.robot.commands.CommandGroups;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendRetractCommand;
@@ -234,7 +235,7 @@ public class RobotContainer {
 
     driverController.a().onTrue(new HighWristCommand(wristSubsystem));
     driverController.b().onTrue(new LowWristCommand(wristSubsystem));
-    driverController.x().onTrue(new WristZeroCommand(wristSubsystem));
+    // driverController.x().onTrue(new WristZeroCommand(wristSubsystem));
     driverController.y().whileTrue(exampleCommand);
 
     driverController.povUp().onTrue(resetOdometryCommandForward);
@@ -247,13 +248,13 @@ public class RobotContainer {
     operatorController.leftBumper().whileTrue(pinchCommand);
     operatorController.rightBumper().whileTrue(releaseCommand);
 
-    operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 161));
-    operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
+    operatorController.start().whileTrue(intakeCommand);
+    operatorController.back().whileTrue(outtakeCommand);
 
-    operatorController.a().onTrue(highArmCommand);
-    operatorController.b().onTrue(midArmCommand);
-    operatorController.x().whileTrue(intakeCommand);
-    operatorController.y().whileTrue(outtakeCommand);
+    operatorController.a().onTrue(CommandGroups.lowScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    operatorController.b().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    operatorController.x().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    // operatorController.y().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
 
     operatorController.povUp().whileTrue(armRotateCommand);
     operatorController.povDown().whileTrue(armUnrotateCommand);
