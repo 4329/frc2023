@@ -68,7 +68,7 @@ import frc.robot.utilities.MathUtils;
 public class RobotContainer {
 
   // private final PneumaticHub pneumaticHub;
-  GenericEntry pid;
+  // GenericEntry pid;
   // The robot's subsystems
   private final Drivetrain m_robotDrive;
   private final WristSubsystem wristSubsystem;
@@ -113,8 +113,8 @@ public class RobotContainer {
 
   public RobotContainer(Drivetrain drivetrain) {
 
-    pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph)
-        .withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
+    // pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph)
+        // .withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
     m_robotDrive = drivetrain;
     colorDetector = new ColorDetector();
 
@@ -247,7 +247,7 @@ public class RobotContainer {
     operatorController.leftBumper().whileTrue(pinchCommand);
     operatorController.rightBumper().whileTrue(releaseCommand);
 
-    operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 275));
+    operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 161));
     operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
 
     operatorController.a().onTrue(highArmCommand);
@@ -302,7 +302,7 @@ public class RobotContainer {
 
   public void autonomousPeriodic() {
 
-    pid.setDouble(MathUtils.inchesToMeters(m_robotDrive.getPose().getX()));
+    // pid.setDouble(MathUtils.inchesToMeters(m_robotDrive.getPose().getX()));
   }
 
   public void teleopPeriodic() {

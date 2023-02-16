@@ -23,7 +23,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public ArmExtensionSubsystem() {
 
-        maxValue = 300f;
+        maxValue = 175f;
         minValue = 0f;
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);

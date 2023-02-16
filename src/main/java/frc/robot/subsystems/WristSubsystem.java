@@ -29,7 +29,7 @@ public class WristSubsystem extends SubsystemBase {
         wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate);
         wristPID = wristMotor.getPIDController();
         wristEncoder = wristMotor.getEncoder();
-        wristMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        wristMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         wristMotor.setSoftLimit(SoftLimitDirection.kForward, maxValue);
@@ -83,6 +83,7 @@ public class WristSubsystem extends SubsystemBase {
     public void periodic() {
 
         wristMotorSetpoint.setDouble(setpoint);
+        wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
     
 }

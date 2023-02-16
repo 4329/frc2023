@@ -41,11 +41,11 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     public ArmRotationSubsystem() {
 
-        maxValue = 28f;
+        maxValue = 43f;
         minValue = 0f;
 
-        highPos = 9;
-        midPos = 7.75;
+        highPos = 37.75;
+        midPos = 37.5;
         lowPos = 0;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
@@ -70,10 +70,12 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setD(0);
         armPID.setIZone(0);
         armPID.setFF(0);
-        armPID.setOutputRange(-0.05, 1);
+        armPID.setOutputRange(-0.05, 0.7);
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;
+
+        //TODO decrease rotate forward power. slow drive speed when arm is extended. Keep arm at minimum possible extension. 
 
         pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();

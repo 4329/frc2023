@@ -167,17 +167,17 @@ public final class Constants {
 
   public static final class ArmExtendConstants {
 
-    public static final double armExtendSpeed = 0.05;
+    public static final double armExtendSpeed = 0.4;
   }
 
   public static final class ArmRotationConstants {
 
-    public static final double armRotateSpeed = 0.03;
+    public static final double armRotateSpeed = 0.25;
   }
 
   public static final class WristConstants {
     
-    public static final double wristRotationSpeed = 1;
+    public static final double wristRotationSpeed = 0.2;
   }
 
   public static final class CANIDConstants {
@@ -189,5 +189,14 @@ public final class Constants {
     public static final int armExtension = 20;
     public static final int wristRotate = 21;
   }
+  // good low stats
+  //30.5 rotate
+  //148 extend
+  //-0.2 wrist
+
+  // good high stats
+  //37.73 rotate
+  //166.8 extend
+  //-8 wrist
 
 }

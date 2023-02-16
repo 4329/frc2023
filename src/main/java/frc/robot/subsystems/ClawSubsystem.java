@@ -32,7 +32,7 @@ public class ClawSubsystem extends SubsystemBase {
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
         this.colorDetector = colorDetector;
         this.armRotationSubsystem = armRotationSubsystem;
-        rightMotor.setInverted(true);
+        leftMotor.setInverted(true);
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
     }
