@@ -36,6 +36,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final double midPos;
     private final double lowPos;
     private final double initialPos;
+    private final double portalPos;
 
     public ArmHeight currentArmHeight;
 
@@ -43,7 +44,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
         HIGH,
         MID,
         LOW,
-        INITIAL
+        INITIAL,
+        PORTAL
     }
 
     public ArmRotationSubsystem() {
@@ -51,10 +53,11 @@ public class ArmRotationSubsystem extends SubsystemBase {
         maxValue = 43f;
         minValue = 0f;
 
-        highPos = 37.75;
+        highPos = 37.75; //high is wrong
         midPos = 37.5;
         lowPos = 0;
         initialPos = 10;
+        portalPos = 39;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
         armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
@@ -133,6 +136,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
         } else if (ArmHeight.INITIAL.equals(currentArmHeight)) {
 
             setpoint = initialPos;
+        } else if (ArmHeight.PORTAL.equals(currentArmHeight)) {
+
+            setpoint = portalPos;
         }
     }
 
