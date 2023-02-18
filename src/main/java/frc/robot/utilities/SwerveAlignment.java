@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.swerve.Drivetrain;
-import frc.robot.Configrun;
 
 public class SwerveAlignment {
         private Drivetrain m_dDrivetrain;

@@ -60,6 +60,7 @@ import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.MathUtils;
 
 /* (including subsystems, commands, and button mappings) should be declared here
@@ -173,8 +174,8 @@ public class RobotContainer {
     // .withWidget(BuiltInWidgets.kCameraStream);
     // }
 
-    HttpCamera limelight = new HttpCamera("Limelight", Configrun.get("http://10.43.29.11:5800", "Limelighturl"));
-    System.out.println(Configrun.get("http://10.43.29.11:5800", "Limelighturl"));
+    HttpCamera limelight = new HttpCamera("Limelight", HoorayConfig.gimmeConfig().getLimelighturl());
+    System.out.println(HoorayConfig.gimmeConfig().getLimelighturl());
     CameraServer.startAutomaticCapture(limelight);
 
     Shuffleboard.getTab("RobotData").add("Limelight Camera", limelight).withPosition(2, 0).withSize(2, 2)
