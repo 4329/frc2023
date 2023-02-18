@@ -98,6 +98,11 @@ public class ArmRotationSubsystem extends SubsystemBase {
         calcEnums();
     }
 
+    public ArmHeight getArmPosition() {
+
+        return this.currentArmHeight;
+    }
+
     public void armRotate() {
 
         if (setpoint < maxValue) {

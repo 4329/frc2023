@@ -36,7 +36,7 @@ public class ColorDetector extends SubsystemBase {
     }
 
     public enum FieldElement {
-        CUBE, CONE
+        CUBE, CONE, NOTHIN
     }
 
     public FieldElement detectElement() {
@@ -64,6 +64,10 @@ public class ColorDetector extends SubsystemBase {
         FieldElement kraigElement = detectElement();
         if (kraigElement != null) {
             coneOrCube.setString(kraigElement.toString());
+        } else {
+
+            coneOrCube.setString(FieldElement.NOTHIN.toString());
+
         }
         proximity.setDouble(distance());
     }

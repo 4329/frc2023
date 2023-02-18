@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
 import frc.robot.subsystems.ColorDetector.FieldElement;
 import frc.robot.utilities.SparkFactory;
 
@@ -22,9 +21,8 @@ public class ClawSubsystem extends SubsystemBase {
     private ColorDetector colorDetector;
     private GenericEntry clawOpen;
     private GenericEntry fdjsial;
-    private ArmRotationSubsystem armRotationSubsystem;
 
-    public ClawSubsystem(ColorDetector colorDetector, ArmRotationSubsystem armRotationSubsystem) {
+    public ClawSubsystem(ColorDetector colorDetector) {
 
         clawOpen = Shuffleboard.getTab("setpoints").add("Claw is Forward", true).getEntry();
 
@@ -32,51 +30,55 @@ public class ClawSubsystem extends SubsystemBase {
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
         this.colorDetector = colorDetector;
-        this.armRotationSubsystem = armRotationSubsystem;
         leftMotor.setInverted(true);
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
         fdjsial = Shuffleboard.getTab("setpoints").add("whynot", 0.285).getEntry();
+
     }
 
     public void intake() {
-        
+
         double speed = -0.2;
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
 
-    public void outtake() {
-        
-        double reverseSpeed = fdjsial.getDouble(0.285);
+    public void outtakeHigh() {
 
-        // if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
+        double speed = 0.285;
+        if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
 
-        //     if (ArmHeight.HIGH.equals(armRotationSubsystem.currentArmHeight)) {
-        //         reverseSpeed = 0.45;
-        //     } /* This is for later when we add low level*/ else if (ArmHeight.MID.equals(armRotationSubsystem.currentArmHeight)) {
+            speed = 0.20;
+        }
+        fdjsial.setDouble(speed);
+        leftMotor.set(speed);
+        rightMotor.set(speed);
 
-        //         reverseSpeed = 0.2;
-        //     } else {
+    }
 
-        //         reverseSpeed = 0.15;
-        //     }
+    public void outtakeMid() {
 
-        // } else {
+        double speed = 0.285;
+        if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
 
-        //     if (ArmHeight.HIGH.equals(armRotationSubsystem.currentArmHeight)) {
+            speed = 0.05;
+        }
+        fdjsial.setDouble(speed);
+        leftMotor.set(speed);
+        rightMotor.set(speed);
+    }
 
-        //         reverseSpeed = 0.43;
-        //     } else if (ArmHeight.MID.equals(armRotationSubsystem.currentArmHeight)) {
+    public void outtakeLow() {
 
-        //         reverseSpeed = 0.15;
-        //     } else {
+        double speed = 0.285;
+        if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
 
-        //         reverseSpeed = 0.1;
-        //     }
-        // }
-        leftMotor.set(reverseSpeed);
-        rightMotor.set(reverseSpeed);
+            speed = 0.15;
+        }
+        fdjsial.setDouble(speed);
+        leftMotor.set(speed);
+        rightMotor.set(speed);
     }
 
     public void stop() {
