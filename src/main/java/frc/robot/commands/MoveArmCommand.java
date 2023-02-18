@@ -1,36 +1,33 @@
 package frc.robot.commands;
 
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmRotationSubsystem;
+import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
 
-public class MoveArmCommand extends CommandBase {
+public abstract class MoveArmCommand extends CommandBase {
 
     private ArmRotationSubsystem armSubsystem;
-    private double setPoint;
-    private GenericEntry armSetpoint;
+    private ArmHeight armHeight;
 
-    public MoveArmCommand(ArmRotationSubsystem armSubsystem, double setPoint) {
+    public MoveArmCommand(ArmRotationSubsystem armSubsystem, ArmHeight armHeight) {
 
         this.armSubsystem = armSubsystem;
-        this.setPoint = setPoint;
-        
+        this.armHeight = armHeight;
+
         addRequirements(armSubsystem);
-        // armSetpoint = Shuffleboard.getTab("setpoints").add("arm setpoint", 7.75).getEntry();
     }
 
     @Override
-    public void initialize() {
+    public void execute() {
 
-        armSubsystem.setArmPosition(setPoint);
-
+        armSubsystem.setArmPosition(armHeight);
     }
 
-    @Override
-    public boolean isFinished() {
-
-        return true;
+     @Override 
+     public boolean isFinished() {
         
+       return armSubsystem.armAtSetpoint();
     }
+     
 }

@@ -1,10 +1,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.WristSubsystem;
 
-public abstract class WristToPositionCommand extends InstantCommand {
+public abstract class WristToPositionCommand extends CommandBase {
 
     WristSubsystem wristSubsystem;
     double setpoint;
@@ -19,6 +18,12 @@ public abstract class WristToPositionCommand extends InstantCommand {
     public void execute() {
 
         wristSubsystem.setWristPosition(setpoint);
+
     }
 
+    @Override 
+    public boolean isFinished() {
+
+       return wristSubsystem.wristAtSetpoint();
+    }
 }

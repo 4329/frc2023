@@ -35,6 +35,7 @@ import frc.robot.commands.ArmUnrotateCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.ChangeFieldOrientCommand;
 import frc.robot.commands.CoastCommand;
+import frc.robot.commands.CommandGroups;
 import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendRetractCommand;
@@ -43,6 +44,7 @@ import frc.robot.commands.LowArmCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.MidArmCommand;
 import frc.robot.commands.HighWristCommand;
+import frc.robot.commands.InitialArmCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LowWristCommand;
 import frc.robot.commands.MoveArmCommand;
@@ -66,29 +68,28 @@ import frc.robot.utilities.MathUtils;
 /* (including subsystems, commands, and button mappings) should be declared here
 */
 public class RobotContainer {
-
-  // private final PneumaticHub pneumaticHub;
-  GenericEntry pid;
+  
   // The robot's subsystems
   private final Drivetrain m_robotDrive;
   private final WristSubsystem wristSubsystem;
-  // private final TrackingTurretSubsystem trackingTurretSubsystem;
-  // The driver's controllers
-
+  private final ArmRotationSubsystem armRotationSubsystem;
+  private final ArmExtensionSubsystem armExtensionSubsystem;
+  
   final SendableChooser<Command> m_chooser;
-
+  
+  // The driver's controllers
+  private final CommandXboxController driverController;
+  private final CommandXboxController operatorController;
   private final DriveByController m_drive;
+
   private final ExampleCommand exampleCommand;
   private final ResetOdometryCommand resetOdometryCommandForward;
   private final ResetOdometryCommand resetOdometryCommandBackward;
   private final ChangeFieldOrientCommand changeFieldOrientCommand;
   private final BalanceCommand balanceCommand;
-  private final MoveArmCommand armToSetpoint;
   private final HighArmCommand highArmCommand;
   private final MidArmCommand midArmCommand;
   private final LowArmCommand lowArmCommand;
-  private final ArmRotationSubsystem armRotationSubsystem;
-  private final ArmExtensionSubsystem armExtensionSubsystem;
   private final ClawSubsystem clawSubsystem;
   private final IntakeCommand intakeCommand;
   private final OuttakeCommand outtakeCommand;
@@ -98,8 +99,6 @@ public class RobotContainer {
   private final ArmRotateCommand armRotateCommand;
   private final ArmUnrotateCommand armUnrotateCommand;
   private final ExtendRetractCommand extendRetractCommand;
-  private final CommandXboxController driverController;
-  private final CommandXboxController operatorController;
   private Command simpleAuto;
   private final WristRotateUpCommand wristRotateUpCommand;
   private final WristRotateDownCommand wristRotateDownCommand;
@@ -114,8 +113,8 @@ public class RobotContainer {
 
   public RobotContainer(Drivetrain drivetrain) {
 
-    pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph)
-        .withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
+    // pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph)
+        // .withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
     m_robotDrive = drivetrain;
     colorDetector = new ColorDetector();
 
@@ -136,7 +135,6 @@ public class RobotContainer {
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
     balanceCommand = new BalanceCommand(drivetrain);
-    armToSetpoint = new MoveArmCommand(armRotationSubsystem, 9);
     highArmCommand = new HighArmCommand(armRotationSubsystem);
     midArmCommand = new MidArmCommand(armRotationSubsystem);
     lowArmCommand = new LowArmCommand(armRotationSubsystem);
@@ -249,13 +247,13 @@ public class RobotContainer {
     operatorController.leftBumper().whileTrue(pinchCommand);
     operatorController.rightBumper().whileTrue(releaseCommand);
 
-    operatorController.start().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 275));
-    operatorController.back().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
+    operatorController.start().whileTrue(intakeCommand);
+    operatorController.back().whileTrue(outtakeCommand);
 
-    operatorController.a().onTrue(highArmCommand);
-    operatorController.b().onTrue(midArmCommand);
-    operatorController.x().whileTrue(intakeCommand);
-    operatorController.y().whileTrue(outtakeCommand);
+    operatorController.a().onTrue(CommandGroups.lowScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    operatorController.b().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    operatorController.x().onTrue(midArmCommand);
+    operatorController.y().onTrue(highArmCommand);
 
     operatorController.povUp().whileTrue(armRotateCommand);
     operatorController.povDown().whileTrue(armUnrotateCommand);
@@ -277,14 +275,8 @@ public class RobotContainer {
 
         String name = pathFile.getName().replace(".path", "");
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(name,
-            new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-        // System.out.println("trajectory
-        // is_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-        // " + trajectory);
-
+          new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
         m_chooser.addOption(name, swerveAutoBuilder.fullAuto(trajectory));
-        // System.out.println("added " + pathFile + " as an auto option");
-
       }
     }
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(2, 1).withPosition(0, 0);
@@ -304,7 +296,6 @@ public class RobotContainer {
 
   public void autonomousPeriodic() {
 
-    pid.setDouble(MathUtils.inchesToMeters(m_robotDrive.getPose().getX()));
   }
 
   public void teleopPeriodic() {

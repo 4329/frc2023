@@ -7,12 +7,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 
-public class ExtendRetractCommand extends CommandBase {
+public class ExtendRetractCommand extends ArmExtensionBase {
 
     private ArmExtensionSubsystem armExtensionSubsystem;
     private CommandXboxController controller;
 
     public ExtendRetractCommand(ArmExtensionSubsystem armExtensionSubsystem, CommandXboxController commandXboxController) {
+
+        super(armExtensionSubsystem, 0);
 
         this.armExtensionSubsystem = armExtensionSubsystem;
         this.controller = commandXboxController;
@@ -29,6 +31,6 @@ public class ExtendRetractCommand extends CommandBase {
         } else if (retraction > 0.3) {
             armExtensionSubsystem.retract();
         }
-    }
+    }    
 
 }

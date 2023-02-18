@@ -18,13 +18,14 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private SparkMaxPIDController extensionPID;
     private double setpoint;
     public GenericEntry extensionMotorSetpoint;
+    public GenericEntry tolerance;
     public final float maxValue;
     public final float minValue;
 
     public ArmExtensionSubsystem() {
 
-        maxValue = 300f;
-        minValue = 0f;
+        maxValue = 63f;
+        minValue = -63f; //it's a float - Matthew
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
         extensionPID = extensionMotor.getPIDController();
@@ -46,6 +47,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionPID.setOutputRange(-1, 1);
         extensionMotor.burnFlash();
 
+        tolerance = Shuffleboard.getTab("setpoints").add("armex tolerance", 0.3).getEntry();
         extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", 1).getEntry();
     }
 
@@ -59,7 +61,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     public void extend() {
 
         if (setpoint < maxValue) {
-            setpoint += Constants.ArmConstants.armExtendSpeed;
+            setpoint += Constants.ArmExtendConstants.armExtendSpeed;
             extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
@@ -67,7 +69,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     public void retract() {
 
         if (setpoint > minValue) {
-            setpoint -= Constants.ArmConstants.armExtendSpeed;
+            setpoint -= Constants.ArmExtendConstants.armExtendSpeed;
             extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
@@ -76,6 +78,17 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
         setpoint = 0;
         extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+    }
+
+    public boolean extendAtSetpoint() {
+
+        if (extensionEncoder.getPosition() <= setpoint + tolerance.getDouble(0) && extensionEncoder.getPosition() >= setpoint - tolerance.getDouble(0)) {
+         
+            return true;
+        } else {
+
+            return false;
+        }
     }
 
     @Override

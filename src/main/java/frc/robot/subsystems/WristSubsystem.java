@@ -18,7 +18,7 @@ public class WristSubsystem extends SubsystemBase {
     private SparkMaxPIDController wristPID;
     private double setpoint;
     public GenericEntry wristMotorSetpoint;
-    public GenericEntry speed;
+    public GenericEntry tolerance;
     public final float maxValue;
     public final float minValue;
     
@@ -30,7 +30,7 @@ public class WristSubsystem extends SubsystemBase {
         wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate);
         wristPID = wristMotor.getPIDController();
         wristEncoder = wristMotor.getEncoder();
-        wristMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        wristMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         wristMotor.setSoftLimit(SoftLimitDirection.kForward, maxValue);
@@ -45,8 +45,9 @@ public class WristSubsystem extends SubsystemBase {
         wristPID.setSmartMotionAllowedClosedLoopError(0.3, 0);
         wristMotor.burnFlash();
         setpoint = 0;
+
+        tolerance = Shuffleboard.getTab("setpoints").add("wrtol", 0.1).getEntry();
         wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
-        speed =Shuffleboard.getTab("setpoints").add("speed", 1).getEntry();
     }
 
     public void setWristPosition(Double setpoint) {
@@ -58,7 +59,7 @@ public class WristSubsystem extends SubsystemBase {
     public void wristUp() {
 
         if (setpoint > minValue) {
-            setpoint -= speed.getDouble(0); 
+            setpoint -= Constants.WristConstants.wristRotationSpeed; 
             wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
@@ -66,7 +67,7 @@ public class WristSubsystem extends SubsystemBase {
     public void wristDown() {
 
         if (setpoint < maxValue) {
-            setpoint += speed.getDouble(0); 
+            setpoint += Constants.WristConstants.wristRotationSpeed; 
             wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
@@ -78,13 +79,20 @@ public class WristSubsystem extends SubsystemBase {
 
     public boolean wristAtSetpoint() {
 
-        return false;
+        if (wristEncoder.getPosition() <= setpoint + tolerance.getDouble(0) && wristEncoder.getPosition() >= setpoint - tolerance.getDouble(0)) {
+         
+            return true;
+        } else {
+
+            return false;
+        }
     }
 
     @Override
     public void periodic() {
 
         wristMotorSetpoint.setDouble(setpoint);
+        wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
     
 }
