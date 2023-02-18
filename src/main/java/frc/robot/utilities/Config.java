@@ -29,6 +29,12 @@ public class Config {
 
     private int rollDirection = 1;
 
+    private String limelighturl = "http://10.43.29.11:5800";
+
+    public String getLimelighturl() {
+        return limelighturl;
+    }
+
     public int getFrontLeftDriveMotorPort() {
         return frontLeftDriveMotorPort;
     }

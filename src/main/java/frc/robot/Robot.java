@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utilities.HoorayConfig;
 import frc.robot.utilities.SwerveAlignment;
-import frc.robot.Configrun;
 import frc.robot.subsystems.swerve.Drivetrain;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -34,7 +34,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    Configrun.loadconfig();
+    
+    HoorayConfig.gimmeConfig();
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
