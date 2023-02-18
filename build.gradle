@@ -54,6 +54,9 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
     implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation 'commons-io:commons-io:2.11.0'
+
 
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)

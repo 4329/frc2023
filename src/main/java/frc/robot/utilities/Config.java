@@ -25,8 +25,6 @@ public class Config {
     private double backLeftOffset = -0.039;
     private double backRightOffset = 1.03;
 
-    private int PH_CAN_ID = 61;
-
     private boolean extraShuffleBoardToggle = true;
 
     private int rollDirection = 1;
@@ -43,7 +41,7 @@ public class Config {
         return backLeftDriveMotorPort;
     }
 
-    public int backRightDriveMotorPort() {
+    public int getBackRightDriveMotorPort() {
         return backRightDriveMotorPort;
     }
     public int getFrontLeftTurningMotorPort() {
@@ -92,10 +90,6 @@ public class Config {
 
     public double getBackRightOffset() {
         return backRightOffset;
-    }
-
-    public int getPH_CAN_ID() {
-        return PH_CAN_ID;
     }
 
     public boolean isExtraShuffleBoardToggle() {

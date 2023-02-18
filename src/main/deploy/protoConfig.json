@@ -15,7 +15,6 @@
     "frontRightOffset": -0.65,
     "backLeftOffset": -0.039,
     "backRightOffset": 1.03,
-    "PH_CAN_ID": 61,
     "extraShuffleBoardToggle": true,
     "rollDirection": 1
 }
