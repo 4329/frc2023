@@ -189,14 +189,5 @@ public final class Constants {
     public static final int armExtension = 20;
     public static final int wristRotate = 21;
   }
-  // good low stats
-  //30.5 rotate
-  //148 extend
-  //-0.2 wrist
-
-  // good high stats
-  //37.73 rotate
-  //166.8 extend
-  //-8 wrist
 
 }

@@ -18,7 +18,6 @@ public abstract class WristToPositionCommand extends CommandBase {
     public void execute() {
 
         wristSubsystem.setWristPosition(setpoint);
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
     }
 

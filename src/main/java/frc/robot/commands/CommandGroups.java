@@ -32,11 +32,11 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
-        //     new InitialArmCommand(armRotationSubsystem),
-        //     new WristZeroCommand(wristSubsystem),
-        //     new MidArmCommand(armRotationSubsystem),
-        //     new ArmExtensionCommand(armExtensionSubsystem, 161),
-        //     new OuttakeCommand(clawSubsystem)
+            new InitialArmCommand(armRotationSubsystem),
+            new WristZeroCommand(wristSubsystem),
+            new MidArmCommand(armRotationSubsystem),
+            new ArmExtensionCommand(armExtensionSubsystem, 161),
+            new OuttakeCommand(clawSubsystem)
         );
     }
 
@@ -44,10 +44,10 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
-        //     new InitialArmCommand(armRotationSubsystem),
-        //     new HighWristCommand(wristSubsystem),
-        //     new ReleaseCommand(clawSubsystem),
-        //     new ArmExtensionCommand(armExtensionSubsystem, 40)
+            new InitialArmCommand(armRotationSubsystem),
+            new HighWristCommand(wristSubsystem),
+            new ReleaseCommand(clawSubsystem),
+            new ArmExtensionCommand(armExtensionSubsystem, 40)
         );
     }
 

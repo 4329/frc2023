@@ -68,18 +68,20 @@ import frc.robot.utilities.MathUtils;
 /* (including subsystems, commands, and button mappings) should be declared here
 */
 public class RobotContainer {
-
-  // private final PneumaticHub pneumaticHub;
-  // GenericEntry pid;
+  
   // The robot's subsystems
   private final Drivetrain m_robotDrive;
   private final WristSubsystem wristSubsystem;
-  // private final TrackingTurretSubsystem trackingTurretSubsystem;
-  // The driver's controllers
-
+  private final ArmRotationSubsystem armRotationSubsystem;
+  private final ArmExtensionSubsystem armExtensionSubsystem;
+  
   final SendableChooser<Command> m_chooser;
-
+  
+  // The driver's controllers
+  private final CommandXboxController driverController;
+  private final CommandXboxController operatorController;
   private final DriveByController m_drive;
+
   private final ExampleCommand exampleCommand;
   private final ResetOdometryCommand resetOdometryCommandForward;
   private final ResetOdometryCommand resetOdometryCommandBackward;
@@ -88,8 +90,6 @@ public class RobotContainer {
   private final HighArmCommand highArmCommand;
   private final MidArmCommand midArmCommand;
   private final LowArmCommand lowArmCommand;
-  private final ArmRotationSubsystem armRotationSubsystem;
-  private final ArmExtensionSubsystem armExtensionSubsystem;
   private final ClawSubsystem clawSubsystem;
   private final IntakeCommand intakeCommand;
   private final OuttakeCommand outtakeCommand;
@@ -99,8 +99,6 @@ public class RobotContainer {
   private final ArmRotateCommand armRotateCommand;
   private final ArmUnrotateCommand armUnrotateCommand;
   private final ExtendRetractCommand extendRetractCommand;
-  private final CommandXboxController driverController;
-  private final CommandXboxController operatorController;
   private Command simpleAuto;
   private final WristRotateUpCommand wristRotateUpCommand;
   private final WristRotateDownCommand wristRotateDownCommand;
@@ -236,7 +234,7 @@ public class RobotContainer {
 
     driverController.a().onTrue(new HighWristCommand(wristSubsystem));
     driverController.b().onTrue(new LowWristCommand(wristSubsystem));
-    // driverController.x().onTrue(new WristZeroCommand(wristSubsystem));
+    driverController.x().onTrue(new WristZeroCommand(wristSubsystem));
     driverController.y().whileTrue(exampleCommand);
 
     driverController.povUp().onTrue(resetOdometryCommandForward);
@@ -252,10 +250,8 @@ public class RobotContainer {
     operatorController.start().whileTrue(intakeCommand);
     operatorController.back().whileTrue(outtakeCommand);
 
-    //operatorController.a().onTrue(CommandGroups.lowScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    //operatorController.b().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    operatorController.a().onTrue(new InitialArmCommand(armRotationSubsystem));
-    operatorController.b().onTrue(lowArmCommand);
+    operatorController.a().onTrue(CommandGroups.lowScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    operatorController.b().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     operatorController.x().onTrue(midArmCommand);
     operatorController.y().onTrue(highArmCommand);
 
@@ -279,14 +275,8 @@ public class RobotContainer {
 
         String name = pathFile.getName().replace(".path", "");
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(name,
-            new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-        // System.out.println("trajectory
-        // is_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-        // " + trajectory);
-
+          new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
         m_chooser.addOption(name, swerveAutoBuilder.fullAuto(trajectory));
-        // System.out.println("added " + pathFile + " as an auto option");
-
       }
     }
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(2, 1).withPosition(0, 0);
@@ -306,7 +296,6 @@ public class RobotContainer {
 
   public void autonomousPeriodic() {
 
-    // pid.setDouble(MathUtils.inchesToMeters(m_robotDrive.getPose().getX()));
   }
 
   public void teleopPeriodic() {

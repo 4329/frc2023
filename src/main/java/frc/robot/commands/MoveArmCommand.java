@@ -27,15 +27,7 @@ public abstract class MoveArmCommand extends CommandBase {
      @Override 
      public boolean isFinished() {
         
-        System.out.println("fgviklsjfoiisdojofjeoaujfoisdajdoifiosadjoifjiosadjiofjsdaoijfaoifjdjf;dasjadsjfiosadjfoi;sajfsa;oifjio;sdaj");
        return armSubsystem.armAtSetpoint();
-     }
-
-    @Override
-    public void end(boolean interrupted) {
-        
-        System.out.println("____________________________________________________________________________________________");
     }
-
      
 }

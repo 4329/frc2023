@@ -7,11 +7,6 @@ public class ArmExtensionCommand extends ArmExtensionBase {
     public ArmExtensionCommand(ArmExtensionSubsystem armExtensionSubsystem, double setPoint) {
 
         super(armExtensionSubsystem, setPoint);
-
-       
-        
     }
-
-    
 
 }
