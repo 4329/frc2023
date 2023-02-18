@@ -13,10 +13,5 @@ public class HighArmCommand extends MoveArmCommand {
         this.armRotationSubsystem = armRotationSubsystem;
 
     }
-    @Override
-    public void execute() {
-        super.execute();
-
-        armRotationSubsystem.stepNum.setDouble(2);
-    }
+   
 }

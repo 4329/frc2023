@@ -44,6 +44,7 @@ import frc.robot.commands.LowArmCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.MidArmCommand;
 import frc.robot.commands.HighWristCommand;
+import frc.robot.commands.InitialArmCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LowWristCommand;
 import frc.robot.commands.MoveArmCommand;
@@ -251,10 +252,12 @@ public class RobotContainer {
     operatorController.start().whileTrue(intakeCommand);
     operatorController.back().whileTrue(outtakeCommand);
 
-    operatorController.a().onTrue(CommandGroups.lowScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    operatorController.b().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    operatorController.x().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    // operatorController.y().whileTrue(new ArmExtensionCommand(armExtensionSubsystem, 0));
+    //operatorController.a().onTrue(CommandGroups.lowScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    //operatorController.b().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    operatorController.a().onTrue(new InitialArmCommand(armRotationSubsystem));
+    operatorController.b().onTrue(lowArmCommand);
+    operatorController.x().onTrue(midArmCommand);
+    operatorController.y().onTrue(highArmCommand);
 
     operatorController.povUp().whileTrue(armRotateCommand);
     operatorController.povDown().whileTrue(armUnrotateCommand);

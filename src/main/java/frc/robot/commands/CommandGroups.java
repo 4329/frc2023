@@ -21,10 +21,10 @@ public class CommandGroups {
         return new SequentialCommandGroup(
 
             new InitialArmCommand(armRotationSubsystem),
-            new WristZeroCommand(wristSubsystem, armRotationSubsystem),
+            new WristZeroCommand(wristSubsystem),
             new HighArmCommand(armRotationSubsystem),
-            new ArmExtensionCommand(armExtensionSubsystem, 166.8, armRotationSubsystem)
-// make sure we're in position before we shoot. new OuttakeCommand(clawSubsystem)
+            new ArmExtensionCommand(armExtensionSubsystem, 166.8),
+            new OuttakeCommand(clawSubsystem)
         );
     }
 

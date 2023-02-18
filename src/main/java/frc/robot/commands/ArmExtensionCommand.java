@@ -1,30 +1,17 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmExtensionSubsystem;
-import frc.robot.subsystems.ArmRotationSubsystem;
 
 public class ArmExtensionCommand extends ArmExtensionBase {
 
-    private ArmExtensionSubsystem armExtensionSubsystem;
-    private double setPoint;
-    ArmRotationSubsystem armRotationSubsystem;
-
-    public ArmExtensionCommand(ArmExtensionSubsystem armExtensionSubsystem, double setPoint, ArmRotationSubsystem armRotationSubsystem) {
+    public ArmExtensionCommand(ArmExtensionSubsystem armExtensionSubsystem, double setPoint) {
 
         super(armExtensionSubsystem, setPoint);
 
-        this.armExtensionSubsystem = armExtensionSubsystem;
-        this.setPoint = setPoint;
-        addRequirements(armExtensionSubsystem);
-        this.armRotationSubsystem = armRotationSubsystem;
+       
+        
     }
 
-    @Override
-    public void execute() {
-
-        armExtensionSubsystem.setExtensionLength(setPoint);
-        armRotationSubsystem.stepNum.setDouble(3);
-    }
+    
 
 }

@@ -24,11 +24,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public GenericEntry pidGraph;
     public GenericEntry tolerance;
     public GenericEntry jdisaflo;
-    public GenericEntry accel;
-    public GenericEntry veloc;
-    public GenericEntry up;
-    public GenericEntry stepNum;
-
+    
     private final float maxValue;
     private final float minValue;
 
@@ -81,9 +77,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setD(0);
         armPID.setIZone(0);
         armPID.setFF(0);
-        armPID.setOutputRange(-0.5, 0.7);
-        // armPID.setSmartMotionMaxAccel(0, 0);
-        // armPID.setSmartMotionMaxVelocity(0, 0);
+        armPID.setOutputRange(-0.3, 0.3);
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;
@@ -94,10 +88,6 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
         tolerance = Shuffleboard.getTab("setpoints").add("armrot tolerance", 0.2).getEntry();
         jdisaflo = Shuffleboard.getTab("setpoints").add("alefij", false).getEntry();
-        accel = Shuffleboard.getTab("setpoints").add("ac", 0).getEntry();
-        veloc = Shuffleboard.getTab("setpoints").add("v", 0).getEntry();
-        up = Shuffleboard.getTab("setpoints").add("up", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-        stepNum = Shuffleboard.getTab("setpoints").add("stepnum", -1).getEntry();
 
     }
 
@@ -174,11 +164,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         // armAtSetpoint();
 
-        if (up.getBoolean(false)) {
-
-            // armPID.setSmartMotionMaxAccel(accel.getDouble(0), 0);
-            // armPID.setSmartMotionMaxVelocity(veloc.getDouble(0), 0);
-        }
+       
     }
 
 }
