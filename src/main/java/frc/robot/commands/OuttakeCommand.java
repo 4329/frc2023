@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystem;
 
 public class OuttakeCommand extends CommandBase {
+
     private ClawSubsystem clawSubsystem;
 
     public OuttakeCommand(ClawSubsystem clawSubsystem) {
@@ -14,13 +15,14 @@ public class OuttakeCommand extends CommandBase {
 
     @Override
     public void execute() {
+
         clawSubsystem.outtake();
     }
 
     @Override
     public boolean isFinished() {
 
-        return clawSubsystem.outtakeSuccessful();
+        return false;
     }
 
     @Override

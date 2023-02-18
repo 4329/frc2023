@@ -21,6 +21,7 @@ public class ClawSubsystem extends SubsystemBase {
     private DoubleSolenoid solenoid;
     private ColorDetector colorDetector;
     private GenericEntry clawOpen;
+    private GenericEntry fdjsial;
     private ArmRotationSubsystem armRotationSubsystem;
 
     public ClawSubsystem(ColorDetector colorDetector, ArmRotationSubsystem armRotationSubsystem) {
@@ -35,6 +36,7 @@ public class ClawSubsystem extends SubsystemBase {
         leftMotor.setInverted(true);
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
+        fdjsial = Shuffleboard.getTab("setpoints").add("whynot", 0.285).getEntry();
     }
 
     public void intake() {
@@ -46,33 +48,33 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void outtake() {
         
-        double reverseSpeed;
+        double reverseSpeed = fdjsial.getDouble(0.285);
 
-        if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
+        // if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
 
-            if (ArmHeight.HIGH.equals(armRotationSubsystem.currentArmHeight)) {
-                reverseSpeed = 0.45;
-            } /* This is for later when we add low level*/ else if (ArmHeight.MID.equals(armRotationSubsystem.currentArmHeight)) {
+        //     if (ArmHeight.HIGH.equals(armRotationSubsystem.currentArmHeight)) {
+        //         reverseSpeed = 0.45;
+        //     } /* This is for later when we add low level*/ else if (ArmHeight.MID.equals(armRotationSubsystem.currentArmHeight)) {
 
-                reverseSpeed = 0.2;
-            } else {
+        //         reverseSpeed = 0.2;
+        //     } else {
 
-                reverseSpeed = 0.15;
-            }
+        //         reverseSpeed = 0.15;
+        //     }
 
-        } else {
+        // } else {
 
-            if (ArmHeight.HIGH.equals(armRotationSubsystem.currentArmHeight)) {
+        //     if (ArmHeight.HIGH.equals(armRotationSubsystem.currentArmHeight)) {
 
-                reverseSpeed = 0.43;
-            } else if (ArmHeight.MID.equals(armRotationSubsystem.currentArmHeight)) {
+        //         reverseSpeed = 0.43;
+        //     } else if (ArmHeight.MID.equals(armRotationSubsystem.currentArmHeight)) {
 
-                reverseSpeed = 0.15;
-            } else {
+        //         reverseSpeed = 0.15;
+        //     } else {
 
-                reverseSpeed = 0.1;
-            }
-        }
+        //         reverseSpeed = 0.1;
+        //     }
+        // }
         leftMotor.set(reverseSpeed);
         rightMotor.set(reverseSpeed);
     }

@@ -19,13 +19,27 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private double setpoint;
     public GenericEntry extensionMotorSetpoint;
     public GenericEntry tolerance;
+
+    public final double highExtend;
+
     public final float maxValue;
     public final float minValue;
 
+    public enum ExtendLength {
+
+        RETRACTFULL,
+        EXTENDFULL,
+        ZERO
+    }
+
+    public ExtendLength currentExtendLength;
+
     public ArmExtensionSubsystem() {
 
-        maxValue = 63f;
-        minValue = -63f; //it's a float - Matthew
+        highExtend = 120;
+
+        maxValue = 140f;
+        minValue = -55f; //it's a float - Matthew
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
         extensionPID = extensionMotor.getPIDController();
@@ -51,18 +65,21 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", 1).getEntry();
     }
 
-    public void setExtensionLength(Double setpoint) {
+    public void setExtensionLength(double setpoint) {
 
         this.setpoint = setpoint;
-        extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+    }
 
+    public void setExtensionLength(ExtendLength extendLength) {
+
+        currentExtendLength = extendLength;
+        calcEnums();
     }
 
     public void extend() {
 
         if (setpoint < maxValue) {
             setpoint += Constants.ArmExtendConstants.armExtendSpeed;
-            extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
 
@@ -70,14 +87,12 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
         if (setpoint > minValue) {
             setpoint -= Constants.ArmExtendConstants.armExtendSpeed;
-            extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         }
     }
 
     public void resetSetpoint() {
 
         setpoint = 0;
-        extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
 
     public boolean extendAtSetpoint() {
@@ -91,10 +106,25 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         }
     }
 
+    private void calcEnums() {
+
+        if (ExtendLength.EXTENDFULL.equals(currentExtendLength)) {
+
+            setpoint = highExtend;
+        } else if (ExtendLength.RETRACTFULL.equals(currentExtendLength)) {
+
+            setpoint = minValue;
+        } else if (ExtendLength.ZERO.equals(currentExtendLength)) {
+
+            setpoint = 0.0;
+        }
+    }
+
     @Override
     public void periodic() {
 
         extensionMotorSetpoint.setDouble(setpoint);
+        extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
     
 }

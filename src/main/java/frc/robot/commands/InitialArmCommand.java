@@ -13,6 +13,4 @@ public class InitialArmCommand extends MoveArmCommand {
         this.armRotationSubsystem = armRotationSubsystem;
     }
 
-   
-
 }

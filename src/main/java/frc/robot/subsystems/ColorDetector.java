@@ -31,8 +31,8 @@ public class ColorDetector extends SubsystemBase {
 
         colorMatch.addColorMatch(cube);
         colorMatch.addColorMatch(cone);
-        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube?", "NOTHIN").getEntry();
-        proximity = Shuffleboard.getTab("RobotData").add("Proximity", 1).getEntry();
+        coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
+        proximity = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
     }
 
     public enum FieldElement {

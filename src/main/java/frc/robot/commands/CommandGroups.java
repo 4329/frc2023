@@ -1,9 +1,11 @@
 package frc.robot.commands;
 
+import org.junit.experimental.ParallelComputer;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.ArmExtensionCommand;
 import frc.robot.commands.ArmRotateCommand;
 import frc.robot.commands.LowArmCommand;
 import frc.robot.commands.MidArmCommand;
@@ -21,10 +23,12 @@ public class CommandGroups {
         return new SequentialCommandGroup(
 
             new InitialArmCommand(armRotationSubsystem),
-            new WristZeroCommand(wristSubsystem),
-            new HighArmCommand(armRotationSubsystem),
-            new ArmExtensionCommand(armExtensionSubsystem, 166.8),
-            new OuttakeCommand(clawSubsystem)
+            new ArmExtendFullCommand(armExtensionSubsystem),
+            
+            new ParallelCommandGroup(                
+                new HighWristCommand(wristSubsystem),
+                new HighArmCommand(armRotationSubsystem)
+            )   
         );
     }
 
@@ -33,10 +37,12 @@ public class CommandGroups {
         return new SequentialCommandGroup(
 
             new InitialArmCommand(armRotationSubsystem),
-            new WristZeroCommand(wristSubsystem),
-            new MidArmCommand(armRotationSubsystem),
-            new ArmExtensionCommand(armExtensionSubsystem, 161),
-            new OuttakeCommand(clawSubsystem)
+            new ArmExtendFullCommand(armExtensionSubsystem),
+
+            new ParallelCommandGroup(
+                new MidWristCommand(wristSubsystem),
+                new MidArmCommand(armRotationSubsystem)
+            )
         );
     }
 
@@ -44,10 +50,9 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
-            new InitialArmCommand(armRotationSubsystem),
-            new HighWristCommand(wristSubsystem),
-            new ReleaseCommand(clawSubsystem),
-            new ArmExtensionCommand(armExtensionSubsystem, 40)
+        new LowArmCommand(armRotationSubsystem),
+        new LowWristCommand(wristSubsystem)
+            
         );
     }
 
