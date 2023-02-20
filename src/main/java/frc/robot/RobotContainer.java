@@ -29,7 +29,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ArmExtensionCommand;
+import frc.robot.commands.ArmExtendToZeroCommand;
+import frc.robot.commands.ArmRetractFullCommand;
 import frc.robot.commands.ArmRotateCommand;
 import frc.robot.commands.ArmUnrotateCommand;
 import frc.robot.commands.BalanceCommand;
@@ -102,6 +103,8 @@ public class RobotContainer {
   private Command simpleAuto;
   private final WristRotateUpCommand wristRotateUpCommand;
   private final WristRotateDownCommand wristRotateDownCommand;
+  private final ArmRetractFullCommand armRetractFullCommand;
+  private final ArmExtendToZeroCommand armExtendToZeroCommand;
 
   
 
@@ -139,9 +142,9 @@ public class RobotContainer {
     midArmCommand = new MidArmCommand(armRotationSubsystem);
     lowArmCommand = new LowArmCommand(armRotationSubsystem);
 
-    clawSubsystem = new ClawSubsystem(colorDetector, armRotationSubsystem);
+    clawSubsystem = new ClawSubsystem(colorDetector);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
-    outtakeCommand = new OuttakeCommand(clawSubsystem);
+    outtakeCommand = new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector);
     pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     armExtensionSubsystem = new ArmExtensionSubsystem();
@@ -150,6 +153,8 @@ public class RobotContainer {
     armUnrotateCommand = new ArmUnrotateCommand(armRotationSubsystem);
     wristRotateUpCommand = new WristRotateUpCommand(wristSubsystem);
     wristRotateDownCommand = new WristRotateDownCommand(wristSubsystem);
+    armRetractFullCommand = new ArmRetractFullCommand(armExtensionSubsystem);
+    armExtendToZeroCommand = new ArmExtendToZeroCommand(armExtensionSubsystem);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
@@ -252,8 +257,8 @@ public class RobotContainer {
 
     operatorController.a().onTrue(CommandGroups.lowScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     operatorController.b().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    operatorController.x().onTrue(midArmCommand);
-    operatorController.y().onTrue(highArmCommand);
+    operatorController.x().onTrue(armExtendToZeroCommand);
+    operatorController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
     operatorController.povUp().whileTrue(armRotateCommand);
     operatorController.povDown().whileTrue(armUnrotateCommand);
@@ -292,6 +297,7 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(m_drive);
     armExtensionSubsystem.resetSetpoint();
     armRotationSubsystem.resetSetpoint();
+    wristSubsystem.resetSetpoint();
   }
 
   public void autonomousPeriodic() {

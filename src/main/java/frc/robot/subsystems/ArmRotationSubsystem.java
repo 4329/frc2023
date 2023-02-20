@@ -34,7 +34,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final double lowPos;
     private final double initialPos;
     private final double portalPos;
-
+    private GenericEntry qwerty;
+    
     public ArmHeight currentArmHeight;
 
     public enum ArmHeight {
@@ -48,15 +49,15 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     public ArmRotationSubsystem() {
 
-        maxValue = 43f;
+        maxValue = 63f;
         minValue = 0f;
 
         tolerance = 0.2;
 
-        highPos = 37.75;
-        midPos = 30.5;
-        lowPos = 0;
-        initialPos = 10;
+        highPos = 43.75;
+        midPos = 38.75;
+        lowPos = 13.5;
+        initialPos = 17.5;
         portalPos = 39;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
@@ -85,6 +86,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;
+        qwerty = Shuffleboard.getTab("setpoints").add("where", "Zero").getEntry();
 
         // TODO slow drive speed when arm is extended. Keep arm at minimum possible extension.
 
@@ -96,6 +98,12 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         this.currentArmHeight = armHeight;
         calcEnums();
+        qwerty.setString(armHeight.toString());
+    }
+
+    public ArmHeight getArmPosition() {
+
+        return this.currentArmHeight;
     }
 
     public void armRotate() {

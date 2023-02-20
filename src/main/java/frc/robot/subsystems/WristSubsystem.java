@@ -21,11 +21,32 @@ public class WristSubsystem extends SubsystemBase {
     public GenericEntry tolerance;
     public final float maxValue;
     public final float minValue;
+
+    private final double highAngle;
+    private final double midAngle;
+    private final double lowAngle;
+    private final double portalAngle;
+
+    public WristAngle currentWristAngle;
+
+    public enum WristAngle {
+        
+        HIGHROT,
+        MIDROT,
+        LOWROT,
+        PORTALROT,
+        ZERO
+    }
     
     public WristSubsystem() {
 
-        maxValue = 30f;
-        minValue = -30f;
+        maxValue = 60f;
+        minValue = 0f;
+
+        highAngle = 28.19;
+        midAngle = 31.2;
+        lowAngle = 9.0;
+        portalAngle = 39;
 
         wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate);
         wristPID = wristMotor.getPIDController();
@@ -50,12 +71,19 @@ public class WristSubsystem extends SubsystemBase {
         wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
     }
 
-    public void setWristPosition(Double setpoint) {
+    public void setWristPosition(double setpoint) {
         
         this.setpoint = setpoint;
 
         wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
+
+    public void setWristPosition(WristAngle wristAngle) {
+
+        currentWristAngle = wristAngle;
+        calcEnums();
+    }
+
     public void wristUp() {
 
         if (setpoint > minValue) {
@@ -88,11 +116,41 @@ public class WristSubsystem extends SubsystemBase {
         }
     }
 
+
+    private void calcEnums() {
+
+        if (WristAngle.HIGHROT.equals(currentWristAngle)) {
+
+            setpoint = highAngle;
+        } else if (WristAngle.LOWROT.equals(currentWristAngle)) {
+
+            setpoint = lowAngle;
+
+        } else if (WristAngle.MIDROT.equals(currentWristAngle)) {
+
+            setpoint = midAngle;
+
+        } else if (WristAngle.ZERO.equals(currentWristAngle)) {
+
+            setpoint = 0.0;
+        } else if (WristAngle.PORTALROT.equals(currentWristAngle)) {
+
+            setpoint = portalAngle;
+        }
+        
+    }
+    
+    public void resetSetpoint() {
+
+        setpoint = 0;
+    }
+
     @Override
     public void periodic() {
 
         wristMotorSetpoint.setDouble(setpoint);
         wristPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
+
     
 }
