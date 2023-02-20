@@ -34,7 +34,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final double lowPos;
     private final double initialPos;
     private final double portalPos;
-
+    private GenericEntry qwerty;
+    
     public ArmHeight currentArmHeight;
 
     public enum ArmHeight {
@@ -85,6 +86,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;
+        qwerty = Shuffleboard.getTab("setpoints").add("where", "Zero").getEntry();
 
         // TODO slow drive speed when arm is extended. Keep arm at minimum possible extension.
 
@@ -96,6 +98,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         this.currentArmHeight = armHeight;
         calcEnums();
+        qwerty.setString(armHeight.toString());
     }
 
     public ArmHeight getArmPosition() {

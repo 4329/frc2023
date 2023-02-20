@@ -144,7 +144,7 @@ public class RobotContainer {
 
     clawSubsystem = new ClawSubsystem(colorDetector);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
-    outtakeCommand = new OuttakeCommand(clawSubsystem, armRotationSubsystem);
+    outtakeCommand = new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector);
     pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     armExtensionSubsystem = new ArmExtensionSubsystem();

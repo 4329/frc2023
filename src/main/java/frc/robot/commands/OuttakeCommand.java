@@ -3,18 +3,30 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
+import frc.robot.subsystems.ColorDetector.FieldElement;
 
 public class OuttakeCommand extends CommandBase {
 
     private ClawSubsystem clawSubsystem;
     private ArmRotationSubsystem armRotationSubsystem;
+    ColorDetector colorDetector;
 
-    public OuttakeCommand(ClawSubsystem clawSubsystem, ArmRotationSubsystem armRotationSubsystem) {
+    FieldElement elly;
+
+    public OuttakeCommand(ClawSubsystem clawSubsystem, ArmRotationSubsystem armRotationSubsystem, ColorDetector colorDetector) {
 
         this.clawSubsystem = clawSubsystem;
         this.armRotationSubsystem = armRotationSubsystem;
+        this.colorDetector = colorDetector;
         addRequirements(clawSubsystem);
+    }
+
+    @Override
+    public void initialize() {
+
+        elly = colorDetector.detectElement();
     }
 
     @Override
@@ -22,40 +34,14 @@ public class OuttakeCommand extends CommandBase {
 
         if (ArmHeight.HIGH.equals(armRotationSubsystem.getArmPosition())) {
 
-            clawSubsystem.outtakeHigh();
-
+            clawSubsystem.outtakeHigh(elly);
         } else if (ArmHeight.MID.equals(armRotationSubsystem.getArmPosition())) {
 
-            clawSubsystem.outtakeMid();
+            clawSubsystem.outtakeMid(elly);
         } else if (ArmHeight.LOW.equals(armRotationSubsystem.getArmPosition())) {
 
-            clawSubsystem.outtakeLow();
+            clawSubsystem.outtakeLow(elly);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        clawSubsystem.outtakeHigh();
-    }
-
-    @Override
-    public boolean isFinished() {
-
-        return false;
     }
 
     @Override

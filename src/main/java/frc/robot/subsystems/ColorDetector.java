@@ -16,44 +16,56 @@ public class ColorDetector extends SubsystemBase {
     private final ColorSensorV3 colorSensorV3;
     GenericEntry coneOrCube;
     GenericEntry proximity;
+    GenericEntry fjsalidsfa;
+    GenericEntry sdfajilfjsadlifjd;
+
     ColorMatch colorMatch;
-    Color cube;
-    Color cone;
-    Color matchColor;
+
+    private final Color cube;
+    private final Color cubeLogo;
+    private final Color cone;
+
+    public Color matchColor;
+    public Color rawColor;
 
     public ColorDetector() {
+
         i2cPort = I2C.Port.kMXP;
         colorSensorV3 = new ColorSensorV3(i2cPort);
         colorMatch = new ColorMatch();
         cube = new Color(36 / 255.0, 36 / 255.0, 182 / 255.0);
-        cone = new Color(125 / 255.0, 117 / 255.0, 12 / 255.0);
-        colorMatch.setConfidenceThreshold(Constants.ColorConstants.confidenceLevel);
+        cubeLogo = new Color(60 / 255.0, 115/ 255.0, 79 / 255);
+        cone = new Color(85 / 255.0, 136 / 255.0, 24 / 255.0);
 
         colorMatch.addColorMatch(cube);
+        colorMatch.addColorMatch(cubeLogo);
         colorMatch.addColorMatch(cone);
         coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
         proximity = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
+        fjsalidsfa = Shuffleboard.getTab("setpoints").add("hex", "jisilflsjajfjij").getEntry();
+        sdfajilfjsadlifjd = Shuffleboard.getTab("setpoints").add("colrmatch", "fsdjasijk").getEntry();
     }
 
     public enum FieldElement {
         CUBE, CONE, NOTHIN
     }
 
+
     public FieldElement detectElement() {
 
-        colorMatch.matchClosestColor(colorSensorV3.getColor());
-        matchColor = colorMatch.matchClosestColor(colorSensorV3.getColor()).color;
-        if (matchColor == cone) {
+        rawColor = colorSensorV3.getColor();
+        matchColor = colorMatch.matchClosestColor(rawColor).color;
+        if (cone.equals(matchColor)) {
 
             return FieldElement.CONE;
-        } else if (matchColor == cube) {
+        } else if (cube.equals(matchColor) || cubeLogo.equals(matchColor)) {
 
             return FieldElement.CUBE;
         } else {
-            return null;
+
+            return FieldElement.NOTHIN;
         }
     }
-
     public double distance() {
         
         return colorSensorV3.getProximity();
@@ -70,5 +82,8 @@ public class ColorDetector extends SubsystemBase {
 
         }
         proximity.setDouble(distance());
+        fjsalidsfa.setString(rawColor.toString());
+        sdfajilfjsadlifjd.setString(matchColor.toString());
+
     }
 }

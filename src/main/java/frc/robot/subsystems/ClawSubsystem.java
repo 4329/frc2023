@@ -44,10 +44,10 @@ public class ClawSubsystem extends SubsystemBase {
         rightMotor.set(speed);
     }
 
-    public void outtakeHigh() {
+    public void outtakeHigh(FieldElement fieldElement) {
 
         double speed = 0.285;
-        if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
+        if (FieldElement.CUBE.equals(fieldElement)) {
 
             speed = 0.20;
         }
@@ -57,10 +57,10 @@ public class ClawSubsystem extends SubsystemBase {
 
     }
 
-    public void outtakeMid() {
+    public void outtakeMid(FieldElement fieldElement) {
 
         double speed = 0.285;
-        if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
+        if (FieldElement.CUBE.equals(fieldElement)) {
 
             speed = 0.05;
         }
@@ -69,10 +69,10 @@ public class ClawSubsystem extends SubsystemBase {
         rightMotor.set(speed);
     }
 
-    public void outtakeLow() {
+    public void outtakeLow(FieldElement fieldElement) {
 
         double speed = 0.285;
-        if (FieldElement.CUBE.equals(colorDetector.detectElement())) {
+        if (FieldElement.CUBE.equals(fieldElement)) {
 
             speed = 0.15;
         }
