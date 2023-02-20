@@ -8,6 +8,6 @@ public class ArmExtendToZeroCommand extends ArmExtensionBase {
     public ArmExtendToZeroCommand(ArmExtensionSubsystem armExtensionSubsystem) {
 
         super(armExtensionSubsystem, ExtendLength.ZERO);
-
     }
+    
 }

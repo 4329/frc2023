@@ -92,7 +92,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public void resetSetpoint() {
 
-        setpoint = 0;
+        setpoint = extensionEncoder.getPosition();
     }
 
     public boolean extendAtSetpoint() {

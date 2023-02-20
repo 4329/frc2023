@@ -22,13 +22,13 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
-            new InitialArmCommand(armRotationSubsystem),
+            new SafeExtendCommand(armRotationSubsystem),
             new ArmExtendFullCommand(armExtensionSubsystem),
-            
-            new ParallelCommandGroup(                
+            new ParallelCommandGroup(
+
                 new HighWristCommand(wristSubsystem),
                 new HighArmCommand(armRotationSubsystem)
-            )   
+            )
         );
     }
 
@@ -36,10 +36,10 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
-            new InitialArmCommand(armRotationSubsystem),
+            new SafeExtendCommand(armRotationSubsystem),
             new ArmExtendFullCommand(armExtensionSubsystem),
-
             new ParallelCommandGroup(
+
                 new MidWristCommand(wristSubsystem),
                 new MidArmCommand(armRotationSubsystem)
             )
@@ -50,9 +50,9 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
-        new LowArmCommand(armRotationSubsystem),
-        new LowWristCommand(wristSubsystem)
-            
+            new LowArmCommand(armRotationSubsystem),
+            new LowWristCommand(wristSubsystem)
+
         );
     }
 
@@ -78,4 +78,17 @@ public class CommandGroups {
         );
     }
 
+    public static CommandBase totalZero(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, WristSubsystem wristSubsystem) {
+
+        return new SequentialCommandGroup(
+
+            new ParallelCommandGroup(
+                
+                new ArmExtendToZeroCommand(armExtensionSubsystem),
+                new WristZeroCommand(wristSubsystem)
+            ),
+            new ZeroArmCommand(armRotationSubsystem)
+        );
+    }
+    
 }
