@@ -16,22 +16,30 @@ import frc.robot.subsystems.swerve.Drivetrain;
 public class LimlighSubsystem extends SubsystemBase {
 
     NetworkTable limligh;
-    GenericEntry doesthiswork;
     Drivetrain drivetrain;
     GenericEntry pose;
+    GenericEntry asdfg;
+    GenericEntry jflaiss;
     double[] hrm;
+
     public enum Alliance {
 
         RED,
         BLUE
     };
+    public enum LimlighPipeline {
+
+        FIDUCIAL,
+        RETROREFLECTIVE
+    }
+
     Alliance currentAlliance;
 
     public LimlighSubsystem(Drivetrain drivetrain) {
 
         limligh = NetworkTableInstance.getDefault().getTable("limelight-limligh");
-        doesthiswork = Shuffleboard.getTab("ikfsdal").add("work?", 1).getEntry();
         pose = Shuffleboard.getTab("ikfsdal").add("pose?", "yes").getEntry();
+        asdfg = Shuffleboard.getTab("ikfsdal").add("targetZ?", 0).getEntry();
         this.drivetrain = drivetrain;
 
         if (NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(false)) {
@@ -41,6 +49,7 @@ public class LimlighSubsystem extends SubsystemBase {
 
             currentAlliance = Alliance.BLUE;
         }
+        jflaiss = Shuffleboard.getTab("ikfsdal").add("pipeline", 0).getEntry();
     }
 
     public boolean targetVisible() {
@@ -49,7 +58,8 @@ public class LimlighSubsystem extends SubsystemBase {
     }
 
     /**
-     * Pulls target x (the difference as an angle with respect to x value of our robot and the target) 
+     * Pulls target x (the difference as an angle with respect to x value of our
+     * robot and the target)
      * from our limligh via networkTableEntries
      * 
      * @return the target x angle
@@ -59,8 +69,14 @@ public class LimlighSubsystem extends SubsystemBase {
         return limligh.getEntry("tx").getDouble(0);
     }
 
+    public double getTargetz() {
+
+        return Math.round(getPose().getX()*100);
+    }
+
     /**
-     * Pulls target y (the difference as an angle with respect to y value of our robot and the target) 
+     * Pulls target y (the difference as an angle with respect to y value of our
+     * robot and the target)
      * from our limligh via networkTableEntries
      * 
      * @return the target y angle
@@ -75,29 +91,35 @@ public class LimlighSubsystem extends SubsystemBase {
         return limligh.getEntry("tid").getDouble(0);
     }
 
-    public Pose2d hj() {
+    public Pose2d getPose() {
 
         if (Alliance.RED.equals(currentAlliance)) {
 
-            hrm = limligh.getEntry("botpose_wpired").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
+            hrm = limligh.getEntry("botpose_wpired").getDoubleArray(new double[] { 0, 0, 0, 0, 0, 0 });
         } else {
 
-            hrm = limligh.getEntry("botpose_wpiblue").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
+            hrm = limligh.getEntry("botpose_wpiblue").getDoubleArray(new double[] { 0, 0, 0, 0, 0, 0 });
         }
 
         return new Pose2d(
+            
             new Translation2d(hrm[0], hrm[1]),
             new Rotation2d(hrm[5])
         );
     }
 
+    public void switchPipeline(LimlighPipeline pipeline) {
+
+        limligh.getEntry("pipeline").setDouble(pipeline.ordinal());
+    }
+
     @Override
     public void periodic() {
 
-        doesthiswork.setBoolean(true);
-
-        hj();
-        pose.setString("" + Math.round(hrm[0]) + ", " + Math.round(hrm[1]) + ", " + Math.round(hrm[5]));
+        getPose();
+        pose.setString("" + (hrm[0]) + ", " + (hrm[1]) + ", " + (hrm[5]));
+        asdfg.setDouble(getTargetz());
+        switchPipeline(LimlighPipeline.values()[Math.toIntExact(jflaiss.getInteger(0))]);
     }
-    
+
 }

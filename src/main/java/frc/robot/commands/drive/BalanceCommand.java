@@ -105,5 +105,4 @@ public class BalanceCommand extends CommandBase{
         // commandRuningdkj.setBoolean(false);
     }
 
-
 }
