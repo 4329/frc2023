@@ -49,7 +49,7 @@ public class CommandGroups {
         );
     }
 
-    public static CommandBase portalSnagCone(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
+    public static CommandBase portalSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
 
         return new SequentialCommandGroup(
 
@@ -59,16 +59,21 @@ public class CommandGroups {
             new IntakeCommand(clawSubsystem, colorDetector)
         );
     }
-
-    public static CommandBase portalSnagCube(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
+    public static CommandBase floorSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
 
         return new SequentialCommandGroup(
 
-            new PortalArmCommand(armRotationSubsystem),
-            new PortalWristCommand(wristSubsystem),
-            new ReleaseCommand(clawSubsystem),
-            new IntakeCommand(clawSubsystem, colorDetector)
+            new ArmRotateFloorCommand(armRotationSubsystem),
+
+            new ParallelCommandGroup(
+
+                 new ArmExtendFloorCommand(armExtensionSubsystem),
+                 new WristFloorCommand(wristSubsystem)
+            
+            )
+
         );
+
     }
 
     public static CommandBase totalZero(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, WristSubsystem wristSubsystem) {

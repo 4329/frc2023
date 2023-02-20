@@ -36,6 +36,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final double portalPos;
     private GenericEntry qwerty;
     private final double zeroPos;
+    private final double floorPos;
     
     public ArmHeight currentArmHeight;
 
@@ -46,6 +47,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         LOW,
         SAFEEXTEND,
         PORTAL,
+        FLOOR,
         ZERO
     }
 
@@ -61,6 +63,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         lowPos = 13.5;
         safeExtendPos = 17.5;
         portalPos = 42;
+        floorPos = 16;
         zeroPos = 0;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
@@ -144,6 +147,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
         } else if (ArmHeight.ZERO.equals(currentArmHeight)) {
             
             setpoint = zeroPos;
+        } else if (ArmHeight.FLOOR.equals(currentArmHeight)) {
+
+            setpoint = floorPos;
         }
     }
 

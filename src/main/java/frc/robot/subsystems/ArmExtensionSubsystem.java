@@ -17,28 +17,31 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private RelativeEncoder extensionEncoder;
     private SparkMaxPIDController extensionPID;
     private double setpoint;
-    public GenericEntry extensionMotorSetpoint;
-    public GenericEntry tolerance;
+    private GenericEntry extensionMotorSetpoint;
+    private GenericEntry tolerance;
 
-    public final double highExtend;
+    private final double highExtend;
+    private final double floorExtend;
 
-    public final float maxValue;
-    public final float minValue;
+    private final float maxValue;
+    private final float minValue;
 
     public enum ExtendLength {
 
         RETRACTFULL,
         EXTENDFULL,
+        FLOOR,
         ZERO
     }
 
-    public ExtendLength currentExtendLength;
+    private ExtendLength currentExtendLength;
 
     public ArmExtensionSubsystem() {
 
         highExtend = 120;
+        floorExtend = 220;
 
-        maxValue = 140f;
+        maxValue = 220f;
         minValue = -55f; //it's a float - Matthew
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
@@ -117,6 +120,9 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         } else if (ExtendLength.ZERO.equals(currentExtendLength)) {
 
             setpoint = 0.0;
+        } else if (ExtendLength.FLOOR.equals(currentExtendLength)) {
+
+            setpoint = floorExtend;
         }
     }
 
