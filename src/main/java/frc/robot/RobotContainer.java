@@ -237,9 +237,9 @@ public class RobotContainer {
     driverController.start().whileTrue(wristRotateUpCommand);
     driverController.back().whileTrue(wristRotateDownCommand);
 
-    driverController.a().onTrue(new HighWristCommand(wristSubsystem));
-    driverController.b().onTrue(new LowWristCommand(wristSubsystem));
-    driverController.x().onTrue(new WristZeroCommand(wristSubsystem));
+    driverController.a().onTrue(CommandGroups.portalSnagCone(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+    driverController.b().onTrue(CommandGroups.portalSnagCube(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+    driverController.x().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
     driverController.y().whileTrue(exampleCommand);
 
     driverController.povUp().onTrue(resetOdometryCommandForward);

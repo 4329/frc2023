@@ -1,15 +1,8 @@
 package frc.robot.commands;
 
-import org.junit.experimental.ParallelComputer;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.ArmRotateCommand;
-import frc.robot.commands.LowArmCommand;
-import frc.robot.commands.MidArmCommand;
-import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;

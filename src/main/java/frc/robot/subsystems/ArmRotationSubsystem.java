@@ -60,7 +60,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         midPos = 38.75;
         lowPos = 13.5;
         safeExtendPos = 17.5;
-        portalPos = 39;
+        portalPos = 42;
         zeroPos = 0;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);

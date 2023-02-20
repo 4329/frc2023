@@ -28,7 +28,7 @@ public class ClawSubsystem extends SubsystemBase {
 
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
-        solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
+        solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
         this.colorDetector = colorDetector;
         leftMotor.setInverted(true);
         leftMotor.setIdleMode(IdleMode.kBrake);
