@@ -32,9 +32,10 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final double highPos;
     private final double midPos;
     private final double lowPos;
-    private final double initialPos;
+    private final double safeExtendPos;
     private final double portalPos;
     private GenericEntry qwerty;
+    private final double zeroPos;
     
     public ArmHeight currentArmHeight;
 
@@ -43,8 +44,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
         HIGH,
         MID,
         LOW,
-        INITIAL,
-        PORTAL
+        SAFEEXTEND,
+        PORTAL,
+        ZERO
     }
 
     public ArmRotationSubsystem() {
@@ -57,8 +59,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
         highPos = 43.75;
         midPos = 38.75;
         lowPos = 13.5;
-        initialPos = 17.5;
+        safeExtendPos = 17.5;
         portalPos = 39;
+        zeroPos = 0;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
         armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
@@ -132,18 +135,21 @@ public class ArmRotationSubsystem extends SubsystemBase {
         } else if (ArmHeight.LOW.equals(currentArmHeight)) {
 
             setpoint = lowPos;
-        } else if (ArmHeight.INITIAL.equals(currentArmHeight)) {
+        } else if (ArmHeight.SAFEEXTEND.equals(currentArmHeight)) {
 
-            setpoint = initialPos;
+            setpoint = safeExtendPos;
         } else if (ArmHeight.PORTAL.equals(currentArmHeight)) {
 
             setpoint = portalPos;
+        } else if (ArmHeight.ZERO.equals(currentArmHeight)) {
+            
+            setpoint = zeroPos;
         }
     }
 
     public void resetSetpoint() {
 
-        setpoint = 0;
+        setpoint = armEncoder.getPosition();
     }
 
     public void stop() {
@@ -162,6 +168,17 @@ public class ArmRotationSubsystem extends SubsystemBase {
         }
     }
 
+    public boolean isLowerThanSafeExtend() {
+
+        if (armEncoder.getPosition() < safeExtendPos) {
+
+            return true;
+        } else {
+
+            return false;
+        }
+    }
+
     @Override
     public void periodic() {
 
@@ -169,5 +186,6 @@ public class ArmRotationSubsystem extends SubsystemBase {
         pidGraph.setDouble(armEncoder.getPosition());
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
+
 
 }

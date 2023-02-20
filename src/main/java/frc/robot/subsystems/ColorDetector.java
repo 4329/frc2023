@@ -14,19 +14,23 @@ public class ColorDetector extends SubsystemBase {
 
     private final I2C.Port i2cPort;
     private final ColorSensorV3 colorSensorV3;
+    
     GenericEntry coneOrCube;
     GenericEntry proximity;
-    GenericEntry fjsalidsfa;
-    GenericEntry sdfajilfjsadlifjd;
+
 
     ColorMatch colorMatch;
-
     private final Color cube;
     private final Color cubeLogo;
     private final Color cone;
 
     public Color matchColor;
     public Color rawColor;
+
+    public enum FieldElement {
+        
+        CUBE, CONE, NOTHIN
+    }
 
     public ColorDetector() {
 
@@ -42,14 +46,7 @@ public class ColorDetector extends SubsystemBase {
         colorMatch.addColorMatch(cone);
         coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
         proximity = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
-        fjsalidsfa = Shuffleboard.getTab("setpoints").add("hex", "jisilflsjajfjij").getEntry();
-        sdfajilfjsadlifjd = Shuffleboard.getTab("setpoints").add("colrmatch", "fsdjasijk").getEntry();
     }
-
-    public enum FieldElement {
-        CUBE, CONE, NOTHIN
-    }
-
 
     public FieldElement detectElement() {
 
@@ -73,17 +70,16 @@ public class ColorDetector extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         FieldElement kraigElement = detectElement();
         if (kraigElement != null) {
+
             coneOrCube.setString(kraigElement.toString());
         } else {
 
             coneOrCube.setString(FieldElement.NOTHIN.toString());
-
         }
         proximity.setDouble(distance());
-        fjsalidsfa.setString(rawColor.toString());
-        sdfajilfjsadlifjd.setString(matchColor.toString());
-
     }
+
 }

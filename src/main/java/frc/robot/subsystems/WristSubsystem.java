@@ -142,7 +142,7 @@ public class WristSubsystem extends SubsystemBase {
     
     public void resetSetpoint() {
 
-        setpoint = 0;
+        setpoint = wristEncoder.getPosition();
     }
 
     @Override
