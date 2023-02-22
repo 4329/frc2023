@@ -174,7 +174,7 @@ public class RobotContainer {
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
     manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
-    aprilTagMiddleCommand = new AprilTagMiddleCommand();
+    aprilTagMiddleCommand = new AprilTagMiddleCommand(limlighSubsystem, 1, m_robotDrive);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function

@@ -16,14 +16,15 @@ public class AprilTagMiddleCommand extends CommandBase {
 
     Drivetrain drivetrain;
 
-    public void aprilTagMiddleCommand(LimlighSubsystem limlighSubsystem, double targetId, Drivetrain drivetrain) {
+    public AprilTagMiddleCommand(LimlighSubsystem limlighSubsystem, double targetId, Drivetrain m_drivetrain) {
 
         this.limlighSubsystem = limlighSubsystem;
-        centerPID = new PIDController(0, 0, 0);
+        this.drivetrain = m_drivetrain;
+        centerPID = new PIDController(-0.001, 0, 0);
         centerPID.setTolerance(0.5);
-        forwardPID = new PIDController(0, 0, 0);
+        forwardPID = new PIDController(-0.001, 0, 0);
         this.targetId = targetId;
-        this.drivetrain = drivetrain;
+        addRequirements(limlighSubsystem, m_drivetrain);
     }
 
     @Override
@@ -35,11 +36,13 @@ public class AprilTagMiddleCommand extends CommandBase {
     @Override
     public void execute() {
         
-        if (limlighSubsystem.getTargetId() == targetId) {
+        if (this.limlighSubsystem.getTargetId() == targetId) {
             
             centerPID.setSetpoint(0);
             forwardPID.setSetpoint(150);
             drivetrain.drive(forwardPID.calculate(limlighSubsystem.getTargetz()), centerPID.calculate(limlighSubsystem.getTargetx()), 0, false);
+            System.out.println("I am movin WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWw");
+
         }
     }
 
