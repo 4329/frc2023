@@ -38,7 +38,7 @@ public class ColorDetector extends SubsystemBase {
         colorSensorV3 = new ColorSensorV3(i2cPort);
         colorMatch = new ColorMatch();
         cube = new Color(36 / 255.0, 36 / 255.0, 182 / 255.0);
-        cubeLogo = new Color(60 / 255.0, 115/ 255.0, 79 / 255);
+        cubeLogo = new Color(60 / 255.0, 115/ 255.0, 79 / 255.0);
         cone = new Color(85 / 255.0, 136 / 255.0, 24 / 255.0);
 
         colorMatch.addColorMatch(cube);
