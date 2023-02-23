@@ -215,23 +215,27 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(exampleCommand);
-    driverController.leftTrigger().whileTrue(exampleCommand);
+    driverController.rightTrigger().whileTrue(armUnrotateCommand);
+    driverController.leftTrigger().whileTrue(armRotateCommand);
 
-    driverController.leftBumper().onTrue(exampleCommand);
-    driverController.rightBumper().onTrue(changeFieldOrientCommand);
+    driverController.leftBumper().whileTrue(extendRetractCommand);
+    driverController.rightBumper().whileTrue(extendRetractCommand);
 
-    driverController.start().whileTrue(wristRotateUpCommand);
-    driverController.back().whileTrue(wristRotateDownCommand);
+    driverController.start().whileTrue(wristRotateUpCommand); //to april tag
+    driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
-    driverController.b().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
-    driverController.x().onTrue(exampleCommand);
-    driverController.y().whileTrue(exampleCommand);
+    driverController.a().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+    driverController.b().whileTrue(pinchCommand); //toggle
+    driverController.x().whileTrue(outtakeCommand);
+    driverController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
-    driverController.povUp().onTrue(resetOdometryCommandForward);
+    driverController.povUp().onTrue(intakeCommand); //intake for substation
+    driverController.povRight().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    driverController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
     driverController.povDown().onTrue(resetOdometryCommandBackward);
 
+    driverController.rightStick().whileTrue(balanceCommand);
+    // driverController.leftStick().whileTrue();
     // Operator Controller
     operatorController.rightTrigger().whileTrue(extendRetractCommand);
     operatorController.leftTrigger().whileTrue(extendRetractCommand);
