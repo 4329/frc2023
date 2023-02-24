@@ -2,7 +2,6 @@ package frc.robot;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.pathplanner.lib.PathConstraints;
@@ -11,52 +10,41 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
-import java.util.Map;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ArmExtendToZeroCommand;
-import frc.robot.commands.ArmRetractFullCommand;
-import frc.robot.commands.ArmRotateCommand;
-import frc.robot.commands.ArmUnrotateCommand;
-import frc.robot.commands.BalanceCommand;
-import frc.robot.commands.ChangeFieldOrientCommand;
-import frc.robot.commands.CoastCommand;
 import frc.robot.commands.CommandGroups;
-import frc.robot.commands.DriveByController;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.ExtendRetractCommand;
-import frc.robot.commands.HighArmCommand;
-import frc.robot.commands.LowArmCommand;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.MidArmCommand;
-import frc.robot.commands.HighWristCommand;
-import frc.robot.commands.SafeExtendCommand;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.LowWristCommand;
-import frc.robot.commands.MoveArmCommand;
-import frc.robot.commands.OuttakeCommand;
-import frc.robot.commands.PinchCommand;
-import frc.robot.commands.ReleaseCommand;
-import frc.robot.commands.ResetOdometryCommand;
-import frc.robot.commands.WristRotateDownCommand;
-import frc.robot.commands.WristRotateUpCommand;
-import frc.robot.commands.WristToPositionCommand;
-import frc.robot.commands.WristZeroCommand;
+import frc.robot.commands.claw.IntakeCommand;
+import frc.robot.commands.claw.OuttakeCommand;
+import frc.robot.commands.claw.PinchCommand;
+import frc.robot.commands.claw.ReleaseCommand;
+import frc.robot.commands.drive.BalanceCommand;
+import frc.robot.commands.drive.ChangeFieldOrientCommand;
+import frc.robot.commands.drive.CoastCommand;
+import frc.robot.commands.drive.DriveByController;
+import frc.robot.commands.drive.ResetOdometryCommand;
+import frc.robot.commands.extend.ArmExtendToZeroCommand;
+import frc.robot.commands.extend.ArmRetractFullCommand;
+import frc.robot.commands.extend.ExtendRetractCommand;
+import frc.robot.commands.rotation.ArmRotateCommand;
+import frc.robot.commands.rotation.ArmUnrotateCommand;
+import frc.robot.commands.rotation.HighArmCommand;
+import frc.robot.commands.rotation.LowArmCommand;
+import frc.robot.commands.rotation.MidArmCommand;
+import frc.robot.commands.wrist.WristRotateDownCommand;
+import frc.robot.commands.wrist.WristRotateUpCommand;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -64,7 +52,6 @@ import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.HoorayConfig;
-import frc.robot.utilities.MathUtils;
 
 /* (including subsystems, commands, and button mappings) should be declared here
 */
@@ -148,7 +135,7 @@ public class RobotContainer {
     pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     armExtensionSubsystem = new ArmExtensionSubsystem();
-    extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, operatorController);
+    extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, driverController);
     armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
     armUnrotateCommand = new ArmUnrotateCommand(armRotationSubsystem);
     wristRotateUpCommand = new WristRotateUpCommand(wristSubsystem);
@@ -228,40 +215,51 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(exampleCommand);
-    driverController.leftTrigger().whileTrue(exampleCommand);
+    driverController.rightTrigger().whileTrue(extendRetractCommand); //arm extend
+    driverController.leftTrigger().whileTrue(extendRetractCommand); //arm retract
+    
+    driverController.rightBumper().whileTrue(armRotateCommand); //arm up
+    driverController.leftBumper().whileTrue(armUnrotateCommand); //arm down
 
-    driverController.leftBumper().onTrue(exampleCommand);
-    driverController.rightBumper().onTrue(changeFieldOrientCommand);
+    driverController.start().whileTrue(exampleCommand); //to april tag
+    driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.start().whileTrue(wristRotateUpCommand);
-    driverController.back().whileTrue(wristRotateDownCommand);
+    driverController.a().whileTrue(intakeCommand); //TODO make into a toggle
+    driverController.b().onTrue(pinchCommand); //toggle
+    driverController.x().whileTrue(outtakeCommand);
+    driverController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
-    driverController.a().onTrue(new HighWristCommand(wristSubsystem));
-    driverController.b().onTrue(new LowWristCommand(wristSubsystem));
-    driverController.x().onTrue(new WristZeroCommand(wristSubsystem));
-    driverController.y().whileTrue(exampleCommand);
+    driverController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector)); //intake for substation
+    driverController.povRight().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    driverController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
+    driverController.povDown().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
 
-    driverController.povUp().onTrue(resetOdometryCommandForward);
-    driverController.povDown().onTrue(resetOdometryCommandBackward);
-
+    //driverController.rightStick().whileTrue(balanceCommand);
+    driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient    /\/\
+    
     // Operator Controller
     operatorController.rightTrigger().whileTrue(extendRetractCommand);
     operatorController.leftTrigger().whileTrue(extendRetractCommand);
 
-    operatorController.leftBumper().whileTrue(pinchCommand);
-    operatorController.rightBumper().whileTrue(releaseCommand);
+    operatorController.leftBumper().whileTrue(armRotateCommand);
+    operatorController.rightBumper().whileTrue(armUnrotateCommand);
 
-    operatorController.start().whileTrue(intakeCommand);
-    operatorController.back().whileTrue(outtakeCommand);
-
-    operatorController.a().onTrue(CommandGroups.lowScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    operatorController.b().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    operatorController.x().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
+    operatorController.start().whileTrue(exampleCommand); //to april tag
+    operatorController.back().onTrue(changeFieldOrientCommand);
+    
+    
+    operatorController.a().whileTrue(intakeCommand); //TODO make into a toggle
+    operatorController.b().onTrue(pinchCommand); //toggle
+    operatorController.x().whileTrue(outtakeCommand);
     operatorController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
-    operatorController.povUp().whileTrue(armRotateCommand);
-    operatorController.povDown().whileTrue(armUnrotateCommand);
+    operatorController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector)); //intake for substation
+    operatorController.povRight().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    operatorController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
+    operatorController.povDown().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+
+//    operatorController.rightStick().whileTrue(balanceCommand);
+    operatorController.leftStick().whileTrue(resetOdometryCommandForward); //field orient
   }
 
   // jonathan was here today 2/3/2023

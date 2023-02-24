@@ -26,6 +26,7 @@ public class WristSubsystem extends SubsystemBase {
     private final double midAngle;
     private final double lowAngle;
     private final double portalAngle;
+    private final double floorAngle;
 
     public WristAngle currentWristAngle;
 
@@ -35,6 +36,7 @@ public class WristSubsystem extends SubsystemBase {
         MIDROT,
         LOWROT,
         PORTALROT,
+        FLOOR,
         ZERO
     }
     
@@ -46,8 +48,9 @@ public class WristSubsystem extends SubsystemBase {
         highAngle = 28.19;
         midAngle = 31.2;
         lowAngle = 9.0;
-        portalAngle = 39;
-
+        portalAngle = 33.39;
+        floorAngle = 9.3999;
+        
         wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate);
         wristPID = wristMotor.getPIDController();
         wristEncoder = wristMotor.getEncoder();
@@ -136,6 +139,9 @@ public class WristSubsystem extends SubsystemBase {
         } else if (WristAngle.PORTALROT.equals(currentWristAngle)) {
 
             setpoint = portalAngle;
+        } else if (WristAngle.FLOOR.equals(currentWristAngle)) {
+
+            setpoint = floorAngle;
         }
         
     }

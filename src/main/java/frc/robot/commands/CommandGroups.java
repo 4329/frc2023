@@ -1,15 +1,26 @@
 package frc.robot.commands;
 
-import org.junit.experimental.ParallelComputer;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.ArmRotateCommand;
-import frc.robot.commands.LowArmCommand;
-import frc.robot.commands.MidArmCommand;
-import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.claw.IntakeCommand;
+import frc.robot.commands.claw.PinchCommand;
+import frc.robot.commands.extend.ArmExtendFloorCommand;
+import frc.robot.commands.extend.ArmExtendFullCommand;
+import frc.robot.commands.extend.ArmExtendToZeroCommand;
+import frc.robot.commands.extend.SafeExtendCommand;
+import frc.robot.commands.rotation.ArmRotateFloorCommand;
+import frc.robot.commands.rotation.HighArmCommand;
+import frc.robot.commands.rotation.LowArmCommand;
+import frc.robot.commands.rotation.MidArmCommand;
+import frc.robot.commands.rotation.PortalArmCommand;
+import frc.robot.commands.rotation.ZeroArmCommand;
+import frc.robot.commands.wrist.HighWristCommand;
+import frc.robot.commands.wrist.LowWristCommand;
+import frc.robot.commands.wrist.MidWristCommand;
+import frc.robot.commands.wrist.PortalWristCommand;
+import frc.robot.commands.wrist.WristFloorCommand;
+import frc.robot.commands.wrist.WristZeroCommand;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -56,7 +67,7 @@ public class CommandGroups {
         );
     }
 
-    public static CommandBase portalSnagCone(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
+    public static CommandBase portalSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
 
         return new SequentialCommandGroup(
 
@@ -66,15 +77,16 @@ public class CommandGroups {
             new IntakeCommand(clawSubsystem, colorDetector)
         );
     }
-
-    public static CommandBase portalSnagCube(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
+    public static CommandBase floorSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
 
         return new SequentialCommandGroup(
 
-            new PortalArmCommand(armRotationSubsystem),
-            new PortalWristCommand(wristSubsystem),
-            new ReleaseCommand(clawSubsystem),
-            new IntakeCommand(clawSubsystem, colorDetector)
+            new ArmRotateFloorCommand(armRotationSubsystem),
+            new ParallelCommandGroup(
+
+                new ArmExtendFloorCommand(armExtensionSubsystem),
+                new WristFloorCommand(wristSubsystem)
+            )
         );
     }
 

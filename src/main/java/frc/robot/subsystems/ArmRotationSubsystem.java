@@ -36,6 +36,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final double portalPos;
     private GenericEntry qwerty;
     private final double zeroPos;
+    private final double floorPos;
     
     public ArmHeight currentArmHeight;
 
@@ -46,6 +47,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         LOW,
         SAFEEXTEND,
         PORTAL,
+        FLOOR,
         ZERO
     }
 
@@ -60,7 +62,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
         midPos = 38.75;
         lowPos = 13.5;
         safeExtendPos = 17.5;
-        portalPos = 39;
+        portalPos = 42;
+        floorPos = 16;
         zeroPos = 0;
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
@@ -93,7 +96,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         // TODO slow drive speed when arm is extended. Keep arm at minimum possible extension.
 
-        pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
+        pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).getEntry();
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
     }
 
@@ -144,6 +147,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
         } else if (ArmHeight.ZERO.equals(currentArmHeight)) {
             
             setpoint = zeroPos;
+        } else if (ArmHeight.FLOOR.equals(currentArmHeight)) {
+
+            setpoint = floorPos;
         }
     }
 

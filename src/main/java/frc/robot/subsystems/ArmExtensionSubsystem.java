@@ -6,6 +6,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,29 +18,32 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private RelativeEncoder extensionEncoder;
     private SparkMaxPIDController extensionPID;
     private double setpoint;
-    public GenericEntry extensionMotorSetpoint;
-    public GenericEntry tolerance;
+    private GenericEntry extensionMotorSetpoint;
+    private GenericEntry tolerance;
 
-    public final double highExtend;
+    private final double highExtend;
+    private final double floorExtend;
 
-    public final float maxValue;
-    public final float minValue;
+    private final float maxValue;
+    private final float minValue;
 
     public enum ExtendLength {
 
         RETRACTFULL,
         EXTENDFULL,
+        FLOOR,
         ZERO
     }
 
-    public ExtendLength currentExtendLength;
+    private ExtendLength currentExtendLength;
 
     public ArmExtensionSubsystem() {
 
         highExtend = 120;
+        floorExtend = 220;
 
-        maxValue = 140f;
-        minValue = -55f; //it's a float - Matthew
+        maxValue = 220f;
+        minValue = -16f; //it's a float - Matthew
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
         extensionPID = extensionMotor.getPIDController();
@@ -61,8 +65,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionPID.setOutputRange(-1, 1);
         extensionMotor.burnFlash();
 
-        tolerance = Shuffleboard.getTab("setpoints").add("armex tolerance", 0.3).getEntry();
-        extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", 1).getEntry();
+        tolerance = Shuffleboard.getTab("setpoints").add("armex tolerance", 2).getEntry();
+        extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
     }
 
     public void setExtensionLength(double setpoint) {
@@ -117,13 +121,16 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         } else if (ExtendLength.ZERO.equals(currentExtendLength)) {
 
             setpoint = 0.0;
+        } else if (ExtendLength.FLOOR.equals(currentExtendLength)) {
+
+            setpoint = floorExtend;
         }
     }
 
     @Override
     public void periodic() {
 
-        extensionMotorSetpoint.setDouble(setpoint);
+        extensionMotorSetpoint.setDouble(extensionEncoder.getPosition());
         extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
     

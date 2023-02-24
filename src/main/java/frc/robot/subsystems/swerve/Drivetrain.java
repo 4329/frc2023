@@ -11,12 +11,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
 import frc.robot.utilities.FieldRelativeAccel;
@@ -80,6 +83,7 @@ public class Drivetrain extends SubsystemBase {
   private FieldRelativeSpeed m_lastFieldRelVel = new FieldRelativeSpeed();
   private FieldRelativeAccel m_fieldRelAccel = new FieldRelativeAccel();
 
+  GenericEntry jdsilsad;
   /**
    * Constructs a Drivetrain and resets the Gyro and Keep Angle parameters
    */
@@ -88,7 +92,9 @@ public class Drivetrain extends SubsystemBase {
     keepAngleTimer.start();
     m_keepAnglePID.enableContinuousInput(-Math.PI, Math.PI);
     ahrs.reset();
+    jdsilsad = Shuffleboard.getTab("setpoints").add("dsjafsdlf", 0).getEntry();
   }
+
 
   /**
    * Method to drive the robot using joystick info.
@@ -106,6 +112,7 @@ public class Drivetrain extends SubsystemBase {
     xSpeed = slewX.calculate(xSpeed);
     ySpeed = slewY.calculate(ySpeed);
     rot = slewRot.calculate(rot);
+    jdsilsad.setDouble(rot);
 
     // creates an array of the desired swerve module states based on driver command
     // and if the commands are field relative or not
@@ -297,10 +304,10 @@ public class Drivetrain extends SubsystemBase {
   public void lock() {
 
     SwerveModuleState[] steve = {
-        new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
-        new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
-        new SwerveModuleState(0, Rotation2d.fromDegrees(225)),
-        new SwerveModuleState(0, Rotation2d.fromDegrees(315))
+      new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
+      new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
+      new SwerveModuleState(0, Rotation2d.fromDegrees(225)),
+      new SwerveModuleState(0, Rotation2d.fromDegrees(315))
     };
 
     setModuleStates(steve);
