@@ -120,16 +120,6 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
     drivetrain.coastMode();
     m_robotContainer.configureTestMode();
-
-    drivetrain.setModuleStates(
-      new SwerveModuleState[] {
-
-        new SwerveModuleState(0, new Rotation2d()),
-        new SwerveModuleState(0, new Rotation2d()),
-        new SwerveModuleState(0, new Rotation2d()),
-        new SwerveModuleState(0, new Rotation2d())
-      }
-    );
     
     if (m_swerveAlignment == null) {
       // This prevents 2 sets of widgets from appearing when disabling & enabling the
