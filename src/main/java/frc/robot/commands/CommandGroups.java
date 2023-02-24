@@ -82,16 +82,12 @@ public class CommandGroups {
         return new SequentialCommandGroup(
 
             new ArmRotateFloorCommand(armRotationSubsystem),
-
             new ParallelCommandGroup(
 
-                 new ArmExtendFloorCommand(armExtensionSubsystem),
-                 new WristFloorCommand(wristSubsystem)
-            
+                new ArmExtendFloorCommand(armExtensionSubsystem),
+                new WristFloorCommand(wristSubsystem)
             )
-
         );
-
     }
 
     public static CommandBase totalZero(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, WristSubsystem wristSubsystem) {

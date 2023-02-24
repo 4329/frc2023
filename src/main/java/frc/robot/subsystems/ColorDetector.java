@@ -42,7 +42,7 @@ public class ColorDetector extends SubsystemBase {
         cone = new Color(85 / 255.0, 136 / 255.0, 24 / 255.0);
 
         colorMatch.addColorMatch(cube);
-        colorMatch.addColorMatch(cubeLogo);
+        //colorMatch.addColorMatch(cubeLogo);
         colorMatch.addColorMatch(cone);
         coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
         proximity = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();

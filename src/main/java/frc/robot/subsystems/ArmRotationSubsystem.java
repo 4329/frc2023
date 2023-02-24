@@ -96,7 +96,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         // TODO slow drive speed when arm is extended. Keep arm at minimum possible extension.
 
-        pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
+        pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).getEntry();
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
     }
 

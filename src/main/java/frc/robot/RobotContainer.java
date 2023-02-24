@@ -135,7 +135,7 @@ public class RobotContainer {
     pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     armExtensionSubsystem = new ArmExtensionSubsystem();
-    extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, operatorController);
+    extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, driverController);
     armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
     armUnrotateCommand = new ArmUnrotateCommand(armRotationSubsystem);
     wristRotateUpCommand = new WristRotateUpCommand(wristSubsystem);
@@ -215,44 +215,51 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(armUnrotateCommand);
-    driverController.leftTrigger().whileTrue(armRotateCommand);
+    driverController.rightTrigger().whileTrue(extendRetractCommand); //arm extend
+    driverController.leftTrigger().whileTrue(extendRetractCommand); //arm retract
+    
+    driverController.rightBumper().whileTrue(armRotateCommand); //arm up
+    driverController.leftBumper().whileTrue(armUnrotateCommand); //arm down
 
-    driverController.leftBumper().whileTrue(extendRetractCommand);
-    driverController.rightBumper().whileTrue(extendRetractCommand);
-
-    driverController.start().whileTrue(wristRotateUpCommand); //to april tag
+    driverController.start().whileTrue(exampleCommand); //to april tag
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
-    driverController.b().whileTrue(pinchCommand); //toggle
+    driverController.a().whileTrue(intakeCommand); //TODO make into a toggle
+    driverController.b().onTrue(pinchCommand); //toggle
     driverController.x().whileTrue(outtakeCommand);
     driverController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
-    driverController.povUp().onTrue(intakeCommand); //intake for substation
+    driverController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector)); //intake for substation
     driverController.povRight().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     driverController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
-    driverController.povDown().onTrue(resetOdometryCommandBackward);
+    driverController.povDown().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
 
-    driverController.rightStick().whileTrue(balanceCommand);
-    // driverController.leftStick().whileTrue();
+    //driverController.rightStick().whileTrue(balanceCommand);
+    driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient    /\/\
+    
     // Operator Controller
     operatorController.rightTrigger().whileTrue(extendRetractCommand);
     operatorController.leftTrigger().whileTrue(extendRetractCommand);
 
-    operatorController.leftBumper().whileTrue(pinchCommand);
-    operatorController.rightBumper().whileTrue(releaseCommand);
+    operatorController.leftBumper().whileTrue(armRotateCommand);
+    operatorController.rightBumper().whileTrue(armUnrotateCommand);
 
-    operatorController.start().whileTrue(intakeCommand);
-    operatorController.back().whileTrue(outtakeCommand);
-
-    operatorController.a().onTrue(CommandGroups.lowScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    operatorController.b().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    operatorController.x().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
+    operatorController.start().whileTrue(exampleCommand); //to april tag
+    operatorController.back().onTrue(changeFieldOrientCommand);
+    
+    
+    operatorController.a().whileTrue(intakeCommand); //TODO make into a toggle
+    operatorController.b().onTrue(pinchCommand); //toggle
+    operatorController.x().whileTrue(outtakeCommand);
     operatorController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
-    operatorController.povUp().whileTrue(armRotateCommand);
-    operatorController.povDown().whileTrue(armUnrotateCommand);
+    operatorController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector)); //intake for substation
+    operatorController.povRight().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    operatorController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
+    operatorController.povDown().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+
+//    operatorController.rightStick().whileTrue(balanceCommand);
+    operatorController.leftStick().whileTrue(resetOdometryCommandForward); //field orient
   }
 
   // jonathan was here today 2/3/2023

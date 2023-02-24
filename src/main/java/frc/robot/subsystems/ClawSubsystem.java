@@ -21,6 +21,7 @@ public class ClawSubsystem extends SubsystemBase {
     private ColorDetector colorDetector;
     private GenericEntry clawOpen;
     private GenericEntry fdjsial;
+    public boolean clawing;
 
     public ClawSubsystem(ColorDetector colorDetector) {
 
@@ -28,13 +29,12 @@ public class ClawSubsystem extends SubsystemBase {
 
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
-        solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+        solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
         this.colorDetector = colorDetector;
         leftMotor.setInverted(true);
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
         fdjsial = Shuffleboard.getTab("setpoints").add("whynot", 0.285).getEntry();
-
     }
 
     public void intake() {
@@ -86,6 +86,20 @@ public class ClawSubsystem extends SubsystemBase {
         double stop = 0;
         leftMotor.set(stop);
         rightMotor.set(stop);
+    }
+
+    public void togglePinch() {
+
+        if (clawing) {
+
+            solenoid.set(Value.kReverse);
+            clawing = false;
+        } else {
+
+            solenoid.set(Value.kForward);
+            clawing = true;
+        } 
+        clawOpen.setBoolean(clawing);
     }
 
     public void pinch() {
