@@ -69,9 +69,14 @@ public class LimlighSubsystem extends SubsystemBase {
         return limligh.getEntry("tx").getDouble(0);
     }
 
-    public double getTargetz() {
+    public double getCalculatedPoseZ() {
 
-        return Math.round(getPose().getX()*100);
+        return getPose().getX();
+    }
+
+    public double getCalculatedPoseRot() {
+
+        return getPose().getRotation().getRadians();
     }
 
     /**
@@ -118,7 +123,7 @@ public class LimlighSubsystem extends SubsystemBase {
 
         getPose();
         pose.setString("" + (hrm[0]) + ", " + (hrm[1]) + ", " + (hrm[5]));
-        asdfg.setDouble(getTargetz());
+        asdfg.setDouble(getCalculatedPoseZ());
         switchPipeline(LimlighPipeline.values()[Math.toIntExact(jflaiss.getInteger(0))]);
     }
 
