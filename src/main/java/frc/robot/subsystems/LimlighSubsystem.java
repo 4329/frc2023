@@ -54,7 +54,7 @@ public class LimlighSubsystem extends SubsystemBase {
 
     public boolean targetVisible() {
 
-        return limligh.getEntry("tv").getBoolean(false);
+        return limligh.getEntry("tv").getDouble(0) == 1;
     }
 
     /**
@@ -76,7 +76,7 @@ public class LimlighSubsystem extends SubsystemBase {
 
     public double getCalculatedPoseRot() {
 
-        return getPose().getRotation().getRadians();
+        return getPose().getRotation().getDegrees();
     }
 
     /**
@@ -87,8 +87,18 @@ public class LimlighSubsystem extends SubsystemBase {
      * @return the target y angle
      */
     public double getTargety() {
-
+        
         return limligh.getEntry("ty").getDouble(0);
+    }
+
+    /**
+     * gives how much of the camera a target covers
+     * 
+     * @return target area
+     */
+    public double getTargeta() {
+
+        return limligh.getEntry("ta").getDouble(0);
     }
 
     public double getTargetId() {
@@ -100,16 +110,16 @@ public class LimlighSubsystem extends SubsystemBase {
 
         if (Alliance.RED.equals(currentAlliance)) {
 
-            hrm = limligh.getEntry("botpose_wpired").getDoubleArray(new double[] { 0, 0, 0, 0, 0, 0 });
+            hrm = limligh.getEntry("botpose_wpired").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
         } else {
 
-            hrm = limligh.getEntry("botpose_wpiblue").getDoubleArray(new double[] { 0, 0, 0, 0, 0, 0 });
+            hrm = limligh.getEntry("botpose_wpiblue").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
         }
 
         return new Pose2d(
             
             new Translation2d(hrm[0], hrm[1]),
-            new Rotation2d(hrm[5])
+            Rotation2d.fromDegrees(hrm[5])
         );
     }
 
@@ -117,6 +127,12 @@ public class LimlighSubsystem extends SubsystemBase {
 
         limligh.getEntry("pipeline").setDouble(pipeline.ordinal());
     }
+
+    public double getPipeline() {
+
+        return limligh.getEntry("pipeline").getDouble(0);
+    }
+
 
     @Override
     public void periodic() {

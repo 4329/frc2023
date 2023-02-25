@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AprilTagMiddleCommand;
+import frc.robot.commands.CenterOnTargetCommand;
 import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SwerveAlignZeroCommand;
@@ -117,7 +117,7 @@ public class RobotContainer {
   private final ManualMidShotCommand manualMidShotCommand;
   // private final ManualHighShotCommand manualHighShotCommand;
   private final Command manualHighShotCommand;
-  private final AprilTagMiddleCommand aprilTagMiddleCommand;
+  private final CenterOnTargetCommand aprilTagMiddleCommand;
 
   
 
@@ -174,7 +174,7 @@ public class RobotContainer {
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
     manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
-    aprilTagMiddleCommand = new AprilTagMiddleCommand(limlighSubsystem, 1, m_robotDrive);
+    aprilTagMiddleCommand = new CenterOnTargetCommand(limlighSubsystem, 6, m_robotDrive);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
