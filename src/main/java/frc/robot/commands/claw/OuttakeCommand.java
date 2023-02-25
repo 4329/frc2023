@@ -41,6 +41,9 @@ public class OuttakeCommand extends CommandBase {
         } else if (ArmHeight.LOW.equals(armRotationSubsystem.getArmPosition())) {
 
             clawSubsystem.outtakeLow(elly);
+        } else {
+
+            clawSubsystem.outtakeMid(elly);
         }
     }
 
