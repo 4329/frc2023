@@ -1,8 +1,6 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.LimlighSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
@@ -18,10 +16,6 @@ public class CenterOnTargetCommand extends CommandBase {
     double centerCalc;
     double forwardCalc;
     double rotationCalc;
-
-    GenericEntry dsaljfk;
-    GenericEntry lk;
-    GenericEntry asdklf;
 
     double targetId;
 
@@ -43,10 +37,6 @@ public class CenterOnTargetCommand extends CommandBase {
         rotationPID.setTolerance(0.5);
 
         addRequirements(limlighSubsystem, m_drivetrain);
-
-        dsaljfk = Shuffleboard.getTab("ikfsdal").add("hahaha", false).getEntry();
-        lk = Shuffleboard.getTab("ikfsdal").add("kakakak", 4).getEntry();
-        asdklf = Shuffleboard.getTab("ikfsdal").add("llalala", 0.05).getEntry();
     }
 
     @Override
@@ -82,7 +72,6 @@ public class CenterOnTargetCommand extends CommandBase {
             forwardPID.setTolerance(0.075);
 
             rotationCalc = rotationPID.calculate(drivetrain.getGyro().getDegrees(), 0);
-            dsaljfk.setBoolean(true);
         }
 
         if ((!centerPID.atSetpoint() || !rotationPID.atSetpoint() || !forwardPID.atSetpoint())) {
