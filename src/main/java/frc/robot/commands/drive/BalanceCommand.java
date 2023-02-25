@@ -12,19 +12,21 @@ import frc.robot.utilities.HoorayConfig;
 import frc.robot.Constants;
 import frc.robot.subsystems.BalanceSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.HoorayConfig;
 
 public class BalanceCommand extends CommandBase{
 
     Drivetrain drivetrain;
     BalanceSubsystem balanceSubsystem;
 
-    private PIDController balancePID;
+    private double roll;
 
     public GenericEntry atSetpoint;
     public GenericEntry dilfs;
     public GenericEntry commandRuningdkj;
     private double pidCalc;
     private double ff = 0;
+    private PIDController balancePID;
    
 
 
@@ -59,7 +61,7 @@ public class BalanceCommand extends CommandBase{
         balancePID.setSetpoint(0);
         balancePID.setIntegratorRange(-balanceSubsystem.irange.getDouble(0.1), balanceSubsystem.irange.getDouble(0.1));
     }
-    
+
     @Override
     public void execute() {
 
@@ -76,11 +78,17 @@ public class BalanceCommand extends CommandBase{
             drivetrain.unlock();
             drivetrain.drive(pidCalc, 0, 0, false);
         }
+        roll = drivetrain.getRoll() / Constants.DriveConstants.maxRampRoll;
 
-        else {
+        if (Math.abs(roll) <= Constants.DriveConstants.maxRampDeviation || Math.abs(roll) >= Constants.DriveConstants.maxRampRoll + 5) {
 
             drivetrain.lock();
             balanceSubsystem.atSetpoint.setBoolean(true);
+        } else {
+
+            drivetrain.unlock();
+
+            drivetrain.drive(HoorayConfig.gimmeConfig().getRollDirection() * roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
         }
 
         balanceSubsystem.happiness.setDouble(balancePID.getPositionError());
@@ -90,6 +98,7 @@ public class BalanceCommand extends CommandBase{
         // atSetpoint.setBoolean(balancePID.atSetpoint());
         // dilfs.setDouble(balancePID.getPositionError());
     }
+
 
     @Override
     public boolean isFinished() {
@@ -104,5 +113,6 @@ public class BalanceCommand extends CommandBase{
         drivetrain.stop();
         // commandRuningdkj.setBoolean(false);
     }
+
 
 }
