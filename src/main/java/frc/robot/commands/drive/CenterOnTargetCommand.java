@@ -54,24 +54,31 @@ public class CenterOnTargetCommand extends CommandBase {
 
             centerCalc = centerPID.calculate(limlighSubsystem.getTargetx(), -4);
             centerPID.setTolerance(0.5);
-            centerPID.setP(0.01);
+            centerPID.setP(0.03);
+            centerPID.setD(0);
 
             forwardCalc = forwardPID.calculate(limlighSubsystem.getCalculatedPoseZ(), 14.65);
-            forwardPID.setP(0.5);
+            forwardPID.setP(1);
             forwardPID.setTolerance(0.5);
 
             rotationCalc = rotationPID.calculate(limlighSubsystem.getCalculatedPoseRot(), 7);
+            rotationPID.setP(0.03);
+            rotationPID.setTolerance(0.75);
+
         } else if (limlighSubsystem.getPipeline() == 1 && limlighSubsystem.targetVisible()) {
 
             centerCalc = centerPID.calculate(limlighSubsystem.getTargetx(), 0);
-            centerPID.setP(0.005);
-            centerPID.setTolerance(1.5);
+            centerPID.setTolerance(0.5);
+            centerPID.setP(0.05);
+            centerPID.setD(0.001);
 
             forwardCalc = forwardPID.calculate(limlighSubsystem.getTargeta(), 0.27);
-            forwardPID.setP(0.75);
-            forwardPID.setTolerance(0.075);
+            forwardPID.setP(2);
+            forwardPID.setTolerance(0.05);
 
             rotationCalc = rotationPID.calculate(drivetrain.getGyro().getDegrees(), 0);
+            rotationPID.setP(0.01);
+            rotationPID.setTolerance(5);
         }
 
         if ((!centerPID.atSetpoint() || !rotationPID.atSetpoint() || !forwardPID.atSetpoint())) {
