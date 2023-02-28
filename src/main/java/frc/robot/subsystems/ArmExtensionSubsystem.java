@@ -46,7 +46,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         startExtend = -4;
 
         maxValue = 220f;
-        minValue = -16f; //it's a float - Matthew
+        minValue = -40f; //it's a float - Matthew
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
         extensionPID = extensionMotor.getPIDController();

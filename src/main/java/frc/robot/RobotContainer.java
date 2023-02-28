@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.pathplanner.lib.PathConstraints;
@@ -12,9 +13,11 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -93,8 +96,6 @@ public class RobotContainer {
   private final WristRotateDownCommand wristRotateDownCommand;
   private final ArmRetractFullCommand armRetractFullCommand;
   private final ArmExtendToZeroCommand armExtendToZeroCommand;
-
-  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -185,16 +186,18 @@ public class RobotContainer {
     return eventMap;
   }
 
+
   private SwerveAutoBuilder createAutoBuilder() {
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+
         m_robotDrive::getPose, // Pose2d supplier
         m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
         Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
         new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation
                                                                            // error (used to create the X and Y PID
                                                                            // controllers)
-        new PIDConstants(Constants.AutoConstants.kPYController, 0.0, 0.0), // PID constants to correct for rotation
+        new PIDConstants(Constants.AutoConstants.kPThetaController, 0.0, 0.0), // PID constants to correct for rotation
                                                                            // error (used to create the rotation
                                                                            // controller)
         m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
@@ -209,6 +212,7 @@ public class RobotContainer {
   }
 
   /**
+   * 
    * Use this method to define your button->command mappings. Buttons can be
    * created by instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of
    * its subclasses ({@link edu.wpi.first.wpilibj.Joystick} or
@@ -282,9 +286,9 @@ public class RobotContainer {
       if (pathFile.isFile() && pathFile.getName().endsWith(".path")) {
 
         String name = pathFile.getName().replace(".path", "");
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath(name,
+        List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
           new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-        m_chooser.addOption(name, swerveAutoBuilder.fullAuto(trajectory));
+        m_chooser.addOption(name, swerveAutoBuilder.fullAuto(trajectories));
       }
     }
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(2, 1).withPosition(0, 0);
