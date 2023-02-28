@@ -22,6 +22,7 @@ public class ClawSubsystem extends SubsystemBase {
     private GenericEntry clawOpen;
     private GenericEntry fdjsial;
     public boolean clawing;
+    private boolean intaking = false;
 
     public ClawSubsystem(ColorDetector colorDetector) {
 
@@ -124,5 +125,20 @@ public class ClawSubsystem extends SubsystemBase {
             return false;
         }
     }
+
+    public void toggleIntake() {
+
+        if (intaking) {
+
+            stop();
+        } else {
+
+            intake();
+        }
+
+        intaking = !intaking;
+    }
+
+
 
 }

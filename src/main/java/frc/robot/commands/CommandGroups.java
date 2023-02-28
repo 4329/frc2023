@@ -7,6 +7,7 @@ import frc.robot.commands.claw.IntakeCommand;
 import frc.robot.commands.claw.PinchCommand;
 import frc.robot.commands.extend.ArmExtendFloorCommand;
 import frc.robot.commands.extend.ArmExtendFullCommand;
+import frc.robot.commands.extend.ArmExtendStartCommand;
 import frc.robot.commands.extend.ArmExtendToZeroCommand;
 import frc.robot.commands.extend.SafeExtendCommand;
 import frc.robot.commands.rotation.ArmRotateFloorCommand;
@@ -33,6 +34,7 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
+            new ArmExtendStartCommand(armExtensionSubsystem),
             new SafeExtendCommand(armRotationSubsystem),
             new ArmExtendFullCommand(armExtensionSubsystem),
             new ParallelCommandGroup(
@@ -47,6 +49,7 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
+            new ArmExtendStartCommand(armExtensionSubsystem),
             new SafeExtendCommand(armRotationSubsystem),
             new ArmExtendFullCommand(armExtensionSubsystem),
             new ParallelCommandGroup(
@@ -61,26 +64,29 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
+            new ArmExtendStartCommand(armExtensionSubsystem),
             new LowArmCommand(armRotationSubsystem),
             new LowWristCommand(wristSubsystem)
 
         );
     }
 
-    public static CommandBase portalSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
+    public static CommandBase portalSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem) {
 
         return new SequentialCommandGroup(
 
+            new ArmExtendStartCommand(armExtensionSubsystem),
             new PortalArmCommand(armRotationSubsystem),
-            new PortalWristCommand(wristSubsystem),
-            new PinchCommand(clawSubsystem),
-            new IntakeCommand(clawSubsystem, colorDetector)
+            new PortalWristCommand(wristSubsystem)
+         //   new PinchCommand(clawSubsystem)
+         // new IntakeCommand(clawSubsystem, colorDetector)
         );
     }
     public static CommandBase floorSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
 
         return new SequentialCommandGroup(
 
+            new ArmExtendStartCommand(armExtensionSubsystem),
             new ArmRotateFloorCommand(armRotationSubsystem),
             new ParallelCommandGroup(
 
@@ -90,17 +96,19 @@ public class CommandGroups {
         );
     }
 
-    public static CommandBase totalZero(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, WristSubsystem wristSubsystem) {
+    public static CommandBase totalZero(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, WristSubsystem wristSubsystem, ClawSubsystem clawSubsystem, ColorDetector colorDetector) {
 
         return new SequentialCommandGroup(
 
             new ParallelCommandGroup(
                 
-                new ArmExtendToZeroCommand(armExtensionSubsystem),
+                new ArmExtendStartCommand(armExtensionSubsystem),
                 new WristZeroCommand(wristSubsystem)
             ),
-            new ZeroArmCommand(armRotationSubsystem)
+            new ZeroArmCommand(armRotationSubsystem),
+            new ArmExtendToZeroCommand(armExtensionSubsystem),
+            new IntakeCommand(clawSubsystem, colorDetector).withTimeout(10)
         );
     }
     
-}
+} 

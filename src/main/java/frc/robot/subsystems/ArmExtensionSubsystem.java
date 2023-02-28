@@ -23,6 +23,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     private final double highExtend;
     private final double floorExtend;
+    private final double startExtend;
 
     private final float maxValue;
     private final float minValue;
@@ -32,7 +33,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         RETRACTFULL,
         EXTENDFULL,
         FLOOR,
-        ZERO
+        ZERO,
+        START
     }
 
     private ExtendLength currentExtendLength;
@@ -40,7 +42,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     public ArmExtensionSubsystem() {
 
         highExtend = 120;
-        floorExtend = 220;
+        floorExtend = 182;
+        startExtend = -4;
 
         maxValue = 220f;
         minValue = -16f; //it's a float - Matthew
@@ -57,7 +60,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         extensionMotor.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
         extensionPID = extensionMotor.getPIDController();
-        extensionPID.setP(4);
+        extensionPID.setP(2);
         extensionPID.setI(1e-4);
         extensionPID.setD(1);
         extensionPID.setIZone(0);
@@ -66,7 +69,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.burnFlash();
 
         tolerance = Shuffleboard.getTab("setpoints").add("armex tolerance", 2).getEntry();
-        extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
+        extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", 1).getEntry();
     }
 
     public void setExtensionLength(double setpoint) {
@@ -124,6 +127,9 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         } else if (ExtendLength.FLOOR.equals(currentExtendLength)) {
 
             setpoint = floorExtend;
+        } else if (ExtendLength.START.equals(currentExtendLength)) {
+
+            setpoint = startExtend;
         }
     }
 

@@ -30,6 +30,7 @@ import frc.robot.commands.claw.IntakeCommand;
 import frc.robot.commands.claw.OuttakeCommand;
 import frc.robot.commands.claw.PinchCommand;
 import frc.robot.commands.claw.ReleaseCommand;
+import frc.robot.commands.claw.ToggleIntakeCommand;
 import frc.robot.commands.drive.BalanceCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
@@ -110,6 +111,7 @@ public class RobotContainer {
 
     initializeCamera();
 
+    armExtensionSubsystem = new ArmExtensionSubsystem();
     armRotationSubsystem = new ArmRotationSubsystem();
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -134,7 +136,6 @@ public class RobotContainer {
     outtakeCommand = new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector);
     pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
-    armExtensionSubsystem = new ArmExtensionSubsystem();
     extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, driverController);
     armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
     armUnrotateCommand = new ArmUnrotateCommand(armRotationSubsystem);
@@ -176,7 +177,11 @@ public class RobotContainer {
   private Map<String, Command> createEventMap() {
     Map<String, Command> eventMap = new HashMap<>();
     eventMap.put("intakeCommand", intakeCommand);
+    eventMap.put("outtake", outtakeCommand);
     eventMap.put("extendCommand", extendRetractCommand);
+    eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
+   // eventMap.put("flootCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     return eventMap;
   }
 
@@ -196,11 +201,9 @@ public class RobotContainer {
         createEventMap(),
         false, // Should the path be automatically mirrored depending on alliance color.
                // Optional, defaults to true
-        m_robotDrive, // The drive subsystem. Used to properly set the requirements of path following
+        m_robotDrive // The drive subsystem. Used to properly set the requirements of path following
                       // commands
-        clawSubsystem,
-        armExtensionSubsystem,
-        armRotationSubsystem);
+);
 
     return autoBuilder;
   }
@@ -224,25 +227,27 @@ public class RobotContainer {
     driverController.start().whileTrue(exampleCommand); //to april tag
     driverController.back().onTrue(changeFieldOrientCommand);
 
-    driverController.a().whileTrue(intakeCommand); //TODO make into a toggle
+    driverController.a().onTrue(new ToggleIntakeCommand(clawSubsystem)); //TODO make into a toggle
     driverController.b().onTrue(pinchCommand); //toggle
     driverController.x().whileTrue(outtakeCommand);
     driverController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
-    driverController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector)); //intake for substation
+    driverController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem)); //intake for substation
     driverController.povRight().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    driverController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
+    driverController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
     driverController.povDown().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
 
-    //driverController.rightStick().whileTrue(balanceCommand);
+    driverController.rightStick().whileTrue(balanceCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient    /\/\
     
     // Operator Controller
     operatorController.rightTrigger().whileTrue(extendRetractCommand);
     operatorController.leftTrigger().whileTrue(extendRetractCommand);
 
-    operatorController.leftBumper().whileTrue(armRotateCommand);
-    operatorController.rightBumper().whileTrue(armUnrotateCommand);
+    // operatorController.leftBumper().whileTrue(armRotateCommand)
+    // operatorController.rightBumper().whileTrue(armUnrotateCommand);
+    operatorController.leftBumper().whileTrue(wristRotateDownCommand);
+    operatorController.rightBumper().whileTrue(wristRotateUpCommand);
 
     operatorController.start().whileTrue(exampleCommand); //to april tag
     operatorController.back().onTrue(changeFieldOrientCommand);
@@ -253,12 +258,12 @@ public class RobotContainer {
     operatorController.x().whileTrue(outtakeCommand);
     operatorController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
-    operatorController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector)); //intake for substation
+    operatorController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem)); //intake for substation
     operatorController.povRight().onTrue(CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    operatorController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem));
+    operatorController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
     operatorController.povDown().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
 
-//    operatorController.rightStick().whileTrue(balanceCommand);
+    operatorController.rightStick().whileTrue(balanceCommand);
     operatorController.leftStick().whileTrue(resetOdometryCommandForward); //field orient
   }
 

@@ -32,16 +32,17 @@ public class IntakeCommand extends CommandBase {
     }
 
     @Override
-    public boolean isFinished() {
+   public boolean isFinished() {
 
-        if (colorDetector.distance() > 500) {
+        // if (colorDetector.distance() > 500) {
 
-            return true;
-        } else {
+        //     return true;
+        // } else {
 
+        //     return false;
+        // }
             return false;
-        }
-
+            
     }
 
     @Override
