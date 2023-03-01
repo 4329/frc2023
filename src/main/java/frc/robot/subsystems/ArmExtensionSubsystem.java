@@ -41,7 +41,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public ArmExtensionSubsystem() {
 
-        highExtend = 120;
+        highExtend = -3;
         floorExtend = 182;
         startExtend = -4;
 
@@ -60,7 +60,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         extensionMotor.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
         extensionPID = extensionMotor.getPIDController();
-        extensionPID.setP(2);
+        extensionPID.setP(1);
         extensionPID.setI(1e-4);
         extensionPID.setD(1);
         extensionPID.setIZone(0);

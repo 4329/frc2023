@@ -45,7 +45,7 @@ public class WristSubsystem extends SubsystemBase {
         maxValue = 60f;
         minValue = 0f;
 
-        highAngle = 28.19;
+        highAngle = 21.99;
         midAngle = 31.2;
         lowAngle = 9.0;
         portalAngle = 29.299;

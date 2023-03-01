@@ -23,6 +23,7 @@ public class ClawSubsystem extends SubsystemBase {
     private GenericEntry fdjsial;
     public boolean clawing;
     private boolean intaking = false;
+    public double speed;
 
     public ClawSubsystem(ColorDetector colorDetector) {
 
@@ -40,19 +41,19 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void intake() {
 
-        double speed = -0.2;
+        speed = -0.2;
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
 
     public void outtakeHigh(FieldElement fieldElement) {
 
-        double speed = 0.285;
+        speed = 0.4329;
         if (FieldElement.CUBE.equals(fieldElement)) {
 
-            speed = 0.20;
+        speed = fdjsial.getDouble(0);
         }
-        fdjsial.setDouble(speed);
+        //fdjsial.setDouble(speed);
         leftMotor.set(speed);
         rightMotor.set(speed);
 
@@ -60,24 +61,24 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void outtakeMid(FieldElement fieldElement) {
 
-        double speed = 0.285;
+        speed = fdjsial.getDouble(0);
         if (FieldElement.CUBE.equals(fieldElement)) {
 
-            speed = 0.05;
+        speed = fdjsial.getDouble(0);
         }
-        fdjsial.setDouble(speed);
+        //fdjsial.setDouble(speed);
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
 
     public void outtakeLow(FieldElement fieldElement) {
 
-        double speed = 0.285;
+        speed = fdjsial.getDouble(0);
         if (FieldElement.CUBE.equals(fieldElement)) {
 
-            speed = 0.15;
+        speed = fdjsial.getDouble(0);
         }
-        fdjsial.setDouble(speed);
+        ////////////////fdjsial.setDouble(speed);
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
@@ -138,7 +139,5 @@ public class ClawSubsystem extends SubsystemBase {
 
         intaking = !intaking;
     }
-
-
 
 }

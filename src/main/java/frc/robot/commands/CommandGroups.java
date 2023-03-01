@@ -113,7 +113,7 @@ public class CommandGroups {
 
             new ParallelCommandGroup(
                 
-                new ArmExtendStartCommand(armExtensionSubsystem),
+                new ArmRetractFullCommand(armExtensionSubsystem),
                 new WristZeroCommand(wristSubsystem)
             ),
             new ZeroArmCommand(armRotationSubsystem),

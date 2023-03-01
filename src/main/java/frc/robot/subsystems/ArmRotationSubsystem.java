@@ -58,7 +58,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         tolerance = 0.2;
 
-        highPos = 43.75;
+        highPos = 41;
         midPos = 38.75;
         lowPos = 13.5;
         safeExtendPos = 17.5;
