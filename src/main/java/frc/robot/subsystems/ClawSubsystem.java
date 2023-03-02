@@ -24,11 +24,12 @@ public class ClawSubsystem extends SubsystemBase {
     public boolean clawing;
     private boolean intaking = false;
     public double speed;
+    private GenericEntry intakafying;
 
     public ClawSubsystem(ColorDetector colorDetector) {
 
-        clawOpen = Shuffleboard.getTab("setpoints").add("Claw is Forward", true).getEntry();
-
+        clawOpen = Shuffleboard.getTab("RobotData").add("Claw closed", true).getEntry();
+        intakafying = Shuffleboard.getTab("RobotData").add("intaking",false).getEntry();
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
@@ -37,6 +38,7 @@ public class ClawSubsystem extends SubsystemBase {
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
         fdjsial = Shuffleboard.getTab("setpoints").add("whynot", 0.285).getEntry();
+
     }
 
     public void intake() {
@@ -95,11 +97,11 @@ public class ClawSubsystem extends SubsystemBase {
         if (clawing) {
 
             solenoid.set(Value.kReverse);
-            clawing = false;
+            clawing = true;
         } else {
 
             solenoid.set(Value.kForward);
-            clawing = true;
+            clawing = false;
         } 
         clawOpen.setBoolean(clawing);
     }
@@ -138,6 +140,7 @@ public class ClawSubsystem extends SubsystemBase {
         }
 
         intaking = !intaking;
+        intakafying.setBoolean(intaking);
     }
 
 }

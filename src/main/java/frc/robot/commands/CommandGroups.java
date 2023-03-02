@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.claw.IntakeCommand;
 import frc.robot.commands.claw.PinchCommand;
 import frc.robot.commands.extend.ArmExtendFloorCommand;
 import frc.robot.commands.extend.ArmExtendFullCommand;
+import frc.robot.commands.extend.ArmExtendMidCommand;
 import frc.robot.commands.extend.ArmExtendStartCommand;
 import frc.robot.commands.extend.ArmExtendToZeroCommand;
 import frc.robot.commands.extend.ArmRetractFullCommand;
@@ -53,7 +53,7 @@ public class CommandGroups {
 
             new ArmExtendStartCommand(armExtensionSubsystem),
             new SafeExtendCommand(armRotationSubsystem),
-            new ArmExtendFullCommand(armExtensionSubsystem),
+            new ArmExtendMidCommand(armExtensionSubsystem),
             new ParallelCommandGroup(
 
                 new MidWristCommand(wristSubsystem),

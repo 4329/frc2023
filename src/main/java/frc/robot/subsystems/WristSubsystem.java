@@ -48,7 +48,7 @@ public class WristSubsystem extends SubsystemBase {
         highAngle = 21.99;
         midAngle = 31.2;
         lowAngle = 9.0;
-        portalAngle = 29.299;
+        portalAngle = 30;
         floorAngle = 9;
         
         wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate);

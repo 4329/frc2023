@@ -22,6 +22,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private GenericEntry tolerance;
 
     private final double highExtend;
+    private final double midExtend;
     private final double floorExtend;
     private final double startExtend;
 
@@ -34,6 +35,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         EXTENDFULL,
         FLOOR,
         ZERO,
+        MID,
         START
     }
 
@@ -42,7 +44,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     public ArmExtensionSubsystem() {
 
         highExtend = -3;
-        floorExtend = 182;
+        midExtend = 120;
+        floorExtend = 190; //was 182
         startExtend = -4;
 
         maxValue = 220f;
@@ -130,6 +133,9 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         } else if (ExtendLength.START.equals(currentExtendLength)) {
 
             setpoint = startExtend;
+        } else if (ExtendLength.MID.equals(currentExtendLength)) {
+
+            setpoint = midExtend;
         }
     }
 

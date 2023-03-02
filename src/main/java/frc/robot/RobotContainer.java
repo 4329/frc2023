@@ -228,7 +228,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(armRotateCommand); //arm up
     driverController.leftBumper().whileTrue(armUnrotateCommand); //arm down
 
-    driverController.start().whileTrue(exampleCommand); //to april tag
+    driverController.start().whileTrue(exampleCommand); //to april tag or conecubetoggle
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(new ToggleIntakeCommand(clawSubsystem)); //TODO make into a toggle
