@@ -179,10 +179,14 @@ public class RobotContainer {
     Map<String, Command> eventMap = new HashMap<>();
     eventMap.put("intakeCommand", intakeCommand);
     eventMap.put("outtake", outtakeCommand);
-    eventMap.put("extendCommand", extendRetractCommand);
-    eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    //eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
    // eventMap.put("flootCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+    eventMap.put("highPos", exampleCommand);
+    eventMap.put("zero", exampleCommand);
+    eventMap.put("outtake", exampleCommand);
+
+
     return eventMap;
   }
 
@@ -296,7 +300,7 @@ public class RobotContainer {
 
   public void autonomousInit() {
 
-    m_robotDrive.setDefaultCommand(m_drive);
+//m_robotDrive.setDefaultCommand(m_drive);
   }
 
   public void teleopInit() {
