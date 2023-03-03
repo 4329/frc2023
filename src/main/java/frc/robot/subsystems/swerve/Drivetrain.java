@@ -43,7 +43,7 @@ public class Drivetrain extends SubsystemBase {
   private double lastDriveTime = 0.0; // Double to store the time of the last translation command
 
   private final Timer keepAngleTimer = new Timer(); // Creates timer used in the perform keep angle function
-
+GenericEntry fjsldakjfsd;
   // Creates a swerveModule object for the front left swerve module feeding in
   // parameters from the constants file
   private final SwerveModule m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveMotorPort,
@@ -107,6 +107,7 @@ public class Drivetrain extends SubsystemBase {
     pitchOffset = ahrs.getPitch();
     rollOffset = ahrs.getRoll();
 
+    fjsldakjfsd = Shuffleboard.getTab("ikfsdal").add("pain", 0).getEntry();
   }
 
 
@@ -156,6 +157,7 @@ public class Drivetrain extends SubsystemBase {
 
     // Calls get pose function which sends the Pose information to the
     getPose();
+    fjsldakjfsd.setDouble(getGyro().getDegrees());
   }
 
   /**

@@ -80,6 +80,7 @@ public class RobotContainer {
   private final BalanceSubsystem balanceSubsystem;
   
   private final LimlighSubsystem limlighSubsystem;
+  // CenterOnTargetCommand centerOnTargetCommand;
   // private final TrackingTurretSubsystem trackingTurretSubsystem;
   // The driver's controllers
 
@@ -118,6 +119,7 @@ public class RobotContainer {
   // private final ManualHighShotCommand manualHighShotCommand;
   private final Command manualHighShotCommand;
   private final CenterOnTargetCommand aprilTagMiddleCommand;
+  private GenericEntry jsdaklfsd;
 
   
 
@@ -181,6 +183,8 @@ public class RobotContainer {
                                 */
     configureAutoChooser(drivetrain);
 
+    jsdaklfsd = Shuffleboard.getTab("ikfsdal").add("hahahahahahhaha", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+    // centerOnTargetCommand = new CenterOnTargetCommand(limlighSubsystem, 0, m_robotDrive);
   }
 
   /**
@@ -385,6 +389,11 @@ public class RobotContainer {
 
   public void teleopPeriodic() {
 
+    if (jsdaklfsd.getBoolean(false)) {
+
+      aprilTagMiddleCommand.schedule();
+      jsdaklfsd.setBoolean(false);
+    }
   }
 
   /**
