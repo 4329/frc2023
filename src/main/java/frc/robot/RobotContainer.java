@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
@@ -188,8 +189,8 @@ public class RobotContainer {
     Map<String, Command> eventMap = new HashMap<>();
     eventMap.put("intakeCommand", intakeCommand);
     eventMap.put("outtake", outtakeCommand);
-    //eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
+    //eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
    // eventMap.put("flootCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     eventMap.put("highPos", exampleCommand);
     eventMap.put("zero", exampleCommand);
@@ -295,7 +296,14 @@ public class RobotContainer {
         String name = pathFile.getName().replace(".path", "");
         List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
           new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-        m_chooser.addOption(name, swerveAutoBuilder.fullAuto(trajectories));
+        Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
+        if (name.endsWith("BalanceAuto")) {
+
+          m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, balanceCommand.withTimeout(5)));
+        } else {
+
+          m_chooser.addOption(name, pathCommand);
+        }
       }
     }
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(2, 1).withPosition(0, 0);
