@@ -23,11 +23,13 @@ public class ClawSubsystem extends SubsystemBase {
     private GenericEntry fdjsial;
     public boolean clawing;
     private boolean intaking = false;
+    public double speed;
+    private GenericEntry intakafying;
 
     public ClawSubsystem(ColorDetector colorDetector) {
 
-        clawOpen = Shuffleboard.getTab("setpoints").add("Claw is Forward", true).getEntry();
-
+        clawOpen = Shuffleboard.getTab("RobotData").add("Claw closed", true).getEntry();
+        intakafying = Shuffleboard.getTab("RobotData").add("intaking",false).getEntry();
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
@@ -36,23 +38,24 @@ public class ClawSubsystem extends SubsystemBase {
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
         fdjsial = Shuffleboard.getTab("setpoints").add("whynot", 0.285).getEntry();
+
     }
 
     public void intake() {
 
-        double speed = -0.2;
+        speed = -0.2;
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
 
     public void outtakeHigh(FieldElement fieldElement) {
 
-        double speed = 0.285;
+        speed = 0.4329;
         if (FieldElement.CUBE.equals(fieldElement)) {
 
-            speed = 0.20;
+        speed = 0.2;
         }
-        fdjsial.setDouble(speed);
+        // fdjsial.setDouble(speed);
         leftMotor.set(speed);
         rightMotor.set(speed);
 
@@ -60,24 +63,24 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void outtakeMid(FieldElement fieldElement) {
 
-        double speed = 0.285;
+        speed = fdjsial.getDouble(0);
         if (FieldElement.CUBE.equals(fieldElement)) {
 
-            speed = 0.05;
+        speed = 0.05;
         }
-        fdjsial.setDouble(speed);
+        // fdjsial.setDouble(speed);
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
 
     public void outtakeLow(FieldElement fieldElement) {
 
-        double speed = 0.285;
+        speed = fdjsial.getDouble(0);
         if (FieldElement.CUBE.equals(fieldElement)) {
 
-            speed = 0.15;
+        speed = 0.15;
         }
-        fdjsial.setDouble(speed);
+        // fdjsial.setDouble(speed);
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
@@ -94,11 +97,11 @@ public class ClawSubsystem extends SubsystemBase {
         if (clawing) {
 
             solenoid.set(Value.kReverse);
-            clawing = false;
+            clawing = true;
         } else {
 
             solenoid.set(Value.kForward);
-            clawing = true;
+            clawing = false;
         } 
         clawOpen.setBoolean(clawing);
     }
@@ -137,8 +140,7 @@ public class ClawSubsystem extends SubsystemBase {
         }
 
         intaking = !intaking;
+        intakafying.setBoolean(intaking);
     }
-
-
 
 }

@@ -152,9 +152,9 @@ public final class Constants {
                                                            // but spinning fast is not particularly useful or driver
                                                            // friendly
 
-    public static final double kPXController = 0.001;
-    public static final double kPYController = 0.001;
-    public static final double kPThetaController = 2.0;
+    public static final double kPXController = 0.003;
+    // public static final double kPYController = 0.0000;
+    public static final double kPThetaController = 0.1;
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeed, kMaxAngularAccel); // Creates a trapezoidal motion for the auto rotational commands

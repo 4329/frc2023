@@ -3,12 +3,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.claw.IntakeCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.claw.PinchCommand;
 import frc.robot.commands.extend.ArmExtendFloorCommand;
 import frc.robot.commands.extend.ArmExtendFullCommand;
+import frc.robot.commands.extend.ArmExtendMidCommand;
 import frc.robot.commands.extend.ArmExtendStartCommand;
 import frc.robot.commands.extend.ArmExtendToZeroCommand;
+import frc.robot.commands.extend.ArmRetractFullCommand;
 import frc.robot.commands.extend.SafeExtendCommand;
 import frc.robot.commands.rotation.ArmRotateFloorCommand;
 import frc.robot.commands.rotation.HighArmCommand;
@@ -51,7 +53,7 @@ public class CommandGroups {
 
             new ArmExtendStartCommand(armExtensionSubsystem),
             new SafeExtendCommand(armRotationSubsystem),
-            new ArmExtendFullCommand(armExtensionSubsystem),
+            new ArmExtendMidCommand(armExtensionSubsystem),
             new ParallelCommandGroup(
 
                 new MidWristCommand(wristSubsystem),
@@ -75,11 +77,16 @@ public class CommandGroups {
 
         return new SequentialCommandGroup(
 
-            new ArmExtendStartCommand(armExtensionSubsystem),
-            new PortalArmCommand(armRotationSubsystem),
-            new PortalWristCommand(wristSubsystem)
-         //   new PinchCommand(clawSubsystem)
-         // new IntakeCommand(clawSubsystem, colorDetector)
+            new ArmRetractFullCommand(armExtensionSubsystem),
+            new ParallelCommandGroup(
+
+                new PortalArmCommand(armRotationSubsystem),
+                new SequentialCommandGroup(
+
+                    new WaitCommand(0.125),
+                    new PortalWristCommand(wristSubsystem)
+                )
+            )
         );
     }
     public static CommandBase floorSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
@@ -102,12 +109,12 @@ public class CommandGroups {
 
             new ParallelCommandGroup(
                 
-                new ArmExtendStartCommand(armExtensionSubsystem),
+                new ArmRetractFullCommand(armExtensionSubsystem),
                 new WristZeroCommand(wristSubsystem)
             ),
             new ZeroArmCommand(armRotationSubsystem),
-            new ArmExtendToZeroCommand(armExtensionSubsystem),
-            new IntakeCommand(clawSubsystem, colorDetector).withTimeout(10)
+            new ArmExtendToZeroCommand(armExtensionSubsystem)
+            // new IntakeCommand(clawSubsystem, colorDetector).withTimeout(10)
         );
     }
     

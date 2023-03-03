@@ -1,5 +1,7 @@
 package frc.robot.commands.claw;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
@@ -12,6 +14,7 @@ public class OuttakeCommand extends CommandBase {
     private ClawSubsystem clawSubsystem;
     private ArmRotationSubsystem armRotationSubsystem;
     ColorDetector colorDetector;
+    GenericEntry djsalkf;
 
     FieldElement elly;
 
@@ -21,12 +24,15 @@ public class OuttakeCommand extends CommandBase {
         this.armRotationSubsystem = armRotationSubsystem;
         this.colorDetector = colorDetector;
         addRequirements(clawSubsystem);
+        djsalkf = Shuffleboard.getTab("sadjfkas").add("sadjfksd", false).getEntry();
     }
 
     @Override
     public void initialize() {
 
         elly = colorDetector.detectElement();
+        djsalkf.setBoolean(true);
+        
     }
 
     @Override
@@ -51,6 +57,7 @@ public class OuttakeCommand extends CommandBase {
     public void end(boolean interrupted) {
         
         clawSubsystem.stop();
+        djsalkf.setBoolean(false);
     }
 
 }

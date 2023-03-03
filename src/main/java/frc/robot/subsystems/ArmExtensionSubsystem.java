@@ -22,6 +22,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private GenericEntry tolerance;
 
     private final double highExtend;
+    private final double midExtend;
     private final double floorExtend;
     private final double startExtend;
 
@@ -34,6 +35,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         EXTENDFULL,
         FLOOR,
         ZERO,
+        MID,
         START
     }
 
@@ -41,12 +43,13 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public ArmExtensionSubsystem() {
 
-        highExtend = 120;
-        floorExtend = 182;
+        highExtend = -3;
+        midExtend = 120;
+        floorExtend = 190; //was 182
         startExtend = -4;
 
         maxValue = 220f;
-        minValue = -16f; //it's a float - Matthew
+        minValue = -40f; //it's a float - Matthew
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
         extensionPID = extensionMotor.getPIDController();
@@ -60,7 +63,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.setSmartCurrentLimit(Constants.ModuleConstants.kDriveCurrentLimit);
         extensionMotor.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
         extensionPID = extensionMotor.getPIDController();
-        extensionPID.setP(2);
+        extensionPID.setP(1);
         extensionPID.setI(1e-4);
         extensionPID.setD(1);
         extensionPID.setIZone(0);
@@ -130,6 +133,9 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         } else if (ExtendLength.START.equals(currentExtendLength)) {
 
             setpoint = startExtend;
+        } else if (ExtendLength.MID.equals(currentExtendLength)) {
+
+            setpoint = midExtend;
         }
     }
 
