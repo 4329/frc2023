@@ -78,19 +78,15 @@ public class CommandGroups {
         return new SequentialCommandGroup(
 
             new ArmRetractFullCommand(armExtensionSubsystem),
-
             new ParallelCommandGroup(
 
                 new PortalArmCommand(armRotationSubsystem),
-
                 new SequentialCommandGroup(
 
                     new WaitCommand(0.125),
                     new PortalWristCommand(wristSubsystem)
-
                 )
             )
-
         );
     }
     public static CommandBase floorSnag(ArmExtensionSubsystem armExtensionSubsystem, ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem, ColorDetector colorDetector) {
