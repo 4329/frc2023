@@ -53,9 +53,9 @@ public class ClawSubsystem extends SubsystemBase {
         speed = 0.4329;
         if (FieldElement.CUBE.equals(fieldElement)) {
 
-        speed = fdjsial.getDouble(0);
+        speed = 0.2;
         }
-        //fdjsial.setDouble(speed);
+        // fdjsial.setDouble(speed);
         leftMotor.set(speed);
         rightMotor.set(speed);
 
@@ -66,9 +66,9 @@ public class ClawSubsystem extends SubsystemBase {
         speed = fdjsial.getDouble(0);
         if (FieldElement.CUBE.equals(fieldElement)) {
 
-        speed = fdjsial.getDouble(0);
+        speed = 0.05;
         }
-        //fdjsial.setDouble(speed);
+        // fdjsial.setDouble(speed);
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
@@ -78,9 +78,9 @@ public class ClawSubsystem extends SubsystemBase {
         speed = fdjsial.getDouble(0);
         if (FieldElement.CUBE.equals(fieldElement)) {
 
-        speed = fdjsial.getDouble(0);
+        speed = 0.15;
         }
-        ////////////////fdjsial.setDouble(speed);
+        // fdjsial.setDouble(speed);
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
