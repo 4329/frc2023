@@ -107,6 +107,9 @@ public class RobotContainer {
   private final ArmExtendToZeroCommand armExtendToZeroCommand;
   private final ToggleElementCommand toggleElementCommand;
   private final ToggleIntakeCommand toggleIntakeCommand;
+  private final ManualMidShotCommand manualMidShotCommand;
+  private final ManualHighShotCommand manualHighShotCommand;
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -158,6 +161,8 @@ public class RobotContainer {
     armExtendToZeroCommand = new ArmExtendToZeroCommand(armExtensionSubsystem);
     toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
+    manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
+    manualHighShotCommand = new ManualHighShotCommand(clawSubsystem, driverController, colorDetector);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
@@ -197,6 +202,8 @@ public class RobotContainer {
     eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    eventMap.put("outtakeMid", manualMidShotCommand);
+    eventMap.put("intake", intakeCommand);
 
 
 
@@ -240,8 +247,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(new ManualHighShotCommand(clawSubsystem, driverController, colorDetector)); //arm extend
-    driverController.leftTrigger().whileTrue(new ManualMidShotCommand(clawSubsystem, driverController, colorDetector)); //arm retract
+    driverController.rightTrigger().whileTrue(manualHighShotCommand); //arm extend
+    driverController.leftTrigger().whileTrue(manualMidShotCommand); //arm retract
     
     driverController.rightBumper().whileTrue(armRotateCommand); //arm up
     driverController.leftBumper().whileTrue(armUnrotateCommand); //arm down
