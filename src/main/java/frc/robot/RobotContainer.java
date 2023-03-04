@@ -60,6 +60,7 @@ import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.ManualColorDetector;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.GimmeSwerve;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.commands.claw.ToggleElementCommand;
 
@@ -190,11 +191,11 @@ public class RobotContainer {
     eventMap.put("intakeCommand", intakeCommand);
     eventMap.put("outtake", outtakeCommand);
     eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
-    //eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-   // eventMap.put("flootCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
-    //eventMap.put("highPos", exampleCommand);
-    eventMap.put("zero", exampleCommand);
-    eventMap.put("outtake", exampleCommand);
+    eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    eventMap.put("flootCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+    eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+
+
 
 
     return eventMap;
@@ -203,25 +204,24 @@ public class RobotContainer {
 
   private SwerveAutoBuilder createAutoBuilder() {
 
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+    SwerveAutoBuilder autoBuilder = new GimmeSwerve(
 
-        m_robotDrive::getPose, // Pose2d supplier
-        m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-        Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-        new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation
-                                                                           // error (used to create the X and Y PID
-                                                                           // controllers)
-        new PIDConstants(Constants.AutoConstants.kPThetaController, 0.0, 0.0), // PID constants to correct for rotation
-        //                                                                    // error (used to create the rotation
-
-        
-        m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
-        createEventMap(),
-        true, // Should the path be automatically mirrored depending on alliance color.
-               // Optional, defaults to true
-        m_robotDrive // The drive subsystem. Used to properly set the requirements of path following
-                      // commands
-);
+      m_robotDrive::getPose, // Pose2d supplier
+      m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation
+                                                                         // error (used to create the X and Y PID
+                                                                         // controllers)
+      new PIDConstants(Constants.AutoConstants.kPThetaController, 0.0, 0.0), // PID constants to correct for rotation
+    // error (used to create the rotation
+      
+      m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      createEventMap(),
+      true, // Should the path be automatically mirrored depending on alliance color.
+             // Optional, defaults to true
+      m_robotDrive // The drive subsystem. Used to properly set the requirements of path following
+                    // commands
+    );
 
     return autoBuilder;
   }

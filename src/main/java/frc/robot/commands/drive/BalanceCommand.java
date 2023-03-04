@@ -1,43 +1,61 @@
 package frc.robot.commands.drive;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.utilities.HoorayConfig;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.Drivetrain;
-import frc.robot.utilities.HoorayConfig;
 
 public class BalanceCommand extends CommandBase{
 
     Drivetrain drivetrain;
 
-    private double roll;
+    private PIDController balancePID;
+    public GenericEntry atSetpoint;
+    public GenericEntry dilfs;
+    public GenericEntry commandRuningdkj;
 
     public BalanceCommand(Drivetrain drivetrain) {
 
         this.drivetrain = drivetrain;
+
+        balancePID = new PIDController(0.03, 0, 0);
+        balancePID.setTolerance(1);
+        balancePID.setSetpoint(0);
+
         addRequirements(drivetrain);
+
+        atSetpoint = Shuffleboard.getTab("RobotData").add("lrafjrld", false).getEntry();
+        dilfs = Shuffleboard.getTab("RobotData").add("pos error", 0).getEntry();
+        commandRuningdkj = Shuffleboard.getTab("RobotData").add("rjeao", false).getEntry();
     }
 
     @Override
     public void initialize() {
-
+        commandRuningdkj.setBoolean(true);
     }
-
+    
     @Override
     public void execute() {
 
-        roll = drivetrain.getRoll() / Constants.DriveConstants.maxRampRoll;
+        if (!balancePID.atSetpoint()) {
+            
+            drivetrain.drive(balancePID.calculate(drivetrain.getRoll()), 0, 0, true);
+        }
 
-        if (Math.abs(roll) <= Constants.DriveConstants.maxRampDeviation || Math.abs(roll) >= Constants.DriveConstants.maxRampRoll + 5) {
+        else {
 
             drivetrain.lock();
-        } else {
-
-            drivetrain.unlock();
-
-            drivetrain.drive(HoorayConfig.gimmeConfig().getRollDirection() * roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
         }
-    }
 
+        atSetpoint.setBoolean(balancePID.atSetpoint());
+        dilfs.setDouble(balancePID.getPositionError());
+    }
 
     @Override
     public boolean isFinished() {
@@ -49,6 +67,7 @@ public class BalanceCommand extends CommandBase{
     public void end(boolean interrupted) {
 
         drivetrain.unlock();
+        commandRuningdkj.setBoolean(false);
     }
 
 
