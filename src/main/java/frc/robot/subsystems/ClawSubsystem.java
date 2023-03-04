@@ -22,7 +22,7 @@ public class ClawSubsystem extends SubsystemBase {
     private GenericEntry clawOpen;
     private GenericEntry fdjsial;
     public boolean clawing;
-    private boolean intaking = false;
+    private boolean intaking;
     public double speed;
     private GenericEntry intakafying;
 
@@ -139,6 +139,13 @@ public class ClawSubsystem extends SubsystemBase {
         }
 
         intaking = !intaking;
+        intakafying.setBoolean(intaking);
+    }
+
+    public void stopIntake() {
+
+        stop();
+        intaking = false;
         intakafying.setBoolean(intaking);
     }
 

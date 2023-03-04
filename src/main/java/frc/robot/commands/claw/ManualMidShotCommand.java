@@ -20,6 +20,12 @@ public class ManualMidShotCommand extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        
+        clawSubsystem.stopIntake();
+    }
+
+    @Override
     public void execute() {
 
         double extension = controller.getLeftTriggerAxis();

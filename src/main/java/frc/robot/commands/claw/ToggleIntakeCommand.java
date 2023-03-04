@@ -16,11 +16,9 @@ public class ToggleIntakeCommand extends InstantCommand {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
      
         clawSubsystem.toggleIntake();
-        
-        
     }
 
 
