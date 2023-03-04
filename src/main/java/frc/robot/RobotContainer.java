@@ -35,7 +35,7 @@ import frc.robot.commands.claw.IntakeCommand;
 import frc.robot.commands.claw.ManualHighShotCommand;
 import frc.robot.commands.claw.ManualMidShotCommand;
 import frc.robot.commands.claw.OuttakeCommand;
-import frc.robot.commands.claw.PinchCommand;
+import frc.robot.commands.claw.TogglePinchCommand;
 import frc.robot.commands.claw.ReleaseCommand;
 import frc.robot.commands.claw.ToggleIntakeCommand;
 import frc.robot.commands.drive.BalanceCommand;
@@ -91,7 +91,7 @@ public class RobotContainer {
   private final ClawSubsystem clawSubsystem;
   private final IntakeCommand intakeCommand;
   private final OuttakeCommand outtakeCommand;
-  private final PinchCommand pinchCommand;
+  private final TogglePinchCommand togglePinchCommand;
   private final ReleaseCommand releaseCommand;
   private final ColorDetector colorDetector;
   private final ArmRotateCommand armRotateCommand;
@@ -143,7 +143,7 @@ public class RobotContainer {
 
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector);
-    pinchCommand = new PinchCommand(clawSubsystem);
+    togglePinchCommand = new TogglePinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, driverController);
     armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
@@ -192,7 +192,7 @@ public class RobotContainer {
     eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
     //eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
    // eventMap.put("flootCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
-    eventMap.put("highPos", exampleCommand);
+    //eventMap.put("highPos", exampleCommand);
     eventMap.put("zero", exampleCommand);
     eventMap.put("outtake", exampleCommand);
 
@@ -212,11 +212,12 @@ public class RobotContainer {
                                                                            // error (used to create the X and Y PID
                                                                            // controllers)
         new PIDConstants(Constants.AutoConstants.kPThetaController, 0.0, 0.0), // PID constants to correct for rotation
-                                                                           // error (used to create the rotation
-                                                                           // controller)
+        //                                                                    // error (used to create the rotation
+
+        
         m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
         createEventMap(),
-        false, // Should the path be automatically mirrored depending on alliance color.
+        true, // Should the path be automatically mirrored depending on alliance color.
                // Optional, defaults to true
         m_robotDrive // The drive subsystem. Used to properly set the requirements of path following
                       // commands
@@ -246,7 +247,7 @@ public class RobotContainer {
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
-    driverController.b().onTrue(pinchCommand);
+    driverController.b().onTrue(togglePinchCommand);
     driverController.x().whileTrue(toggleElementCommand);
     driverController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
@@ -269,7 +270,7 @@ public class RobotContainer {
     operatorController.back().onTrue(changeFieldOrientCommand);
 
     operatorController.a().onTrue(toggleIntakeCommand);
-    operatorController.b().onTrue(pinchCommand);
+    operatorController.b().onTrue(togglePinchCommand);
     operatorController.x().whileTrue(toggleElementCommand);
     operatorController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 

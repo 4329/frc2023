@@ -50,7 +50,7 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void outtakeHigh(FieldElement fieldElement) {
 
-        speed = 0.4329;
+        speed = 0.40;
         if (FieldElement.CUBE.equals(fieldElement)) {
 
         speed = 0.2;
@@ -97,12 +97,11 @@ public class ClawSubsystem extends SubsystemBase {
         if (clawing) {
 
             solenoid.set(Value.kReverse);
-            clawing = true;
         } else {
 
             solenoid.set(Value.kForward);
-            clawing = false;
         } 
+        clawing = !clawing;
         clawOpen.setBoolean(clawing);
     }
 
