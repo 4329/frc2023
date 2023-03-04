@@ -30,6 +30,8 @@ public class WristSubsystem extends SubsystemBase {
 
     public WristAngle currentWristAngle;
 
+    public GenericEntry[] sdjklfsadk;
+
     public enum WristAngle {
         
         HIGHROT,
@@ -48,7 +50,7 @@ public class WristSubsystem extends SubsystemBase {
         highAngle = 21.99;
         midAngle = 31.2;
         lowAngle = 9.0;
-        portalAngle = 30;
+        portalAngle = 31;
         floorAngle = 9;
         
         wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate);
@@ -72,6 +74,14 @@ public class WristSubsystem extends SubsystemBase {
 
         tolerance = Shuffleboard.getTab("setpoints").add("wrtol", 0.1).getEntry();
         wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
+        sdjklfsadk = new GenericEntry[] {
+
+            Shuffleboard.getTab("jdlas").add("hihg", 1).getEntry(),
+            Shuffleboard.getTab("jdlas").add("mid", 1).getEntry(),
+            Shuffleboard.getTab("jdlas").add("low", 1).getEntry(),
+            Shuffleboard.getTab("jdlas").add("portal", 1).getEntry(),
+            Shuffleboard.getTab("jdlas").add("flow", 1).getEntry()
+        };
     }
 
     public void setWristPosition(double setpoint) {
@@ -124,24 +134,24 @@ public class WristSubsystem extends SubsystemBase {
 
         if (WristAngle.HIGHROT.equals(currentWristAngle)) {
 
-            setpoint = highAngle;
+            setpoint = sdjklfsadk[0].getDouble(0);
         } else if (WristAngle.LOWROT.equals(currentWristAngle)) {
 
-            setpoint = lowAngle;
+            setpoint = sdjklfsadk[2].getDouble(0);
 
         } else if (WristAngle.MIDROT.equals(currentWristAngle)) {
 
-            setpoint = midAngle;
+            setpoint = sdjklfsadk[1].getDouble(0);
 
         } else if (WristAngle.ZERO.equals(currentWristAngle)) {
 
             setpoint = 0.0;
         } else if (WristAngle.PORTALROT.equals(currentWristAngle)) {
 
-            setpoint = portalAngle;
+            setpoint = sdjklfsadk[3].getDouble(0);
         } else if (WristAngle.FLOOR.equals(currentWristAngle)) {
 
-            setpoint = floorAngle;
+            setpoint = sdjklfsadk[4].getDouble(0);
         }
         
     }

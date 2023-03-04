@@ -1,14 +1,9 @@
 package frc.robot.commands.claw;
 
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
-import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
-import frc.robot.subsystems.ColorDetector.FieldElement;
 
 public class ManualMidShotCommand extends CommandBase {
 
@@ -16,11 +11,12 @@ public class ManualMidShotCommand extends CommandBase {
     private CommandXboxController controller;
     private ColorDetector colorDetector;
 
-    public ManualMidShotCommand(ClawSubsystem armExtensionSubsystem, CommandXboxController commandXboxController, ColorDetector colorDetector) {
+    public ManualMidShotCommand(ClawSubsystem clawSubsystem, CommandXboxController commandXboxController, ColorDetector colorDetector) {
 
         this.controller = commandXboxController;
         this.colorDetector = colorDetector;
-        addRequirements(armExtensionSubsystem);
+        this.clawSubsystem = clawSubsystem;
+        addRequirements(clawSubsystem);
     }
 
     @Override
@@ -30,7 +26,16 @@ public class ManualMidShotCommand extends CommandBase {
         if (extension > 0.3) {
 
             clawSubsystem.outtakeMid(colorDetector.detectElement());
+        } else {
+
+            clawSubsystem.stop();
         }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+
+        clawSubsystem.stop();
     }
 
 }

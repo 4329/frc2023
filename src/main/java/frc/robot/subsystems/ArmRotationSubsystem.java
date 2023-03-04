@@ -37,6 +37,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private GenericEntry qwerty;
     private final double zeroPos;
     private final double floorPos;
+    private final GenericEntry[] asjkl;
     
     public ArmHeight currentArmHeight;
 
@@ -93,6 +94,15 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor2.burnFlash();
         setpoint = 0;
         qwerty = Shuffleboard.getTab("setpoints").add("where", "Zero").getEntry();
+        asjkl = new GenericEntry[] {
+            
+            Shuffleboard.getTab("jdlas").add("high", 41).getEntry(),
+            Shuffleboard.getTab("jdlas").add("mid", 38.75).getEntry(),
+            Shuffleboard.getTab("jdlas").add("low", 13.5).getEntry(),
+            Shuffleboard.getTab("jdlas").add("safe", 17.5).getEntry(),
+            Shuffleboard.getTab("jdlas").add("portal", 11).getEntry(),
+            Shuffleboard.getTab("jdlas").add("floor", 0).getEntry()
+        };
 
         // TODO slow drive speed when arm is extended. Keep arm at minimum possible extension.
 
@@ -131,25 +141,25 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         if (ArmHeight.HIGH.equals(currentArmHeight)) {
 
-            setpoint = highPos;
+            setpoint = asjkl[0].getDouble(0);
         } else if (ArmHeight.MID.equals(currentArmHeight)) {
 
-            setpoint = midPos;
+            setpoint = asjkl[1].getDouble(0);
         } else if (ArmHeight.LOW.equals(currentArmHeight)) {
 
-            setpoint = lowPos;
+            setpoint = asjkl[2].getDouble(0);
         } else if (ArmHeight.SAFEEXTEND.equals(currentArmHeight)) {
 
-            setpoint = safeExtendPos;
+            setpoint = asjkl[3].getDouble(0);
         } else if (ArmHeight.PORTAL.equals(currentArmHeight)) {
 
-            setpoint = portalPos;
+            setpoint = asjkl[4].getDouble(0);
         } else if (ArmHeight.ZERO.equals(currentArmHeight)) {
             
             setpoint = zeroPos;
         } else if (ArmHeight.FLOOR.equals(currentArmHeight)) {
 
-            setpoint = floorPos;
+            setpoint = asjkl[5].getDouble(0);
         }
     }
 

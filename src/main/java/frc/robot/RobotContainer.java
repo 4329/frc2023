@@ -126,6 +126,7 @@ public class RobotContainer {
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
     wristSubsystem = new WristSubsystem();
+    clawSubsystem = new ClawSubsystem(colorDetector);
 
     m_chooser = new SendableChooser<>();
 
@@ -140,7 +141,6 @@ public class RobotContainer {
     midArmCommand = new MidArmCommand(armRotationSubsystem);
     lowArmCommand = new LowArmCommand(armRotationSubsystem);
 
-    clawSubsystem = new ClawSubsystem(colorDetector);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector);
     pinchCommand = new PinchCommand(clawSubsystem);
@@ -299,7 +299,7 @@ public class RobotContainer {
         Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
         if (name.endsWith("BalanceAuto")) {
 
-          m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, balanceCommand.withTimeout(5)));
+          m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new BalanceCommand(m_robotDrive).withTimeout(5)));
         } else {
 
           m_chooser.addOption(name, pathCommand);

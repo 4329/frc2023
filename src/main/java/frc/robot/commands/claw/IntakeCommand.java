@@ -1,7 +1,5 @@
 package frc.robot.commands.claw;
 
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
