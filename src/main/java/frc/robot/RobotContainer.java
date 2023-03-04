@@ -55,6 +55,7 @@ import frc.robot.commands.wrist.WristRotateDownCommand;
 import frc.robot.commands.wrist.WristRotateUpCommand;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
+import frc.robot.subsystems.BalanceSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.ManualColorDetector;
@@ -73,6 +74,7 @@ public class RobotContainer {
   private final WristSubsystem wristSubsystem;
   private final ArmRotationSubsystem armRotationSubsystem;
   private final ArmExtensionSubsystem armExtensionSubsystem;
+  private final BalanceSubsystem balanceSubsystem;
   
   final SendableChooser<Command> m_chooser;
   
@@ -128,6 +130,7 @@ public class RobotContainer {
     m_drive = new DriveByController(m_robotDrive, driverController);
     wristSubsystem = new WristSubsystem();
     clawSubsystem = new ClawSubsystem(colorDetector);
+    balanceSubsystem = new BalanceSubsystem();
 
     m_chooser = new SendableChooser<>();
 
@@ -137,7 +140,7 @@ public class RobotContainer {
     resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)),
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
-    balanceCommand = new BalanceCommand(drivetrain);
+    balanceCommand = new BalanceCommand(drivetrain, balanceSubsystem);
     highArmCommand = new HighArmCommand(armRotationSubsystem);
     midArmCommand = new MidArmCommand(armRotationSubsystem);
     lowArmCommand = new LowArmCommand(armRotationSubsystem);
@@ -192,7 +195,7 @@ public class RobotContainer {
     eventMap.put("outtake", outtakeCommand);
     eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
     eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    eventMap.put("flootCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+    eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
 
@@ -256,7 +259,7 @@ public class RobotContainer {
     driverController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
     driverController.povDown().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
 
-    //driverController.rightStick().whileTrue(balanceCommand);
+    driverController.rightStick().whileTrue(balanceCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient
     
     // Operator Controller
@@ -300,7 +303,7 @@ public class RobotContainer {
         Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
         if (name.endsWith("BalanceAuto")) {
 
-          m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new BalanceCommand(m_robotDrive).withTimeout(5)));
+          m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new BalanceCommand(m_robotDrive, balanceSubsystem).withTimeout(5)));
         } else {
 
           m_chooser.addOption(name, pathCommand);

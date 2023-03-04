@@ -40,7 +40,7 @@ public class ManualColorDetector extends ColorDetector {
         if (currentElement != null) {
 
             coneOrCube.setBoolean(FieldElement.CUBE.equals(currentElement));
-            System.out.println(currentElement.toString() + "-------------------------------------------------------------------------------------");
+            //System.out.println(currentElement.toString() + "-------------------------------------------------------------------------------------");
         }
     }
 
