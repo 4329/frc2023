@@ -256,7 +256,7 @@ public class RobotContainer {
     driverController.povLeft().onTrue(CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
     driverController.povDown().onTrue(CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
 
-    driverController.rightStick().whileTrue(balanceCommand);
+    //driverController.rightStick().whileTrue(balanceCommand);
     driverController.leftStick().whileTrue(resetOdometryCommandForward); //field orient
     
     // Operator Controller

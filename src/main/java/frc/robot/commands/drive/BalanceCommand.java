@@ -30,9 +30,8 @@ public class BalanceCommand extends CommandBase{
 
         addRequirements(drivetrain);
 
-        atSetpoint = Shuffleboard.getTab("RobotData").add("lrafjrld", false).getEntry();
-        dilfs = Shuffleboard.getTab("RobotData").add("pos error", 0).getEntry();
-        commandRuningdkj = Shuffleboard.getTab("RobotData").add("rjeao", false).getEntry();
+        // dilfs = Shuffleboard.getTab("RobotData").add("pos error", 0).getEntry();
+        // commandRuningdkj = Shuffleboard.getTab("RobotData").add("rjeao", false).getEntry();
     }
 
     @Override
@@ -53,8 +52,8 @@ public class BalanceCommand extends CommandBase{
             drivetrain.lock();
         }
 
-        atSetpoint.setBoolean(balancePID.atSetpoint());
-        dilfs.setDouble(balancePID.getPositionError());
+        // atSetpoint.setBoolean(balancePID.atSetpoint());
+        // dilfs.setDouble(balancePID.getPositionError());
     }
 
     @Override
@@ -67,7 +66,7 @@ public class BalanceCommand extends CommandBase{
     public void end(boolean interrupted) {
 
         drivetrain.unlock();
-        commandRuningdkj.setBoolean(false);
+        // commandRuningdkj.setBoolean(false);
     }
 
 
