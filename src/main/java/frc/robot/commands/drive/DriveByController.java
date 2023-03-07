@@ -21,7 +21,7 @@ public class DriveByController extends CommandBase {
   private final CommandXboxController m_controller;
   private boolean fieldOrient = true;
 
-  private GenericEntry fieldOrientStatus = Shuffleboard.getTab("RobotData").add("Field Orient On", true).withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).withPosition(4, 2).getEntry();
+  private GenericEntry fieldOrientStatus = Shuffleboard.getTab("RobotData").add("Field Orient On", true).withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).withPosition(0, 1).getEntry();
 
   /**
    * Contructs a DriveByController object which applys the driver inputs from the

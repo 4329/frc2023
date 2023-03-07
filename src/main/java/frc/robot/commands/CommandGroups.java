@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.claw.ConeZeroCommand;
 import frc.robot.commands.claw.TogglePinchCommand;
 import frc.robot.commands.extend.ArmExtendFloorCommand;
 import frc.robot.commands.extend.ArmExtendFullCommand;
@@ -114,7 +115,9 @@ public class CommandGroups {
                 new WristZeroCommand(wristSubsystem)
             ),
             new ZeroArmCommand(armRotationSubsystem),
-            new ArmExtendToZeroCommand(armExtensionSubsystem)
+            new ArmExtendToZeroCommand(armExtensionSubsystem),
+            new ConeZeroCommand(clawSubsystem, colorDetector)
+             
             // new IntakeCommand(clawSubsystem, colorDetector).withTimeout(10)
         );
     }

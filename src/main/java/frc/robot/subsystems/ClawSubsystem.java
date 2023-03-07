@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -28,8 +30,8 @@ public class ClawSubsystem extends SubsystemBase {
 
     public ClawSubsystem(ColorDetector colorDetector) {
 
-        clawOpen = Shuffleboard.getTab("RobotData").add("Claw closed", true).getEntry();
-        intakafying = Shuffleboard.getTab("RobotData").add("intaking",false).getEntry();
+        clawOpen = Shuffleboard.getTab("RobotData").add("Claw closed", true).withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).withPosition(0, 1).getEntry();
+        intakafying = Shuffleboard.getTab("RobotData").add("intaking", false).withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).withPosition(1, 1).getEntry();
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);

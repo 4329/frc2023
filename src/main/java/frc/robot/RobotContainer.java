@@ -191,8 +191,8 @@ public class RobotContainer {
     System.out.println(HoorayConfig.gimmeConfig().getLimelighturl());
     CameraServer.startAutomaticCapture(limelight);
 
-    Shuffleboard.getTab("RobotData").add("Limelight Camera", limelight).withPosition(2, 0).withSize(2, 2)
-        .withWidget(BuiltInWidgets.kCameraStream);
+    // Shuffleboard.getTab("RobotData").add("Limelight Camera", limelight).withPosition(2, 0).withSize(2, 2)
+    //     .withWidget(BuiltInWidgets.kCameraStream);
   }
 
   /* Autonomous :D */

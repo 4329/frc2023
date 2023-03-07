@@ -30,8 +30,6 @@ public class WristSubsystem extends SubsystemBase {
 
     public WristAngle currentWristAngle;
 
-    public GenericEntry[] sdjklfsadk;
-
     public enum WristAngle {
         
         HIGHROT,
@@ -74,14 +72,6 @@ public class WristSubsystem extends SubsystemBase {
 
         tolerance = Shuffleboard.getTab("setpoints").add("wrtol", 0.1).getEntry();
         wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
-        sdjklfsadk = new GenericEntry[] {
-
-            Shuffleboard.getTab("jdlas").add("wristhigh", 1).getEntry(),
-            Shuffleboard.getTab("jdlas").add("wristmid", 1).getEntry(),
-            Shuffleboard.getTab("jdlas").add("wristlow", 1).getEntry(),
-            Shuffleboard.getTab("jdlas").add("wristportal", 1).getEntry(),
-            Shuffleboard.getTab("jdlas").add("wristflow", 1).getEntry()
-        };
     }
 
     public void setWristPosition(double setpoint) {
