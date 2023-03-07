@@ -74,7 +74,7 @@ public class BalanceCommand extends CommandBase{
             balanceSubsystem.atSetpoint.setBoolean(false);
             
             drivetrain.unlock();
-            drivetrain.drive(pidCalc, 0, 0, true);
+            drivetrain.drive(pidCalc, 0, 0, false);
         }
 
         else {
@@ -101,6 +101,7 @@ public class BalanceCommand extends CommandBase{
     public void end(boolean interrupted) {
 
         drivetrain.unlock();
+        drivetrain.stop();
         // commandRuningdkj.setBoolean(false);
     }
 

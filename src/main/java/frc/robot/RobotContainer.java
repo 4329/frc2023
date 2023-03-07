@@ -205,7 +205,6 @@ public class RobotContainer {
     eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("outtakeMid", manualMidShotCommand);
-    eventMap.put("intake", intakeCommand);
 
 
 
