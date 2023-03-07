@@ -24,7 +24,8 @@ public class BalanceCommand extends CommandBase{
     public GenericEntry dilfs;
     public GenericEntry commandRuningdkj;
     private double pidCalc;
-    private double ff = 0.1;
+    private double ff = 0;
+   
 
 
 
@@ -52,37 +53,34 @@ public class BalanceCommand extends CommandBase{
     public void initialize() {
         //commandRuningdkj.setBoolean(true);
 
-        balancePID = new PIDController(balanceSubsystem.yay[0].getDouble(0), balanceSubsystem.yay[1].getDouble(0), balanceSubsystem.yay[2].getDouble(0));
-        balancePID.setTolerance(balanceSubsystem.yay[3].getDouble(0));
-        ff = balanceSubsystem.yay[4].getDouble(0);
+        balancePID = new PIDController(balanceSubsystem.yay[0].getDouble(0.015), balanceSubsystem.yay[1].getDouble(0.01), balanceSubsystem.yay[2].getDouble(0));
+        balancePID.setTolerance(balanceSubsystem.yay[3].getDouble(1));
+        // ff = balanceSubsystem.yay[4].getDouble(0);
         balancePID.setSetpoint(0);
+        balancePID.setIntegratorRange(-balanceSubsystem.irange.getDouble(0.1), balanceSubsystem.irange.getDouble(0.1));
     }
     
     @Override
     public void execute() {
 
         double output;
-
-      //  ffCalc = ff.calculate(0);
+        
+        //  ffCalc = ff.calculate(0);
         pidCalc = balancePID.calculate(drivetrain.getOffsetRoll());
-
-        if (pidCalc < 0) {
-
-            output = pidCalc - ff;            
-        } else {
-
-            output = pidCalc + ff;
-        }
-        System.out.println("output is: " + output);
+        balanceSubsystem.out.setDouble(pidCalc);
+        
+        System.out.println("output is: " + pidCalc);
         if (!balancePID.atSetpoint()) {
+            balanceSubsystem.atSetpoint.setBoolean(false);
             
             drivetrain.unlock();
-            drivetrain.drive(output, 0, 0, true);
+            drivetrain.drive(pidCalc, 0, 0, true);
         }
 
         else {
 
             drivetrain.lock();
+            balanceSubsystem.atSetpoint.setBoolean(true);
         }
 
         balanceSubsystem.happiness.setDouble(balancePID.getPositionError());
