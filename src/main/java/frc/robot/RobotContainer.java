@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
@@ -108,8 +109,8 @@ public class RobotContainer {
   private final ToggleElementCommand toggleElementCommand;
   private final ToggleIntakeCommand toggleIntakeCommand;
   private final ManualMidShotCommand manualMidShotCommand;
-  private final ManualHighShotCommand manualHighShotCommand;
-
+  // private final ManualHighShotCommand manualHighShotCommand;
+  private final Command manualHighShotCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -162,12 +163,13 @@ public class RobotContainer {
     toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
-    manualHighShotCommand = new ManualHighShotCommand(clawSubsystem, driverController, colorDetector);
+    manualHighShotCommand = new SequentialCommandGroup(new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
                                 */
     configureAutoChooser(drivetrain);
+
   }
 
   /**

@@ -7,16 +7,17 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.claw.TogglePinchCommand;
 import frc.robot.commands.extend.ArmExtendFloorCommand;
 import frc.robot.commands.extend.ArmExtendFullCommand;
+import frc.robot.commands.extend.ArmExtendHighCommand;
 import frc.robot.commands.extend.ArmExtendMidCommand;
 import frc.robot.commands.extend.ArmExtendStartCommand;
 import frc.robot.commands.extend.ArmExtendToZeroCommand;
 import frc.robot.commands.extend.ArmRetractFullCommand;
-import frc.robot.commands.extend.SafeExtendCommand;
 import frc.robot.commands.rotation.ArmRotateFloorCommand;
 import frc.robot.commands.rotation.HighArmCommand;
 import frc.robot.commands.rotation.LowArmCommand;
 import frc.robot.commands.rotation.MidArmCommand;
 import frc.robot.commands.rotation.PortalArmCommand;
+import frc.robot.commands.rotation.SafeRotateCommand;
 import frc.robot.commands.rotation.ZeroArmCommand;
 import frc.robot.commands.wrist.HighWristCommand;
 import frc.robot.commands.wrist.LowWristCommand;
@@ -37,8 +38,8 @@ public class CommandGroups {
         return new SequentialCommandGroup(
 
             new ArmExtendStartCommand(armExtensionSubsystem),
-            new SafeExtendCommand(armRotationSubsystem),
-            new ArmExtendFullCommand(armExtensionSubsystem),
+            new SafeRotateCommand(armRotationSubsystem),
+            new ArmExtendHighCommand(armExtensionSubsystem),
             new ParallelCommandGroup(
 
                 new HighWristCommand(wristSubsystem),
@@ -52,7 +53,7 @@ public class CommandGroups {
         return new SequentialCommandGroup(
 
             new ArmExtendStartCommand(armExtensionSubsystem),
-            new SafeExtendCommand(armRotationSubsystem),
+            new SafeRotateCommand(armRotationSubsystem),
             new ArmExtendMidCommand(armExtensionSubsystem),
             new ParallelCommandGroup(
 
