@@ -30,8 +30,8 @@ public class ClawSubsystem extends SubsystemBase {
 
     public ClawSubsystem(ColorDetector colorDetector) {
 
-        clawOpen = Shuffleboard.getTab("RobotData").add("Claw closed", true).withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).withPosition(0, 1).getEntry();
-        intakafying = Shuffleboard.getTab("RobotData").add("intaking", false).withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).withPosition(1, 1).getEntry();
+        clawOpen = Shuffleboard.getTab("RobotData").add("Pinch Closed", true).withSize(4, 5).withPosition(11, 0).getEntry();
+        intakafying = Shuffleboard.getTab("RobotData").add("intaking", false).withSize(4, 5).withPosition(7, 0).getEntry();
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);

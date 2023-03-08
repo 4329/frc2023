@@ -13,7 +13,7 @@ public class ManualColorDetector extends ColorDetector {
     public ManualColorDetector() {
 
         currentElement = FieldElement.CUBE;
-        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube", false).withProperties(Map.of("Color when true", "#800080", "Color when false", "#FFF000")).withPosition(2, 0).getEntry();
+        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube", false).withProperties(Map.of("Color when true", "#800080", "Color when false", "#FFF000")).withSize(4, 5).withPosition(3, 0).getEntry();
     }
 
     public void toggleElement() {

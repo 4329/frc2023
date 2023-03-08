@@ -99,7 +99,7 @@ public class Drivetrain extends SubsystemBase {
     m_keepAnglePID.enableContinuousInput(-Math.PI, Math.PI);
     ahrs.reset();
     jdsilsad = Shuffleboard.getTab("setpoints").add("dsjafsdlf", 0).getEntry();
-    roll = Shuffleboard.getTab("RobotData").add("roll", 0).withPosition(2, 1).getEntry();
+    // roll = Shuffleboard.getTab("RobotData").add("roll", 0).withPosition(2, 1).getEntry();
     // pitch = Shuffleboard.getTab("RobotData").add("pitch", 0).getEntry();
 
     ahrs.calibrate();
@@ -151,7 +151,7 @@ public class Drivetrain extends SubsystemBase {
     m_lastFieldRelVel = m_fieldRelVel;
     // Update swerve drive odometry periodically so robot pose can be tracked
     updateOdometry();
-    roll.setDouble(getOffsetRoll());
+    // roll.setDouble(getOffsetRoll());
     // pitch.setDouble(ahrs.getPitch());
 
     // Calls get pose function which sends the Pose information to the

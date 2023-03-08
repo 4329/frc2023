@@ -318,7 +318,7 @@ public class RobotContainer {
         }
       }
     }
-    Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(2, 1).withPosition(0, 0);
+    Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(3, 2).withPosition(0, 0);
   }
 
   public void autonomousInit() {
