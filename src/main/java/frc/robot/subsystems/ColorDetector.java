@@ -15,7 +15,7 @@ public class ColorDetector extends SubsystemBase {
     private final I2C.Port i2cPort;
     private final ColorSensorV3 colorSensorV3;
     
-    GenericEntry coneOrCube;
+    // GenericEntry coneOrCube;
     GenericEntry proximity;
 
 
@@ -44,7 +44,7 @@ public class ColorDetector extends SubsystemBase {
         colorMatch.addColorMatch(cube);
         //colorMatch.addColorMatch(cubeLogo);
         colorMatch.addColorMatch(cone);
-        coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
+        // coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
         proximity = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
     }
 
@@ -74,12 +74,13 @@ public class ColorDetector extends SubsystemBase {
         FieldElement kraigElement = detectElement();
         if (kraigElement != null) {
 
-            coneOrCube.setString(kraigElement.toString());
+            // coneOrCube.setString(kraigElement.toString());
         } else {
 
-            coneOrCube.setString(FieldElement.NOTHIN.toString());
+            // coneOrCube.setString(FieldElement.NOTHIN.toString());
         }
         proximity.setDouble(distance());
+        System.out.println(kraigElement.toString() + "________________________________________________________-");
     }
 
 }

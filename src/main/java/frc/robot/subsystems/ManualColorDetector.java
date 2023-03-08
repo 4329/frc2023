@@ -1,28 +1,19 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorSensorV3;
+import java.util.Map;
 
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class ManualColorDetector extends ColorDetector {
 
-    GenericEntry coneOrCube;
-
+    private GenericEntry coneOrCube;
     private FieldElement currentElement;
-
-
-    
 
     public ManualColorDetector() {
 
-        currentElement = FieldElement.CONE;
-        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube?", "" + currentElement).getEntry();
+        currentElement = FieldElement.CUBE;
+        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube", false).withProperties(Map.of("Color when true", "#800080", "Color when false", "#FFF000")).withSize(4, 5).withPosition(3, 0).getEntry();
     }
 
     public void toggleElement() {
@@ -47,7 +38,9 @@ public class ManualColorDetector extends ColorDetector {
     public void periodic() {
 
         if (currentElement != null) {
-            coneOrCube.setString(currentElement.toString());
+
+            coneOrCube.setBoolean(FieldElement.CUBE.equals(currentElement));
+            //System.out.println(currentElement.toString() + "-------------------------------------------------------------------------------------");
         }
     }
 

@@ -84,6 +84,12 @@ public class Drivetrain extends SubsystemBase {
   private FieldRelativeAccel m_fieldRelAccel = new FieldRelativeAccel();
 
   GenericEntry jdsilsad;
+  GenericEntry roll;
+  GenericEntry pitch;
+  
+
+  double pitchOffset;
+  double rollOffset;
   /**
    * Constructs a Drivetrain and resets the Gyro and Keep Angle parameters
    */
@@ -93,6 +99,14 @@ public class Drivetrain extends SubsystemBase {
     m_keepAnglePID.enableContinuousInput(-Math.PI, Math.PI);
     ahrs.reset();
     jdsilsad = Shuffleboard.getTab("setpoints").add("dsjafsdlf", 0).getEntry();
+    // roll = Shuffleboard.getTab("RobotData").add("roll", 0).withPosition(2, 1).getEntry();
+    // pitch = Shuffleboard.getTab("RobotData").add("pitch", 0).getEntry();
+
+    ahrs.calibrate();
+
+    pitchOffset = ahrs.getPitch();
+    rollOffset = ahrs.getRoll();
+
   }
 
 
@@ -137,6 +151,8 @@ public class Drivetrain extends SubsystemBase {
     m_lastFieldRelVel = m_fieldRelVel;
     // Update swerve drive odometry periodically so robot pose can be tracked
     updateOdometry();
+    // roll.setDouble(getOffsetRoll());
+    // pitch.setDouble(ahrs.getPitch());
 
     // Calls get pose function which sends the Pose information to the
     getPose();
@@ -304,10 +320,11 @@ public class Drivetrain extends SubsystemBase {
   public void lock() {
 
     SwerveModuleState[] steve = {
-      new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
-      new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
+
       new SwerveModuleState(0, Rotation2d.fromDegrees(225)),
-      new SwerveModuleState(0, Rotation2d.fromDegrees(315))
+      new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
+      new SwerveModuleState(0, Rotation2d.fromDegrees(135)),
+      new SwerveModuleState(0, Rotation2d.fromDegrees(225))
     };
 
     setModuleStates(steve);
@@ -331,6 +348,11 @@ public class Drivetrain extends SubsystemBase {
   public double getRoll() {
 
     return ahrs.getRoll();
+  }
+
+  public double getOffsetRoll() {
+
+    return ahrs.getRoll() - rollOffset;
   }
 
 }

@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
@@ -34,7 +36,7 @@ import frc.robot.commands.claw.IntakeCommand;
 import frc.robot.commands.claw.ManualHighShotCommand;
 import frc.robot.commands.claw.ManualMidShotCommand;
 import frc.robot.commands.claw.OuttakeCommand;
-import frc.robot.commands.claw.PinchCommand;
+import frc.robot.commands.claw.TogglePinchCommand;
 import frc.robot.commands.claw.ReleaseCommand;
 import frc.robot.commands.claw.ToggleIntakeCommand;
 import frc.robot.commands.drive.BalanceCommand;
@@ -54,11 +56,13 @@ import frc.robot.commands.wrist.WristRotateDownCommand;
 import frc.robot.commands.wrist.WristRotateUpCommand;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
+import frc.robot.subsystems.BalanceSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.ManualColorDetector;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.GimmeSwerve;
 import frc.robot.utilities.HoorayConfig;
 import frc.robot.commands.claw.ToggleElementCommand;
 
@@ -71,6 +75,7 @@ public class RobotContainer {
   private final WristSubsystem wristSubsystem;
   private final ArmRotationSubsystem armRotationSubsystem;
   private final ArmExtensionSubsystem armExtensionSubsystem;
+  private final BalanceSubsystem balanceSubsystem;
   
   final SendableChooser<Command> m_chooser;
   
@@ -90,7 +95,7 @@ public class RobotContainer {
   private final ClawSubsystem clawSubsystem;
   private final IntakeCommand intakeCommand;
   private final OuttakeCommand outtakeCommand;
-  private final PinchCommand pinchCommand;
+  private final TogglePinchCommand togglePinchCommand;
   private final ReleaseCommand releaseCommand;
   private final ColorDetector colorDetector;
   private final ArmRotateCommand armRotateCommand;
@@ -103,6 +108,9 @@ public class RobotContainer {
   private final ArmExtendToZeroCommand armExtendToZeroCommand;
   private final ToggleElementCommand toggleElementCommand;
   private final ToggleIntakeCommand toggleIntakeCommand;
+  private final ManualMidShotCommand manualMidShotCommand;
+  // private final ManualHighShotCommand manualHighShotCommand;
+  private final Command manualHighShotCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -125,6 +133,8 @@ public class RobotContainer {
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     m_drive = new DriveByController(m_robotDrive, driverController);
     wristSubsystem = new WristSubsystem();
+    clawSubsystem = new ClawSubsystem(colorDetector);
+    balanceSubsystem = new BalanceSubsystem();
 
     m_chooser = new SendableChooser<>();
 
@@ -134,15 +144,14 @@ public class RobotContainer {
     resetOdometryCommandBackward = new ResetOdometryCommand(new Pose2d(new Translation2d(), new Rotation2d(0.0)),
         drivetrain);
     changeFieldOrientCommand = new ChangeFieldOrientCommand(m_drive);
-    balanceCommand = new BalanceCommand(drivetrain);
+    balanceCommand = new BalanceCommand(drivetrain, balanceSubsystem);
     highArmCommand = new HighArmCommand(armRotationSubsystem);
     midArmCommand = new MidArmCommand(armRotationSubsystem);
     lowArmCommand = new LowArmCommand(armRotationSubsystem);
 
-    clawSubsystem = new ClawSubsystem(colorDetector);
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector);
-    pinchCommand = new PinchCommand(clawSubsystem);
+    togglePinchCommand = new TogglePinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, driverController);
     armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
@@ -153,11 +162,14 @@ public class RobotContainer {
     armExtendToZeroCommand = new ArmExtendToZeroCommand(armExtensionSubsystem);
     toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
+    manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
+    manualHighShotCommand = new SequentialCommandGroup(new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
                                 */
     configureAutoChooser(drivetrain);
+
   }
 
   /**
@@ -179,8 +191,8 @@ public class RobotContainer {
     System.out.println(HoorayConfig.gimmeConfig().getLimelighturl());
     CameraServer.startAutomaticCapture(limelight);
 
-    Shuffleboard.getTab("RobotData").add("Limelight Camera", limelight).withPosition(2, 0).withSize(2, 2)
-        .withWidget(BuiltInWidgets.kCameraStream);
+    // Shuffleboard.getTab("RobotData").add("Limelight Camera", limelight).withPosition(2, 0).withSize(2, 2)
+    //     .withWidget(BuiltInWidgets.kCameraStream);
   }
 
   /* Autonomous :D */
@@ -188,12 +200,13 @@ public class RobotContainer {
     Map<String, Command> eventMap = new HashMap<>();
     eventMap.put("intakeCommand", intakeCommand);
     eventMap.put("outtake", outtakeCommand);
-    //eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
-   // eventMap.put("flootCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
-    eventMap.put("highPos", exampleCommand);
-    eventMap.put("zero", exampleCommand);
-    eventMap.put("outtake", exampleCommand);
+    eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+    eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    eventMap.put("outtakeMid", manualMidShotCommand);
+
+
 
 
     return eventMap;
@@ -202,24 +215,24 @@ public class RobotContainer {
 
   private SwerveAutoBuilder createAutoBuilder() {
 
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+    SwerveAutoBuilder autoBuilder = new GimmeSwerve(
 
-        m_robotDrive::getPose, // Pose2d supplier
-        m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-        Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-        new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation
-                                                                           // error (used to create the X and Y PID
-                                                                           // controllers)
-        new PIDConstants(Constants.AutoConstants.kPThetaController, 0.0, 0.0), // PID constants to correct for rotation
-                                                                           // error (used to create the rotation
-                                                                           // controller)
-        m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
-        createEventMap(),
-        false, // Should the path be automatically mirrored depending on alliance color.
-               // Optional, defaults to true
-        m_robotDrive // The drive subsystem. Used to properly set the requirements of path following
-                      // commands
-);
+      m_robotDrive::getPose, // Pose2d supplier
+      m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation
+                                                                         // error (used to create the X and Y PID
+                                                                         // controllers)
+      new PIDConstants(Constants.AutoConstants.kPThetaController, 0.0, 0.0), // PID constants to correct for rotation
+    // error (used to create the rotation
+      
+      m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      createEventMap(),
+      true, // Should the path be automatically mirrored depending on alliance color.
+             // Optional, defaults to true
+      m_robotDrive // The drive subsystem. Used to properly set the requirements of path following
+                    // commands
+    );
 
     return autoBuilder;
   }
@@ -235,8 +248,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(new ManualHighShotCommand(clawSubsystem, driverController, colorDetector)); //arm extend
-    driverController.leftTrigger().whileTrue(new ManualMidShotCommand(clawSubsystem, driverController, colorDetector)); //arm retract
+    driverController.rightTrigger().whileTrue(manualHighShotCommand); //arm extend
+    driverController.leftTrigger().whileTrue(manualMidShotCommand); //arm retract
     
     driverController.rightBumper().whileTrue(armRotateCommand); //arm up
     driverController.leftBumper().whileTrue(armUnrotateCommand); //arm down
@@ -245,7 +258,7 @@ public class RobotContainer {
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
-    driverController.b().onTrue(pinchCommand);
+    driverController.b().onTrue(togglePinchCommand);
     driverController.x().whileTrue(toggleElementCommand);
     driverController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
@@ -268,7 +281,7 @@ public class RobotContainer {
     operatorController.back().onTrue(changeFieldOrientCommand);
 
     operatorController.a().onTrue(toggleIntakeCommand);
-    operatorController.b().onTrue(pinchCommand);
+    operatorController.b().onTrue(togglePinchCommand);
     operatorController.x().whileTrue(toggleElementCommand);
     operatorController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
@@ -295,10 +308,17 @@ public class RobotContainer {
         String name = pathFile.getName().replace(".path", "");
         List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
           new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
-        m_chooser.addOption(name, swerveAutoBuilder.fullAuto(trajectories));
+        Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
+        if (name.endsWith("BalanceAuto")) {
+
+          m_chooser.addOption(name, new SequentialCommandGroup(pathCommand, new BalanceCommand(m_robotDrive, balanceSubsystem).withTimeout(12)));
+        } else {
+
+          m_chooser.addOption(name, pathCommand);
+        }
       }
     }
-    Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(2, 1).withPosition(0, 0);
+    Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(3, 2).withPosition(0, 0);
   }
 
   public void autonomousInit() {

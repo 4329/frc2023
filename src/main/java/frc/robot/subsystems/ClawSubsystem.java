@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -22,14 +24,14 @@ public class ClawSubsystem extends SubsystemBase {
     private GenericEntry clawOpen;
     private GenericEntry fdjsial;
     public boolean clawing;
-    private boolean intaking = false;
+    private boolean intaking;
     public double speed;
     private GenericEntry intakafying;
 
     public ClawSubsystem(ColorDetector colorDetector) {
 
-        clawOpen = Shuffleboard.getTab("RobotData").add("Claw closed", true).getEntry();
-        intakafying = Shuffleboard.getTab("RobotData").add("intaking",false).getEntry();
+        clawOpen = Shuffleboard.getTab("RobotData").add("Pinch Closed", true).withSize(4, 5).withPosition(11, 0).getEntry();
+        intakafying = Shuffleboard.getTab("RobotData").add("intaking", false).withSize(4, 5).withPosition(7, 0).getEntry();
         leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
         rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
@@ -50,7 +52,7 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void outtakeHigh(FieldElement fieldElement) {
 
-        speed = 0.4329;
+        speed = 0.40;
         if (FieldElement.CUBE.equals(fieldElement)) {
 
         speed = 0.2;
@@ -97,12 +99,11 @@ public class ClawSubsystem extends SubsystemBase {
         if (clawing) {
 
             solenoid.set(Value.kReverse);
-            clawing = true;
         } else {
 
             solenoid.set(Value.kForward);
-            clawing = false;
         } 
+        clawing = !clawing;
         clawOpen.setBoolean(clawing);
     }
 
@@ -140,6 +141,13 @@ public class ClawSubsystem extends SubsystemBase {
         }
 
         intaking = !intaking;
+        intakafying.setBoolean(intaking);
+    }
+
+    public void stopIntake() {
+
+        stop();
+        intaking = false;
         intakafying.setBoolean(intaking);
     }
 

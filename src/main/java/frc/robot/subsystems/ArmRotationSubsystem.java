@@ -93,10 +93,11 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor2.burnFlash();
         setpoint = 0;
         qwerty = Shuffleboard.getTab("setpoints").add("where", "Zero").getEntry();
+    
 
         // TODO slow drive speed when arm is extended. Keep arm at minimum possible extension.
 
-        pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).getEntry();
+        pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
     }
 
@@ -189,7 +190,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public void periodic() {
 
         armMotorSetpoint.setDouble(setpoint);
-        pidGraph.setDouble(armEncoder.getPosition());
+        pidGraph.setDouble(armMotor1.getAppliedOutput());
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
 

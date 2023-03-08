@@ -25,6 +25,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private final double midExtend;
     private final double floorExtend;
     private final double startExtend;
+    private final double fullExtend;
 
     private final float maxValue;
     private final float minValue;
@@ -36,6 +37,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         FLOOR,
         ZERO,
         MID,
+        HIGH,
         START
     }
 
@@ -43,6 +45,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public ArmExtensionSubsystem() {
 
+        fullExtend = 220;
         highExtend = -3;
         midExtend = 120;
         floorExtend = 190; //was 182
@@ -120,7 +123,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
         if (ExtendLength.EXTENDFULL.equals(currentExtendLength)) {
 
-            setpoint = highExtend;
+            setpoint = fullExtend;
         } else if (ExtendLength.RETRACTFULL.equals(currentExtendLength)) {
 
             setpoint = minValue;
@@ -136,6 +139,9 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         } else if (ExtendLength.MID.equals(currentExtendLength)) {
 
             setpoint = midExtend;
+        } else if (ExtendLength.HIGH.equals(currentExtendLength)) {
+
+            setpoint = highExtend;
         }
     }
 
