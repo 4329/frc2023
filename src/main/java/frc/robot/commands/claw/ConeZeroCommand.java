@@ -16,7 +16,6 @@ public class ConeZeroCommand extends CommandBase {
 
     private double waitTime;
 
-
     public ConeZeroCommand(ClawSubsystem clawSubsystem, ColorDetector colorDetector) {
 
         this.colorDetector = colorDetector;
@@ -41,20 +40,23 @@ public class ConeZeroCommand extends CommandBase {
     @Override
     public void execute() {
 
-        waitTime++;
-    
-        if (waitTime > 1 && waitTime < 10) {
+        if (!finished) {
+            
+            waitTime++;
 
-            clawSubsystem.release();
-        } else if (waitTime < 20) {
+            if (waitTime > 1 && waitTime < 10) {
 
-            clawSubsystem.pinch();
-        } else if (waitTime < 60) {
+                clawSubsystem.release();
+            } else if (waitTime < 20) {
 
-            clawSubsystem.intake();
-        }  else {
+                clawSubsystem.pinch();
+            } else if (waitTime < 60) {
 
-            finished = true;
+                clawSubsystem.intake();
+            } else {
+
+                finished = true;
+            }
         }
     }
 

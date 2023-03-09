@@ -110,12 +110,16 @@ public class ClawSubsystem extends SubsystemBase {
     public void pinch() {
 
         solenoid.set(Value.kForward);
-        clawOpen.setBoolean(true);
+
+        clawing = true;
+        clawOpen.setBoolean(clawing);
     }
 
     public void release() {
 
         solenoid.set(Value.kReverse);
+
+        clawing = false;
         clawOpen.setBoolean(false);
     }
 

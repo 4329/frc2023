@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -163,7 +164,7 @@ public class RobotContainer {
     toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
-    manualHighShotCommand = new SequentialCommandGroup(new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
+    manualHighShotCommand = new SequentialCommandGroup(/*new InstantCommand(() -> clawSubsystem.stopIntake()),*/ new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
