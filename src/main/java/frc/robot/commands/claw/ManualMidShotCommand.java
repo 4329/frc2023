@@ -22,7 +22,7 @@ public class ManualMidShotCommand extends CommandBase {
     @Override
     public void initialize() {
         
-        clawSubsystem.stopIntake();
+        clawSubsystem.stop();
     }
 
     @Override
