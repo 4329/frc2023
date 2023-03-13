@@ -48,6 +48,8 @@ public class ClawSubsystem extends SubsystemBase {
         speed = -0.2;
         leftMotor.set(speed);
         rightMotor.set(speed);
+        intaking = true;
+        intakafying.setBoolean(intaking);
     }
 
     public void outtakeHigh(FieldElement fieldElement) {
@@ -92,6 +94,8 @@ public class ClawSubsystem extends SubsystemBase {
         double stop = 0;
         leftMotor.set(stop);
         rightMotor.set(stop);
+        intaking = false;
+        intakafying.setBoolean(intaking);
     }
 
     public void togglePinch() {
@@ -110,12 +114,16 @@ public class ClawSubsystem extends SubsystemBase {
     public void pinch() {
 
         solenoid.set(Value.kForward);
-        clawOpen.setBoolean(true);
+
+        clawing = true;
+        clawOpen.setBoolean(clawing);
     }
 
     public void release() {
 
         solenoid.set(Value.kReverse);
+
+        clawing = false;
         clawOpen.setBoolean(false);
     }
 
@@ -140,15 +148,6 @@ public class ClawSubsystem extends SubsystemBase {
             intake();
         }
 
-        intaking = !intaking;
-        intakafying.setBoolean(intaking);
-    }
-
-    public void stopIntake() {
-
-        stop();
-        intaking = false;
-        intakafying.setBoolean(intaking);
     }
 
 }
