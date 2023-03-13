@@ -164,7 +164,7 @@ public class RobotContainer {
     toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
-    manualHighShotCommand = new SequentialCommandGroup(/*new InstantCommand(() -> clawSubsystem.stopIntake()),*/ new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ToggleIntakeCommand(clawSubsystem), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
+    manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
