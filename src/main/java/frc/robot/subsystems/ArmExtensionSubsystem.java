@@ -48,7 +48,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         fullExtend = 220;
         highExtend = -3;
         midExtend = 120;
-        floorExtend = 190; //was 182
+        floorExtend = 186.5; //was 182
         startExtend = -4;
 
         maxValue = 220f;
