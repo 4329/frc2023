@@ -6,6 +6,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,27 +18,30 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     private CANSparkMax armMotor1;
     private CANSparkMax armMotor2;
+    private DoubleSolenoid brakeSolenoid;
     private RelativeEncoder armEncoder;
     private SparkMaxPIDController armPID;
 
-    public double setpoint;
+    private double setpoint;
+    private boolean braking;
+
     public GenericEntry armMotorSetpoint;
     public GenericEntry pidGraph;
-
+    public GenericEntry brakingEntry;
+    public GenericEntry ArmHeightEnum;
     
-    private final float maxValue;
-    private final float minValue;
-
     private final double tolerance;
 
+    private final float maxValue;
+    private final float minValue;
     private final double highPos;
     private final double midPos;
     private final double lowPos;
     private final double safeExtendPos;
     private final double portalPos;
-    private GenericEntry qwerty;
     private final double zeroPos;
     private final double floorPos;
+    
     
     public ArmHeight currentArmHeight;
 
@@ -92,20 +97,21 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;
-        qwerty = Shuffleboard.getTab("setpoints").add("where", "Zero").getEntry();
-    
+        ArmHeightEnum = Shuffleboard.getTab("setpoints").add("where", "Zero").getEntry();
+        brakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);    
 
         // TODO slow drive speed when arm is extended. Keep arm at minimum possible extension.
 
         pidGraph = Shuffleboard.getTab("setpoints").add("graph", 1).withWidget(BuiltInWidgets.kGraph).getEntry();
         armMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Rotation Motor", 1).getEntry();
+        brakingEntry = Shuffleboard.getTab("setpoints").add("Braking", false).getEntry();
     }
 
     public void setArmPosition(ArmHeight armHeight) {
 
         this.currentArmHeight = armHeight;
         calcEnums();
-        qwerty.setString(armHeight.toString());
+        ArmHeightEnum.setString(armHeight.toString());
     }
 
     public ArmHeight getArmPosition() {
@@ -117,6 +123,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         if (setpoint < maxValue) {
             setpoint += Constants.ArmRotationConstants.armRotateSpeed;
+            unBrake();
         }
     }
 
@@ -125,10 +132,13 @@ public class ArmRotationSubsystem extends SubsystemBase {
         if (setpoint > minValue) {
 
             setpoint -= Constants.ArmRotationConstants.armRotateSpeed;
+            unBrake();
         }
     }
 
     private void calcEnums() {
+
+        unBrake();
 
         if (ArmHeight.HIGH.equals(currentArmHeight)) {
 
@@ -162,12 +172,14 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public void stop() {
 
         armMotor1.set(0);
+        brake();
     }
 
     public boolean armAtSetpoint() {
 
         if (armEncoder.getPosition() <= setpoint + tolerance && armEncoder.getPosition() >= setpoint - tolerance) {
 
+            brake();
             return true;
         } else {
 
@@ -186,13 +198,26 @@ public class ArmRotationSubsystem extends SubsystemBase {
         }
     }
 
-    @Override
+    private void brake() {
+
+        brakeSolenoid.set(DoubleSolenoid.Value.kForward);
+        braking = true;
+        brakingEntry.setBoolean(braking);
+   }
+
+    private void unBrake() {
+
+        brakeSolenoid.set(DoubleSolenoid.Value.kReverse);
+        braking = false;
+        brakingEntry.setBoolean(braking);
+   }
+
+   @Override
     public void periodic() {
 
         armMotorSetpoint.setDouble(setpoint);
         pidGraph.setDouble(armMotor1.getAppliedOutput());
         armPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
-
 
 }
