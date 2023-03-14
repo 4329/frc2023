@@ -107,7 +107,7 @@ public class RobotContainer {
   private final WristRotateDownCommand wristRotateDownCommand;
   private final ArmRetractFullCommand armRetractFullCommand;
   private final ArmExtendToZeroCommand armExtendToZeroCommand;
-  private final ToggleElementCommand toggleElementCommand;
+  // private final ToggleElementCommand toggleElementCommand;
   private final ToggleIntakeCommand toggleIntakeCommand;
   private final ManualMidShotCommand manualMidShotCommand;
   // private final ManualHighShotCommand manualHighShotCommand;
@@ -124,7 +124,7 @@ public class RobotContainer {
     // pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph)
         // .withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
     m_robotDrive = drivetrain;
-    colorDetector = new ManualColorDetector();
+    colorDetector = new ColorDetector();
 
     initializeCamera();
 
@@ -161,7 +161,7 @@ public class RobotContainer {
     wristRotateDownCommand = new WristRotateDownCommand(wristSubsystem);
     armRetractFullCommand = new ArmRetractFullCommand(armExtensionSubsystem);
     armExtendToZeroCommand = new ArmExtendToZeroCommand(armExtensionSubsystem);
-    toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
+   // toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
     manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
@@ -260,7 +260,7 @@ public class RobotContainer {
 
     driverController.a().onTrue(toggleIntakeCommand);
     driverController.b().onTrue(togglePinchCommand);
-    driverController.x().onTrue(toggleElementCommand);
+    // driverController.x().onTrue(toggleElementCommand);
     driverController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
     driverController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem)); //intake for substation
@@ -283,7 +283,7 @@ public class RobotContainer {
 
     operatorController.a().onTrue(toggleIntakeCommand);
     operatorController.b().onTrue(togglePinchCommand);
-    operatorController.x().whileTrue(toggleElementCommand);
+    // operatorController.x().whileTrue(toggleElementCommand);
     operatorController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
     operatorController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem)); //intake for substation

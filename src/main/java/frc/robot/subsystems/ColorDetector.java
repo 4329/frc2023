@@ -2,9 +2,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
+import com.revrobotics.ColorSensorV3.RawColor;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +25,7 @@ public class ColorDetector extends SubsystemBase {
     private final Color cube;
     private final Color cubeLogo;
     private final Color cone;
+    private GenericEntry colorGraph;
 
     public Color matchColor;
     public Color rawColor;
@@ -46,11 +49,24 @@ public class ColorDetector extends SubsystemBase {
         colorMatch.addColorMatch(cone);
         // coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
         proximity = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
+        colorGraph = Shuffleboard.getTab("setpoints").add("colors", new double[]{1, 1, 1}).getEntry();
     }
 
     public FieldElement detectElement() {
 
         rawColor = colorSensorV3.getColor();
+        RawColor wer = colorSensorV3.getRawColor();
+        // String colorHex = rawColor.toHexString().substring(1);
+        // double[] colorArray = { 
+
+        //     Long.parseLong(colorHex.substring (4), 16),
+        //     Long.parseLong(colorHex.substring (0, 2), 16),
+        //     Long.parseLong(colorHex.substring (2, 4), 16)
+
+        // };
+
+        // colorGraph.setDoubleArray(colorArray);
+        colorGraph.setDoubleArray(new double []{wer.blue, wer.red, wer.green});
         matchColor = colorMatch.matchClosestColor(rawColor).color;
         if (cone.equals(matchColor)) {
 
