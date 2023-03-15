@@ -48,6 +48,7 @@ import frc.robot.commands.drive.ResetOdometryCommand;
 import frc.robot.commands.extend.ArmExtendToZeroCommand;
 import frc.robot.commands.extend.ArmRetractFullCommand;
 import frc.robot.commands.extend.ExtendRetractCommand;
+import frc.robot.commands.led.LedDefaultCommand;
 import frc.robot.commands.rotation.ArmRotateCommand;
 import frc.robot.commands.rotation.ArmUnrotateCommand;
 import frc.robot.commands.rotation.HighArmCommand;
@@ -60,6 +61,8 @@ import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.BalanceSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
+import frc.robot.subsystems.CoopertitionLEDs;
+import frc.robot.subsystems.ManualColorDetector;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.GimmeSwerve;
@@ -75,6 +78,7 @@ public class RobotContainer {
   private final ArmRotationSubsystem armRotationSubsystem;
   private final ArmExtensionSubsystem armExtensionSubsystem;
   private final BalanceSubsystem balanceSubsystem;
+  private final CoopertitionLEDs coopertitionLEDs;
   
   final SendableChooser<Command> m_chooser;
   
@@ -110,6 +114,7 @@ public class RobotContainer {
   private final ManualMidShotCommand manualMidShotCommand;
   // private final ManualHighShotCommand manualHighShotCommand;
   private final Command manualHighShotCommand;
+  private LedDefaultCommand ledDefaultCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -134,6 +139,7 @@ public class RobotContainer {
     wristSubsystem = new WristSubsystem();
     clawSubsystem = new ClawSubsystem(colorDetector);
     balanceSubsystem = new BalanceSubsystem();
+    coopertitionLEDs = new CoopertitionLEDs();
 
     m_chooser = new SendableChooser<>();
 
@@ -163,12 +169,13 @@ public class RobotContainer {
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
     manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
+    ledDefaultCommand = new LedDefaultCommand(coopertitionLEDs, colorDetector);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
                                 */
     configureAutoChooser(drivetrain);
-
+    coopertitionLEDs.setDefaultCommand(ledDefaultCommand);
   }
 
   /**

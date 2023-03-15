@@ -75,6 +75,9 @@ public class ColorDetector extends SubsystemBase {
         return colorSensorV3.getProximity();
     }
 
+    public FieldElement getCurrentElement() {
+        return FieldElement.CUBE;
+    }
     @Override
     public void periodic() {
 
