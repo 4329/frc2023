@@ -108,13 +108,15 @@ public class LimlighSubsystem extends SubsystemBase {
 
     public Pose2d getPose() {
 
-        if (Alliance.RED.equals(currentAlliance)) {
+        // if (Alliance.RED.equals(currentAlliance)) {
 
-            hrm = limligh.getEntry("botpose_wpired").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
-        } else {
+        //     hrm = limligh.getEntry("botpose_wpired").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
+        // } else {
 
-            hrm = limligh.getEntry("botpose_wpiblue").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
-        }
+        //     hrm = limligh.getEntry("botpose_wpiblue").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
+        // }
+
+        hrm = limligh.getEntry("botpose").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
 
         return new Pose2d(
             

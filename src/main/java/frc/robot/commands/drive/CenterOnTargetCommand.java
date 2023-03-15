@@ -9,132 +9,132 @@ import frc.robot.subsystems.swerve.Drivetrain;
 
 public class CenterOnTargetCommand extends CommandBase {
 
-    LimlighSubsystem limlighSubsystem;
+    private final LimlighSubsystem limlighSubsystem;
+    private final Drivetrain drivetrain;
+    private final double targetId;
 
-    PIDController centerPID;
-    PIDController forwardPID;
-    PIDController rotationPID;
-    GenericEntry djaslk;
-    GenericEntry[] ack;
+    private final PIDController centerPID;
+    private final PIDController forwardPID;
+    private final PIDController rotationPID;
 
-    double centerCalc;
-    double forwardCalc;
-    double rotationCalc;
+    private double centerCalc;
+    private double forwardCalc;
+    private double rotationCalc;
 
-    double targetId;
+    GenericEntry jfdsoujfsadoiijofdsa;
+    GenericEntry[] nooooooo;
+GenericEntry pointset;
 
-    Drivetrain drivetrain;
 
-    GenericEntry ha;
-    
-    GenericEntry noo;
-    GenericEntry asd;
-    GenericEntry ithurts;
-    public CenterOnTargetCommand(LimlighSubsystem limlighSubsystem, double targetId, Drivetrain m_drivetrain) {
+    private boolean usingAprilTag;
+
+    public CenterOnTargetCommand(LimlighSubsystem limlighSubsystem, Drivetrain m_drivetrain, double targetId) {
 
         this.limlighSubsystem = limlighSubsystem;
         this.drivetrain = m_drivetrain;
         this.targetId = targetId;
 
-        centerPID = new PIDController(0.01, 0, 0);
-        centerPID.setTolerance(1);
-
-        forwardPID = new PIDController(0.5, 0, 0);
-        forwardPID.setTolerance(0.5);
-
-        rotationPID = new PIDController(0.01, 0, 0);
-        rotationPID.setTolerance(0.5);
+        centerPID = new PIDController(0, 0, 0);
+        forwardPID = new PIDController(0, 0, 0);
+        rotationPID = new PIDController(0, 0, 0);
 
         addRequirements(limlighSubsystem, m_drivetrain);
-        ha = Shuffleboard.getTab("ikfsdal").add("laksajklfjsaldfjljsd", 0.75).getEntry();
-        djaslk = Shuffleboard.getTab("ikfsdal").add("ack", 0).getEntry();
-        ack = new GenericEntry[] {
 
-            Shuffleboard.getTab("ikfsdal").add("p1", 0.05).getEntry(),
-            Shuffleboard.getTab("ikfsdal").add("p2", 2).getEntry(),
-            Shuffleboard.getTab("ikfsdal").add("p3", 0.01).getEntry(),
+        jfdsoujfsadoiijofdsa = Shuffleboard.getTab("ikfsdal").add("painhahah", false).getEntry();
+
+        nooooooo = new GenericEntry[] {
+
+            Shuffleboard.getTab("ikfsdal").add("p1", 0.04).getEntry(),
+            Shuffleboard.getTab("ikfsdal").add("p2", 1.7).getEntry(),
+            Shuffleboard.getTab("ikfsdal").add("p3", 0.03).getEntry(),
             Shuffleboard.getTab("ikfsdal").add("t1", 0.5).getEntry(),
-            Shuffleboard.getTab("ikfsdal").add("t2", 0.05).getEntry(),
-            Shuffleboard.getTab("ikfsdal").add("t3", 5).getEntry()
+            Shuffleboard.getTab("ikfsdal").add("t2", 0.7).getEntry(),
+            Shuffleboard.getTab("ikfsdal").add("t3", 0.7).getEntry(),
+            Shuffleboard.getTab("ikfsdal").add("s1", -4).getEntry(),
+            Shuffleboard.getTab("ikfsdal").add("s2", 4).getEntry(),
+            Shuffleboard.getTab("ikfsdal").add("s3", 7).getEntry()
         };
-        asd = Shuffleboard.getTab("ikfsdal").add("morepain", 10).getEntry();
-        noo = Shuffleboard.getTab("ikfsdal").add("noo", 0).getEntry();
-        ithurts = Shuffleboard.getTab("ikfsdal").add("ithurts", false).getEntry();
+        pointset = Shuffleboard.getTab("ikfsdal").add("at", false).getEntry();
     }
 
     @Override
     public void initialize() {
 
-        centerPID.setSetpoint(-4);
-        forwardPID.setSetpoint(14.65);
-        rotationPID.setSetpoint(7);
+        if (limlighSubsystem.getPipeline() == 0) {
+
+            usingAprilTag = true;
+
+            centerPID.setP(nooooooo[0].getDouble(0));
+            centerPID.setTolerance(nooooooo[3].getDouble(0));
+            centerPID.setSetpoint(nooooooo[6].getDouble(0));
+
+            forwardPID.setP(nooooooo[1].getDouble(0));
+            forwardPID.setTolerance(nooooooo[4].getDouble(0));
+            forwardPID.setSetpoint(nooooooo[7].getDouble(0));
+
+            rotationPID.setP(nooooooo[2].getDouble(0));
+            rotationPID.setTolerance(nooooooo[5].getDouble(0));
+            rotationPID.setSetpoint(nooooooo[8].getDouble(0));
+        } else {
+
+            usingAprilTag = false;
+
+            centerPID.setP(0.05);
+            centerPID.setTolerance(0.4);
+            centerPID.setSetpoint(0);
+
+            forwardPID.setP(5);
+            forwardPID.setTolerance(0.015);
+            forwardPID.setSetpoint(0.085);
+
+            rotationPID.setP(0.1);
+            rotationPID.setTolerance(4);
+            rotationPID.setSetpoint(0);
+        }
     }
 
     @Override
     public void execute() {
 
-        if (limlighSubsystem.getPipeline() == 0 && limlighSubsystem.getTargetId() == targetId) {
+        if ((limlighSubsystem.getTargetId() == targetId && usingAprilTag)) {
 
-            centerPID.setP(0.04);
-            centerPID.setD(0);
-            centerPID.setTolerance(0.5);
-            centerCalc = centerPID.calculate(limlighSubsystem.getTargetx(), -4);
+            centerCalc = centerPID.calculate(limlighSubsystem.getTargetx());
+            forwardCalc = forwardPID.calculate(limlighSubsystem.getCalculatedPoseZ());
+            rotationCalc = rotationPID.calculate(limlighSubsystem.getCalculatedPoseRot());
 
-            forwardPID.setP(1.7);
-            forwardPID.setI(0);
-            forwardPID.setD(0);
-            forwardPID.setTolerance(0.7);
-            forwardCalc = forwardPID.calculate(limlighSubsystem.getCalculatedPoseZ(), 14.65);
+            jfdsoujfsadoiijofdsa.setBoolean(true);
+        } else if (limlighSubsystem.targetVisible()) {
 
-            rotationPID.setP(0.03);
-            rotationPID.setTolerance(0.7);
-            rotationCalc = rotationPID.calculate(limlighSubsystem.getCalculatedPoseRot(), 7);
+            centerCalc = centerPID.calculate(limlighSubsystem.getTargetx());
+            forwardCalc = forwardPID.calculate(limlighSubsystem.getTargeta());
+            rotationCalc = rotationPID.calculate(drivetrain.getGyro().getDegrees());
 
-        } else if (limlighSubsystem.getPipeline() == 1 && limlighSubsystem.targetVisible()) {
-
-            centerPID.setP(ack[0].getDouble(0));
-            centerPID.setD(0.001);
-            centerPID.setTolerance(ack[3].getDouble(0));
-            centerCalc = centerPID.calculate(limlighSubsystem.getTargetx(), 0);
-
-            forwardPID.setP(ack[1].getDouble(0));
-            forwardPID.setI(0);
-            forwardPID.setD(0);
-            forwardPID.setTolerance(ack[4].getDouble(0));
-            forwardCalc = forwardPID.calculate(limlighSubsystem.getTargeta(), 0.27);
-
-            rotationPID.setP(asd.getDouble(0));
-            rotationPID.setTolerance(0);
-            rotationCalc = rotationPID.calculate(drivetrain.getGyro().getDegrees(), 0);
-            
+            jfdsoujfsadoiijofdsa.setBoolean(false);
         }
-        djaslk.setDouble(rotationCalc);
-        noo.setDouble(rotationPID.getP());
 
         if ((!centerPID.atSetpoint() || !rotationPID.atSetpoint() || !forwardPID.atSetpoint())) {
 
             drivetrain.unlock();
             drivetrain.drive(forwardCalc, centerCalc, rotationCalc, false);
-            ithurts.setBoolean(true);
+            pointset.setBoolean(false);
         } else {
 
             drivetrain.lock();
-            ithurts.setBoolean(false);
+            pointset.setBoolean(true);
         }
-
     }
 
     @Override
     public boolean isFinished() {
 
-        return centerPID.atSetpoint() && rotationPID.atSetpoint() && forwardPID.atSetpoint();
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
 
         drivetrain.unlock();
-        // djaslk.setBoolean(false);
+        jfdsoujfsadoiijofdsa.setBoolean(false);
     }
 
 }

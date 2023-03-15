@@ -119,7 +119,6 @@ public class RobotContainer {
   // private final ManualHighShotCommand manualHighShotCommand;
   private final Command manualHighShotCommand;
   private final CenterOnTargetCommand aprilTagMiddleCommand;
-  private GenericEntry jsdaklfsd;
 
   
 
@@ -176,14 +175,13 @@ public class RobotContainer {
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
     manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
-    aprilTagMiddleCommand = new CenterOnTargetCommand(limlighSubsystem, 6, m_robotDrive);
+    aprilTagMiddleCommand = new CenterOnTargetCommand(limlighSubsystem, m_robotDrive, 1);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
                                 */
     configureAutoChooser(drivetrain);
 
-    jsdaklfsd = Shuffleboard.getTab("ikfsdal").add("hahahahahahhaha", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
     // centerOnTargetCommand = new CenterOnTargetCommand(limlighSubsystem, 0, m_robotDrive);
   }
 
@@ -266,7 +264,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(armRotateCommand); //arm up
     driverController.leftBumper().whileTrue(armUnrotateCommand); //arm down
 
-    driverController.start().whileTrue(exampleCommand); //to april tag or conecubetoggle
+    driverController.start().whileTrue(aprilTagMiddleCommand);
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
@@ -389,11 +387,11 @@ public class RobotContainer {
 
   public void teleopPeriodic() {
 
-    if (jsdaklfsd.getBoolean(false)) {
+    // if (jsdaklfsd.getBoolean(false)) {
 
-      aprilTagMiddleCommand.schedule();
-      jsdaklfsd.setBoolean(false);
-    }
+    //   aprilTagMiddleCommand.schedule();
+    //   jsdaklfsd.setBoolean(false);
+    // }
   }
 
   /**

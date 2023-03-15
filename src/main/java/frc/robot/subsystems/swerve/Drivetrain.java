@@ -107,7 +107,7 @@ GenericEntry fjsldakjfsd;
     pitchOffset = ahrs.getPitch();
     rollOffset = ahrs.getRoll();
 
-    fjsldakjfsd = Shuffleboard.getTab("ikfsdal").add("pain", 0).getEntry();
+    fjsldakjfsd = Shuffleboard.getTab("ikfsdal").add("yrot", 0).getEntry();
   }
 
 

@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.RelativeEncoder;
@@ -42,6 +45,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final double portalPos;
     private final double zeroPos;
     private final double floorPos;
+
+    private final Map<ArmHeight, Double> armHeights;
     
     
     public ArmHeight currentArmHeight;
@@ -74,10 +79,18 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         // armMotor1.restoreFactoryDefaults();
         // armMotor2.restoreFactoryDefaults();
+        armHeights = new HashMap<>();
+        armHeights.put(ArmHeight.HIGH, highPos);
+        armHeights.put(ArmHeight.MID, midPos);
+        armHeights.put(ArmHeight.LOW, lowPos);
+        armHeights.put(ArmHeight.SAFEEXTEND, safeExtendPos);
+        armHeights.put(ArmHeight.PORTAL, portalPos);
+        armHeights.put(ArmHeight.FLOOR, floorPos);
+        armHeights.put(ArmHeight.ZERO, zeroPos);
+        
+
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, true);
         armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2, true);
-        armMotor1.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        armMotor2.setIdleMode(CANSparkMax.IdleMode.kBrake);
         armMotor2.follow(armMotor1);
         armPID = armMotor1.getPIDController();
         armEncoder = armMotor1.getEncoder();
@@ -137,31 +150,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
     }
 
     private void calcEnums() {
-
-        unBrake();
-
-        if (ArmHeight.HIGH.equals(currentArmHeight)) {
-
-            setpoint = highPos;
-        } else if (ArmHeight.MID.equals(currentArmHeight)) {
-
-            setpoint = midPos;
-        } else if (ArmHeight.LOW.equals(currentArmHeight)) {
-
-            setpoint = lowPos;
-        } else if (ArmHeight.SAFEEXTEND.equals(currentArmHeight)) {
-
-            setpoint = safeExtendPos;
-        } else if (ArmHeight.PORTAL.equals(currentArmHeight)) {
-
-            setpoint = portalPos;
-        } else if (ArmHeight.ZERO.equals(currentArmHeight)) {
-            
-            setpoint = zeroPos;
-        } else if (ArmHeight.FLOOR.equals(currentArmHeight)) {
-
-            setpoint = floorPos;
-        }
+        
+        setpoint = armHeights.get(currentArmHeight);
     }
 
     public void resetSetpoint() {
