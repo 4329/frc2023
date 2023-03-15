@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
 
@@ -8,24 +10,25 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class ColorDetector extends SubsystemBase {
 
     private final I2C.Port i2cPort;
     private final ColorSensorV3 colorSensorV3;
     
-    // GenericEntry coneOrCube;
-    GenericEntry proximity;
+    GenericEntry coneOrCube;
+    GenericEntry proximityEntry;
 
 
     ColorMatch colorMatch;
     private final Color cube;
     private final Color cubeLogo;
     private final Color cone;
+    private GenericEntry colorGraph;
+    private FieldElement currentElement;
 
     public Color matchColor;
-    public Color rawColor;
+    public Color color;
 
     public enum FieldElement {
         
@@ -37,21 +40,25 @@ public class ColorDetector extends SubsystemBase {
         i2cPort = I2C.Port.kMXP;
         colorSensorV3 = new ColorSensorV3(i2cPort);
         colorMatch = new ColorMatch();
-        cube = new Color(36 / 255.0, 36 / 255.0, 182 / 255.0);
-        cubeLogo = new Color(60 / 255.0, 115/ 255.0, 79 / 255.0);
-        cone = new Color(85 / 255.0, 136 / 255.0, 24 / 255.0);
+        cube = new Color(0.2, 0.33, 0.469);
+        cubeLogo = new Color(0.238, 0.479, 0.283);
+        cone = new Color(0.35, 0.566, 0.08);
 
         colorMatch.addColorMatch(cube);
-        //colorMatch.addColorMatch(cubeLogo);
+        colorMatch.addColorMatch(cubeLogo);
         colorMatch.addColorMatch(cone);
-        // coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
-        proximity = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
+        proximityEntry = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
+        colorGraph = Shuffleboard.getTab("setpoints").add("colors", new double[]{1, 1, 1}).getEntry();
+        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube", false).withProperties(Map.of("Color when true", "#800080", "Color when false", "#FFF000")).withSize(4, 5).withPosition(3, 0).getEntry();
+
     }
 
     public FieldElement detectElement() {
 
-        rawColor = colorSensorV3.getColor();
-        matchColor = colorMatch.matchClosestColor(rawColor).color;
+        color = colorSensorV3.getColor();
+    
+        colorGraph.setDoubleArray(new double []{color.blue, color.red, color.green});
+        matchColor = colorMatch.matchClosestColor(color).color;
         if (cone.equals(matchColor)) {
 
             return FieldElement.CONE;
@@ -71,16 +78,17 @@ public class ColorDetector extends SubsystemBase {
     @Override
     public void periodic() {
 
-        FieldElement kraigElement = detectElement();
-        if (kraigElement != null) {
+        double proximity = distance();
+        
+        if (proximity > 100) {
 
-            // coneOrCube.setString(kraigElement.toString());
-        } else {
 
-            // coneOrCube.setString(FieldElement.NOTHIN.toString());
+            currentElement = detectElement();
+            if (currentElement != null) {
+                coneOrCube.setBoolean(FieldElement.CUBE.equals(currentElement));    
+            } 
         }
-        proximity.setDouble(distance());
-        System.out.println(kraigElement.toString() + "________________________________________________________-");
+        proximityEntry.setDouble(proximity);
     }
 
 }
