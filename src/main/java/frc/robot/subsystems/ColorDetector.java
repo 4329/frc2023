@@ -17,8 +17,8 @@ public class ColorDetector extends SubsystemBase {
     private final I2C.Port i2cPort;
     private final ColorSensorV3 colorSensorV3;
     
-    // GenericEntry coneOrCube;
-    GenericEntry proximity;
+    GenericEntry coneOrCube;
+    GenericEntry proximityEntry;
 
 
     ColorMatch colorMatch;
@@ -28,7 +28,7 @@ public class ColorDetector extends SubsystemBase {
     private GenericEntry colorGraph;
 
     public Color matchColor;
-    public Color rawColor;
+    public Color color;
 
     public enum FieldElement {
         
@@ -40,34 +40,24 @@ public class ColorDetector extends SubsystemBase {
         i2cPort = I2C.Port.kMXP;
         colorSensorV3 = new ColorSensorV3(i2cPort);
         colorMatch = new ColorMatch();
-        cube = new Color(36 / 255.0, 36 / 255.0, 182 / 255.0);
-        cubeLogo = new Color(60 / 255.0, 115/ 255.0, 79 / 255.0);
-        cone = new Color(85 / 255.0, 136 / 255.0, 24 / 255.0);
+        cube = new Color(0.2, 0.33, 0.469);
+        cubeLogo = new Color(0.238, 0.479, 0.283);
+        cone = new Color(0.35, 0.566, 0.08);
 
         colorMatch.addColorMatch(cube);
-        //colorMatch.addColorMatch(cubeLogo);
+        colorMatch.addColorMatch(cubeLogo);
         colorMatch.addColorMatch(cone);
-        // coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
-        proximity = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
+        coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
+        proximityEntry = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
         colorGraph = Shuffleboard.getTab("setpoints").add("colors", new double[]{1, 1, 1}).getEntry();
     }
 
     public FieldElement detectElement() {
 
-        rawColor = colorSensorV3.getColor();
-        RawColor wer = colorSensorV3.getRawColor();
-        // String colorHex = rawColor.toHexString().substring(1);
-        // double[] colorArray = { 
-
-        //     Long.parseLong(colorHex.substring (4), 16),
-        //     Long.parseLong(colorHex.substring (0, 2), 16),
-        //     Long.parseLong(colorHex.substring (2, 4), 16)
-
-        // };
-
-        // colorGraph.setDoubleArray(colorArray);
-        colorGraph.setDoubleArray(new double []{wer.blue, wer.red, wer.green});
-        matchColor = colorMatch.matchClosestColor(rawColor).color;
+        color = colorSensorV3.getColor();
+    
+        colorGraph.setDoubleArray(new double []{color.blue, color.red, color.green});
+        matchColor = colorMatch.matchClosestColor(color).color;
         if (cone.equals(matchColor)) {
 
             return FieldElement.CONE;
@@ -87,16 +77,21 @@ public class ColorDetector extends SubsystemBase {
     @Override
     public void periodic() {
 
-        FieldElement kraigElement = detectElement();
-        if (kraigElement != null) {
+        double proximity = distance();
+        
+        if (proximity > 125) {
 
-            // coneOrCube.setString(kraigElement.toString());
-        } else {
 
-            // coneOrCube.setString(FieldElement.NOTHIN.toString());
+            FieldElement kraigElement = detectElement();
+            if (kraigElement != null) {
+                
+                coneOrCube.setString(kraigElement.toString());
+            } else {
+
+                coneOrCube.setString(FieldElement.NOTHIN.toString());
+            }
         }
-        proximity.setDouble(distance());
-        System.out.println(kraigElement.toString() + "________________________________________________________-");
+        proximityEntry.setDouble(proximity);
     }
 
 }
