@@ -60,12 +60,10 @@ import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.BalanceSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetector;
-import frc.robot.subsystems.ManualColorDetector;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.GimmeSwerve;
 import frc.robot.utilities.HoorayConfig;
-import frc.robot.commands.claw.ToggleElementCommand;
 
 /* (including subsystems, commands, and button mappings) should be declared here
 */

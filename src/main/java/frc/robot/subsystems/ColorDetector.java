@@ -1,16 +1,15 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
-import com.revrobotics.ColorSensorV3.RawColor;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class ColorDetector extends SubsystemBase {
 
@@ -26,6 +25,7 @@ public class ColorDetector extends SubsystemBase {
     private final Color cubeLogo;
     private final Color cone;
     private GenericEntry colorGraph;
+    private FieldElement currentElement;
 
     public Color matchColor;
     public Color color;
@@ -47,9 +47,10 @@ public class ColorDetector extends SubsystemBase {
         colorMatch.addColorMatch(cube);
         colorMatch.addColorMatch(cubeLogo);
         colorMatch.addColorMatch(cone);
-        coneOrCube = Shuffleboard.getTab("setpoints").add("Cone or Cube?", "NOTHIN").getEntry();
         proximityEntry = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
         colorGraph = Shuffleboard.getTab("setpoints").add("colors", new double[]{1, 1, 1}).getEntry();
+        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube", false).withProperties(Map.of("Color when true", "#800080", "Color when false", "#FFF000")).withSize(4, 5).withPosition(3, 0).getEntry();
+
     }
 
     public FieldElement detectElement() {
@@ -79,17 +80,13 @@ public class ColorDetector extends SubsystemBase {
 
         double proximity = distance();
         
-        if (proximity > 125) {
+        if (proximity > 100) {
 
 
-            FieldElement kraigElement = detectElement();
-            if (kraigElement != null) {
-                
-                coneOrCube.setString(kraigElement.toString());
-            } else {
-
-                coneOrCube.setString(FieldElement.NOTHIN.toString());
-            }
+            currentElement = detectElement();
+            if (currentElement != null) {
+                coneOrCube.setBoolean(FieldElement.CUBE.equals(currentElement));    
+            } 
         }
         proximityEntry.setDouble(proximity);
     }
