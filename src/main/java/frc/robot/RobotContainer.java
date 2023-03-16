@@ -48,6 +48,7 @@ import frc.robot.commands.drive.ResetOdometryCommand;
 import frc.robot.commands.extend.ArmExtendToZeroCommand;
 import frc.robot.commands.extend.ArmRetractFullCommand;
 import frc.robot.commands.extend.ExtendRetractCommand;
+import frc.robot.commands.led.HappyRainbowsCommand;
 import frc.robot.commands.led.LedDefaultCommand;
 import frc.robot.commands.rotation.ArmRotateCommand;
 import frc.robot.commands.rotation.ArmUnrotateCommand;
@@ -265,7 +266,7 @@ public class RobotContainer {
 
     driverController.a().onTrue(toggleIntakeCommand);
     driverController.b().onTrue(togglePinchCommand);
-    // driverController.x().onTrue(toggleElementCommand);
+    driverController.x().whileTrue(new HappyRainbowsCommand(coopertitionLEDs));
     driverController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
     driverController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem)); //intake for substation

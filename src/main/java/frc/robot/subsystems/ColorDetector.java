@@ -76,7 +76,7 @@ public class ColorDetector extends SubsystemBase {
     }
 
     public FieldElement getCurrentElement() {
-        return FieldElement.CUBE;
+        return currentElement;
     }
     @Override
     public void periodic() {
@@ -90,6 +90,9 @@ public class ColorDetector extends SubsystemBase {
             if (currentElement != null) {
                 coneOrCube.setBoolean(FieldElement.CUBE.equals(currentElement));    
             } 
+        } else {
+
+            currentElement = FieldElement.NOTHIN;
         }
         proximityEntry.setDouble(proximity);
     }

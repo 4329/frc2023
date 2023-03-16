@@ -21,11 +21,11 @@ public class LedDefaultCommand extends CommandBase{
     public void execute() {
         FieldElement fieldElement = colorDetector.getCurrentElement();
         if(FieldElement.CUBE.equals(fieldElement)) {
-            coopertitionLEDs.prettyColors(36, 36, 182);
+            coopertitionLEDs.prettyColors(30, 0, 135);
         } else if(FieldElement.CONE.equals(fieldElement)) {
-            coopertitionLEDs.prettyColors(125, 117, 12);
+            coopertitionLEDs.prettyColors(0xFF, 0xF0, 0);
         } else {
-            coopertitionLEDs.prettyColors(0, 0, 0);
+            coopertitionLEDs.prettyColors(0, 0, 0xF8);
         }
         super.execute();
     }
