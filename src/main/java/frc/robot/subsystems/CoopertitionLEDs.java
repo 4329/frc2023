@@ -16,7 +16,7 @@ public class CoopertitionLEDs extends SubsystemBase {
         brightness = 1;
         saturation = 1;
         addressableLED = new AddressableLED(5);
-        addressableLEDBuffer = new AddressableLEDBuffer(60);
+        addressableLEDBuffer = new AddressableLEDBuffer(37);
         addressableLED.setLength(addressableLEDBuffer.getLength());
         addressableLED.setData(addressableLEDBuffer);
         addressableLED.start();
