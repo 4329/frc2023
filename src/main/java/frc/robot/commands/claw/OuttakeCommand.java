@@ -30,7 +30,7 @@ public class OuttakeCommand extends CommandBase {
     @Override
     public void initialize() {
 
-        elly = colorDetector.detectElement();
+        elly = colorDetector.getCurrentElement();
         djsalkf.setBoolean(true);
         
     }

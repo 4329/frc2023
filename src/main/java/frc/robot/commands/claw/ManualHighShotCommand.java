@@ -31,7 +31,7 @@ public class ManualHighShotCommand extends CommandBase {
         double extension = controller.getRightTriggerAxis();
         if (extension > 0.3) {
 
-            clawSubsystem.outtakeHigh(colorDetector.detectElement());
+            clawSubsystem.outtakeHigh(colorDetector.getCurrentElement());
         } else {
 
             clawSubsystem.stop();

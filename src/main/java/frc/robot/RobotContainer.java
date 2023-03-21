@@ -258,7 +258,7 @@ public class RobotContainer {
 
     driverController.a().onTrue(toggleIntakeCommand);
     driverController.b().onTrue(togglePinchCommand);
-    // driverController.x().onTrue(toggleElementCommand);
+    driverController.x().onTrue(new InstantCommand(() -> colorDetector.toggleElement()));
     driverController.y().onTrue(CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
 
     driverController.povUp().onTrue(CommandGroups.portalSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem)); //intake for substation

@@ -28,7 +28,7 @@ public class ConeZeroCommand extends CommandBase {
 
         waitTime = 0;
 
-        if (FieldElement.CONE.equals(colorDetector.detectElement()) && clawSubsystem.clawing) {
+        if (FieldElement.CONE.equals(colorDetector.getCurrentElement()) && clawSubsystem.clawing) {
 
             finished = false;
         } else {

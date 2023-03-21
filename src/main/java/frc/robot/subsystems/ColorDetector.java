@@ -15,10 +15,9 @@ public class ColorDetector extends SubsystemBase {
 
     private final I2C.Port i2cPort;
     private final ColorSensorV3 colorSensorV3;
-    
+
     GenericEntry coneOrCube;
     GenericEntry proximityEntry;
-
 
     ColorMatch colorMatch;
     private final Color cube;
@@ -31,7 +30,7 @@ public class ColorDetector extends SubsystemBase {
     public Color color;
 
     public enum FieldElement {
-        
+
         CUBE, CONE, NOTHIN
     }
 
@@ -48,16 +47,18 @@ public class ColorDetector extends SubsystemBase {
         colorMatch.addColorMatch(cubeLogo);
         colorMatch.addColorMatch(cone);
         proximityEntry = Shuffleboard.getTab("setpoints").add("Proximity", 1).getEntry();
-        colorGraph = Shuffleboard.getTab("setpoints").add("colors", new double[]{1, 1, 1}).getEntry();
-        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube", false).withProperties(Map.of("Color when true", "#800080", "Color when false", "#FFF000")).withSize(4, 5).withPosition(3, 0).getEntry();
+        colorGraph = Shuffleboard.getTab("setpoints").add("colors", new double[] { 1, 1, 1 }).getEntry();
+        coneOrCube = Shuffleboard.getTab("RobotData").add("Cone or Cube", false)
+                .withProperties(Map.of("Color when true", "#800080", "Color when false", "#FFF000")).withSize(4, 5)
+                .withPosition(3, 0).getEntry();
 
     }
 
-    public FieldElement detectElement() {
+    private FieldElement detectElement() {
 
         color = colorSensorV3.getColor();
-    
-        colorGraph.setDoubleArray(new double []{color.blue, color.red, color.green});
+
+        colorGraph.setDoubleArray(new double[] { color.blue, color.red, color.green });
         matchColor = colorMatch.matchClosestColor(color).color;
         if (cone.equals(matchColor)) {
 
@@ -70,8 +71,25 @@ public class ColorDetector extends SubsystemBase {
             return FieldElement.NOTHIN;
         }
     }
+
+    public FieldElement getCurrentElement() {
+
+        return currentElement;
+    }
+
+    public void toggleElement() {
+
+        if (FieldElement.CUBE.equals(currentElement)) {
+
+            currentElement = FieldElement.CONE;
+        } else {
+
+            currentElement = FieldElement.CUBE;
+        }
+    }
+
     public double distance() {
-        
+
         return colorSensorV3.getProximity();
     }
 
@@ -79,14 +97,14 @@ public class ColorDetector extends SubsystemBase {
     public void periodic() {
 
         double proximity = distance();
-        
+
         if (proximity > 100) {
 
-
             currentElement = detectElement();
-            if (currentElement != null) {
-                coneOrCube.setBoolean(FieldElement.CUBE.equals(currentElement));    
-            } 
+        }
+        if (currentElement != null) {
+            
+            coneOrCube.setBoolean(FieldElement.CUBE.equals(currentElement));
         }
         proximityEntry.setDouble(proximity);
     }
