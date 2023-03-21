@@ -31,7 +31,7 @@ public class ManualMidShotCommand extends CommandBase {
         double extension = controller.getLeftTriggerAxis();
         if (extension > 0.3) {
 
-            clawSubsystem.outtakeMid(colorDetector.detectElement());
+            clawSubsystem.outtakeMid(colorDetector.getCurrentElement());
         } else {
 
             clawSubsystem.stop();
