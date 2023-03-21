@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,13 +198,20 @@ public class RobotContainer {
   /* Autonomous :D */
   private Map<String, Command> createEventMap() {
     Map<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intakeCommand", intakeCommand);
-    eventMap.put("outtake", outtakeCommand);
-    eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
-    eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
-    eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
-    eventMap.put("outtakeMid", manualMidShotCommand);
+    // eventMap.put("intakeCommand", intakeCommand);
+    // eventMap.put("outtake", outtakeCommand);
+    // eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
+    // eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    // eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
+    // eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
+    // eventMap.put("outtakeMid", manualMidShotCommand);
+    eventMap.put("intakeCommand", exampleCommand);
+    eventMap.put("outtake", exampleCommand);
+    eventMap.put("zero",exampleCommand);
+    eventMap.put("highPos", exampleCommand);
+    eventMap.put("floorCommand", exampleCommand);
+    eventMap.put("midPos", exampleCommand);
+    eventMap.put("outtakeMid", exampleCommand);
 
 
 
@@ -305,8 +313,23 @@ public class RobotContainer {
       if (pathFile.isFile() && pathFile.getName().endsWith(".path")) {
 
         String name = pathFile.getName().replace(".path", "");
-        List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
-          new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
+   //     PathConstraints[] constraints =  getPathConstraints(name).stream().toArray(PathConstraints[]::new);
+
+      List<PathConstraints> constraints = getPathConstraints(name);
+
+        List<PathPlannerTrajectory> trajectories = null;
+
+        if (constraints.size() == 1) {
+            trajectories = PathPlanner.loadPathGroup(name, constraints.get(0));
+
+        } else {
+
+          trajectories = PathPlanner.loadPathGroup(name, constraints.get(0), constraints.subList(1, constraints.size()).stream().toArray(PathConstraints[]::new));
+          
+
+        }
+
+          //new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
         Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
         if (name.endsWith("BalanceAuto")) {
 
@@ -315,10 +338,36 @@ public class RobotContainer {
 
           m_chooser.addOption(name, pathCommand);
         }
+
+        
       }
     }
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(3, 2).withPosition(0, 0);
   }
+
+  private List<PathConstraints> getPathConstraints(String name) {
+
+
+    List<PathConstraints> listConstraints = new ArrayList<>();
+
+    if (name.equalsIgnoreCase("1HighCubeAcrossCenterBalanceAuto")) {
+
+      System.out.println("5879987547894239870789357890");
+      listConstraints.add(new PathConstraints(3.25, 2.5));
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+      listConstraints.add(new PathConstraints(1, 0.75)); 
+      listConstraints.add(new PathConstraints(2, 2.5)); 
+
+    } else {
+
+      System.out.println("==-=-=-=");
+      listConstraints.add(new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
+    }
+
+    return listConstraints;
+  }
+      
 
   public void autonomousInit() {
 
