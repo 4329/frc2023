@@ -37,6 +37,17 @@ deploy {
     }
 }
 
+task cleanPathPlanner(type: Exec) {
+
+    def process = 'where git-bash'.execute()
+    
+    String happs = "${process.text}"
+    happs = happs.replaceAll("\\\\", "/")
+    happs = happs.replaceAll("\r", "")
+    happs = happs.replaceAll("\n", "")
+    commandLine happs, './cleanPathPlanner.sh'
+}
+
 def deployArtifact = deploy.targets.roborio.artifacts.frcJava
 
 // Set to true to use debug for JNI.
@@ -100,6 +111,7 @@ jar {
 deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
+deployArtifact.dependsOn(cleanPathPlanner)
 
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {

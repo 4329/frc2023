@@ -31,7 +31,6 @@ public class Robot extends TimedRobot {
     drivetrain = new Drivetrain();
     m_robotContainer = new RobotContainer(drivetrain);
     drivetrain.resetOdometry(new Pose2d());
-
   }
 
   @Override
