@@ -121,7 +121,7 @@ public class Drivetrain extends SubsystemBase {
    */
   @SuppressWarnings("ParameterName")
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    // rot = performKeepAngle(xSpeed, ySpeed, rot); // Calls the keep angle function to update the keep angle or rotate
+    rot = performKeepAngle(xSpeed, ySpeed, rot); // Calls the keep angle function to update the keep angle or rotate
                                                  // depending on driver input
     xSpeed = slewX.calculate(xSpeed);
     ySpeed = slewY.calculate(ySpeed);
