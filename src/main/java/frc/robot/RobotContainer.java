@@ -348,10 +348,10 @@ public class RobotContainer {
 
       System.out.println("5879987547894239870789357890");
       listConstraints.add(new PathConstraints(3.25, 2.5));
+      // listConstraints.add(new PathConstraints(3.25, 2.5)); 
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
-      listConstraints.add(new PathConstraints(3.25, 2.5)); 
-      listConstraints.add(new PathConstraints(1, 0.75)); 
-      listConstraints.add(new PathConstraints(2, 2.5)); 
+      listConstraints.add(new PathConstraints(1.75, 1.85)); 
+      listConstraints.add(new PathConstraints(3, 3)); 
 
     } else {
 

@@ -19,6 +19,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private CANSparkMax armMotor1;
     private CANSparkMax armMotor2;
     private DoubleSolenoid brakeSolenoid;
+    
     private RelativeEncoder armEncoder;
     private SparkMaxPIDController armPID;
 
