@@ -9,16 +9,19 @@ import org.apache.commons.io.FileUtils;
 import com.fasterxml.jackson.core.io.CharTypes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class HoorayConfig {
-    
-    
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
+public class HoorayConfig {
+        
     private static Config config;
+    private static GenericEntry configEntry;
 
     public static Config gimmeConfig() {
 
         if (config == null) {
 
+            configEntry = Shuffleboard.getTab("Config").add("Current Config", "").getEntry();
             File configFile = findConfig();
             config = parseConfig(configFile);
         }
@@ -50,12 +53,15 @@ public class HoorayConfig {
 
         if (new File("/home/lvuser/proto").exists()) {
 
+            configEntry.setString("Proto");
             return new File("/home/lvuser/deploy/protoConfig.json");
         } else if (new File("/home/lvuser/dev").exists()) {
 
+            configEntry.setString("Dev");
             return new File("/home/lvuser/deploy/devConfig.json");
         } else {
 
+            configEntry.setString("Comp");
             return new File("/home/lvuser/deploy/compConfig.json");
         }
     }
