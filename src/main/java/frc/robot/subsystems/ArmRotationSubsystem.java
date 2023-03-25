@@ -95,6 +95,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setIZone(0);
         armPID.setFF(0);
         armPID.setOutputRange(-0.3, 0.35);
+        armMotor1.setInverted(true);
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;
