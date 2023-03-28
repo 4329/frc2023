@@ -205,11 +205,7 @@ public class RobotContainer {
     eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("outtakeMid", manualMidShotCommand);
-
-
-
-
-
+    
     return eventMap;
   }
 
@@ -307,7 +303,6 @@ public class RobotContainer {
       if (pathFile.isFile() && pathFile.getName().endsWith(".path")) {
 
         String name = pathFile.getName().replace(".path", "");
-   //     PathConstraints[] constraints =  getPathConstraints(name).stream().toArray(PathConstraints[]::new);
 
       List<PathConstraints> constraints = getPathConstraints(name);
 
@@ -323,7 +318,6 @@ public class RobotContainer {
 
         }
 
-          //new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
         Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
         if (name.endsWith("BalanceAuto")) {
 
@@ -348,7 +342,6 @@ public class RobotContainer {
 
       System.out.println("5879987547894239870789357890");
       listConstraints.add(new PathConstraints(3.25, 2.5));
-      // listConstraints.add(new PathConstraints(3.25, 2.5)); 
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
       listConstraints.add(new PathConstraints(1.75, 1.85)); 
       listConstraints.add(new PathConstraints(3, 3)); 
@@ -365,7 +358,6 @@ public class RobotContainer {
 
   public void autonomousInit() {
 
-    // m_robotDrive.setDefaultCommand(m_drive);
   }
 
   public void teleopInit() {
