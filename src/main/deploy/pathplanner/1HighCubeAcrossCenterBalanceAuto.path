@@ -1,0 +1,135 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.82,
+        "y": 2.78
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8200000000000005,
+        "y": 2.78
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.49,
+        "y": 2.78
+      },
+      "prevControl": {
+        "x": 2.49,
+        "y": 2.78
+      },
+      "nextControl": {
+        "x": 2.49,
+        "y": 2.78
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "midPos"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "after",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.87,
+        "y": 2.78
+      },
+      "prevControl": {
+        "x": 1.87,
+        "y": 2.78
+      },
+      "nextControl": {
+        "x": 1.87,
+        "y": 2.78
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "outtake"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "deadline",
+        "waitTime": 0.75
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.35,
+        "y": 2.78
+      },
+      "prevControl": {
+        "x": 7.349999999999997,
+        "y": 2.78
+      },
+      "nextControl": {
+        "x": 7.350000000000002,
+        "y": 2.78
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.2,
+        "y": 2.78
+      },
+      "prevControl": {
+        "x": 4.946505140098905,
+        "y": 2.78
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 2.084848484848498,
+      "names": [
+        "zero"
+      ]
+    }
+  ]
+}

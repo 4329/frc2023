@@ -19,6 +19,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private CANSparkMax armMotor1;
     private CANSparkMax armMotor2;
     private DoubleSolenoid brakeSolenoid;
+    
     private RelativeEncoder armEncoder;
     private SparkMaxPIDController armPID;
 
@@ -94,6 +95,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setIZone(0);
         armPID.setFF(0);
         armPID.setOutputRange(-0.3, 0.35);
+        armMotor1.setInverted(true); //TODO INVESTIGATE SILLY ARM BOI
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;

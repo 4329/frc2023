@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -204,10 +205,7 @@ public class RobotContainer {
     eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("outtakeMid", manualMidShotCommand);
-
-
-
-
+    
     return eventMap;
   }
 
@@ -305,8 +303,21 @@ public class RobotContainer {
       if (pathFile.isFile() && pathFile.getName().endsWith(".path")) {
 
         String name = pathFile.getName().replace(".path", "");
-        List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name,
-          new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
+
+      List<PathConstraints> constraints = getPathConstraints(name);
+
+        List<PathPlannerTrajectory> trajectories = null;
+
+        if (constraints.size() == 1) {
+            trajectories = PathPlanner.loadPathGroup(name, constraints.get(0));
+
+        } else {
+
+          trajectories = PathPlanner.loadPathGroup(name, constraints.get(0), constraints.subList(1, constraints.size()).stream().toArray(PathConstraints[]::new));
+          
+
+        }
+
         Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
         if (name.endsWith("BalanceAuto")) {
 
@@ -315,14 +326,38 @@ public class RobotContainer {
 
           m_chooser.addOption(name, pathCommand);
         }
+
+        
       }
     }
     Shuffleboard.getTab("RobotData").add("SelectAuto", m_chooser).withSize(3, 2).withPosition(0, 0);
   }
 
+  private List<PathConstraints> getPathConstraints(String name) {
+
+
+    List<PathConstraints> listConstraints = new ArrayList<>();
+
+    if (name.equalsIgnoreCase("1HighCubeAcrossCenterBalanceAuto")) {
+
+      System.out.println("5879987547894239870789357890");
+      listConstraints.add(new PathConstraints(3.25, 2.5));
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+      listConstraints.add(new PathConstraints(1.75, 1.85)); 
+      listConstraints.add(new PathConstraints(3, 3)); 
+
+    } else {
+
+      System.out.println("==-=-=-=");
+      listConstraints.add(new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
+    }
+
+    return listConstraints;
+  }
+      
+
   public void autonomousInit() {
 
-//m_robotDrive.setDefaultCommand(m_drive);
   }
 
   public void teleopInit() {
