@@ -4,8 +4,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.claw.ConeZeroCommand;
 import frc.robot.commands.claw.TogglePinchCommand;
+import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.extend.ArmExtendFloorCommand;
 import frc.robot.commands.extend.ArmExtendFullCommand;
 import frc.robot.commands.extend.ArmExtendHighCommand;
@@ -30,7 +32,9 @@ import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetectorSubsystem;
+import frc.robot.subsystems.LimlighSubsystem;
 import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.swerve.Drivetrain;
 
 public class CommandGroups {
 
@@ -120,6 +124,16 @@ public class CommandGroups {
             new ConeZeroCommand(clawSubsystem, colorDetector)
              
             // new IntakeCommand(clawSubsystem, colorDetector).withTimeout(10)
+        );
+    }
+
+    public static CommandBase midScoreNewJohn(ArmExtensionSubsystem armExtensionSubsystem, ClawSubsystem clawSubsystem, LimlighSubsystem limlighSubsystem, Drivetrain drivetrain, double targetId, CommandXboxController xboxController){
+
+        return new SequentialCommandGroup(
+            
+            new CenterOnTargetCommand(limlighSubsystem, drivetrain, 0, xboxController),
+            new TogglePinchCommand(clawSubsystem),
+            new ArmExtendToZeroCommand(armExtensionSubsystem)
         );
     }
     

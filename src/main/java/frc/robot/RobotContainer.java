@@ -118,7 +118,7 @@ public class RobotContainer {
   private final ManualMidShotCommand manualMidShotCommand;
   // private final ManualHighShotCommand manualHighShotCommand;
   private final Command manualHighShotCommand;
-  private final CenterOnTargetCommand aprilTagMiddleCommand;
+  //private final CenterOnTargetCommand aprilTagMiddleCommand;
 
   
 
@@ -175,7 +175,7 @@ public class RobotContainer {
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
     manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
-    aprilTagMiddleCommand = new CenterOnTargetCommand(limlighSubsystem, m_robotDrive, 1, driverController);
+    //aprilTagMiddleCommand = new CenterOnTargetCommand(limlighSubsystem, m_robotDrive, 1, driverController);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
@@ -264,7 +264,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(armRotateCommand); //arm up
     driverController.leftBumper().whileTrue(armUnrotateCommand); //arm down
 
-    driverController.start().whileTrue(aprilTagMiddleCommand);
+    driverController.start().whileTrue(CommandGroups.midScoreNewJohn(armExtensionSubsystem, clawSubsystem, limlighSubsystem, m_robotDrive, 0, driverController));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);

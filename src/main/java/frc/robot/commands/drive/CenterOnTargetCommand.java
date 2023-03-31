@@ -23,11 +23,11 @@ public class CenterOnTargetCommand extends CommandBase {
     private Timer timer = new Timer();
     GenericEntry tGEntry = Shuffleboard.getTab("ikfsdal").add("tG", 1).getEntry();
     GenericEntry tREntry = Shuffleboard.getTab("ikfsdal").add("tR", 1).getEntry();
-
-    GenericEntry jfdsoujfsadoiijofdsa;
-
+    GenericEntry swervepwooo = Shuffleboard.getTab("ikfsdal").add("swervepwooo", 0.000005).getEntry();
+    GenericEntry swervetwooo = Shuffleboard.getTab("ikfsdal").add("johnwuzhere", 0).getEntry();
+    GenericEntry aprilTagOrLimLigh;
     GenericEntry pointset;
-    private PIDController swervePidController = new PIDController(5, 0, 0.2);
+
 
     GenericEntry[] go;
 
@@ -41,9 +41,9 @@ public class CenterOnTargetCommand extends CommandBase {
         this.xboxController = xboxController;
         centerPID = new PIDController(0, 0, 0);
         forwardPID = new PIDController(0, 0, 0);
-        rotationPID = new PIDController(0, 0, 0);
+        rotationPID = new PIDController(0.00002, 0, 0);
         addRequirements(limlighSubsystem, m_drivetrain);
-        jfdsoujfsadoiijofdsa = Shuffleboard.getTab("ikfsdal").add("painhahah", false).getEntry();
+        aprilTagOrLimLigh = Shuffleboard.getTab("ikfsdal").add("painhahah", false).getEntry();
         pointset = Shuffleboard.getTab("ikfsdal").add("at", false).getEntry();
        
 
@@ -55,9 +55,6 @@ public class CenterOnTargetCommand extends CommandBase {
                 Shuffleboard.getTab("ikfsdal").add("s1", 0).getEntry()
 
         };
-
-        swervePidController.enableContinuousInput(0, 2 * Math.PI);
-
     }
 
     @Override
@@ -95,22 +92,22 @@ public class CenterOnTargetCommand extends CommandBase {
 
             centerPID.setP(0);
 
-            centerPID.setTolerance(0);
+            centerPID.setTolerance(10000);
 
             centerPID.setSetpoint(0);
 
             forwardPID.setP(0);
 
-            forwardPID.setTolerance(0);
+            forwardPID.setTolerance(10000);
 
             forwardPID.setSetpoint(0);
 
-            rotationPID.setP(go[0].getDouble(0));
 
-            rotationPID.setTolerance(go[1].getDouble(0));
+            rotationPID.setP(swervepwooo.getDouble(0));
 
-            rotationPID.setSetpoint(go[2].getDouble(0));
+            rotationPID.setTolerance(swervetwooo.getDouble(0));
 
+            rotationPID.setSetpoint(0);
         }
 
 
@@ -131,13 +128,15 @@ public class CenterOnTargetCommand extends CommandBase {
 
             rotationCalc = rotationPID.calculate(limlighSubsystem.getCalculatedPoseRot());
 
-            jfdsoujfsadoiijofdsa.setBoolean(true);
+            aprilTagOrLimLigh.setBoolean(true);
 
         } else if (limlighSubsystem.targetVisible()) {
 
-            jfdsoujfsadoiijofdsa.setBoolean(false);
+            aprilTagOrLimLigh.setBoolean(false);
 
-            rotationCalc = swervePidController.calculate(limlighSubsystem.getTargetx(), 0);
+            rotationCalc = rotationPID.calculate(limlighSubsystem.getTargetx(), 0);
+            forwardCalc = forwardPID.calculate(0);
+            centerCalc = centerPID.calculate(0);
 
             if (rotationCalc > Constants.DriveConstants.kMaxAngularSpeed) {
 
@@ -145,6 +144,9 @@ public class CenterOnTargetCommand extends CommandBase {
             } else if (rotationCalc < -Constants.DriveConstants.kMaxAngularSpeed) {
 
                 rotationCalc = -Constants.DriveConstants.kMaxAngularSpeed;
+            } else if (rotationPID.atSetpoint()){
+
+                rotationCalc = 0;
             }
           
 
@@ -193,7 +195,7 @@ public class CenterOnTargetCommand extends CommandBase {
 
         drivetrain.unlock();
 
-        jfdsoujfsadoiijofdsa.setBoolean(false);
+        aprilTagOrLimLigh.setBoolean(false);
 
     }
 
