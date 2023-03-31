@@ -73,7 +73,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionPID.setFF(0);
         extensionPID.setOutputRange(-1, 1);
         extensionMotor.burnFlash();
-
+ 
         tolerance = Shuffleboard.getTab("setpoints").add("armex tolerance", 2).getEntry();
         extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", 1).getEntry();
     }
