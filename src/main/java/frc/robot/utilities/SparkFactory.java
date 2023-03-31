@@ -19,7 +19,7 @@ public class SparkFactory {
    * @param id
    * @return a new CAN object
    */
-  public static CANSparkMax createCANSparkMax(int id) {
+  public static CANSparkMax createCANSparkMax(int id, Boolean flipSparkMax) {
 
     //something to the effect of we experimented with burn flash and reset to factory defaults, and it caused the drive motors to go bonkers
     CANSparkMax canToMake = new CANSparkMax(id, MotorType.kBrushless);
@@ -27,7 +27,7 @@ public class SparkFactory {
     canToMake.enableSoftLimit(SoftLimitDirection.kReverse, false);
     canToMake.setIdleMode(IdleMode.kBrake);
     canToMake.follow(ExternalFollower.kFollowerDisabled, 0);
-    canToMake.setInverted(false);
+    canToMake.setInverted(flipSparkMax);
     if (canToMake.isFollower()) {
 
       System.out.println("CAN ID" + id + " is following somebody WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");

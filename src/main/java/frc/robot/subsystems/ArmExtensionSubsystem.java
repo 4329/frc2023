@@ -54,7 +54,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         maxValue = 220f;
         minValue = -40f; //it's a float - Matthew
 
-        extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension);
+        extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension, false);
         extensionPID = extensionMotor.getPIDController();
         extensionEncoder = extensionMotor.getEncoder();
         extensionMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);

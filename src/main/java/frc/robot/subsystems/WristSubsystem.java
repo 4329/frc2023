@@ -51,7 +51,7 @@ public class WristSubsystem extends SubsystemBase {
         portalAngle = 35.5;
         floorAngle = 9;
         
-        wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate);
+        wristMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.wristRotate, false);
         wristPID = wristMotor.getPIDController();
         wristEncoder = wristMotor.getEncoder();
         wristMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
