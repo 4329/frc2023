@@ -15,6 +15,7 @@ public class ColorDetectorSubsystem extends SubsystemBase {
 
     private final I2C.Port i2cPort;
     private final ColorSensorV3 colorSensorV3;
+    private double proximity;
 
     GenericEntry coneOrCube;
     GenericEntry proximityEntry;
@@ -94,10 +95,10 @@ public class ColorDetectorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        
+        proximity = distance();
 
-        double proximity = distance();
-
-        if (proximity > 100) {
+        if (holdingSomthing()) {
 
             currentElement = detectElement();
         }
@@ -107,5 +108,11 @@ public class ColorDetectorSubsystem extends SubsystemBase {
         }
         proximityEntry.setDouble(proximity);
     }
+
+    public boolean holdingSomthing() {
+
+        return proximity > 100;
+    }
+
 
 }
