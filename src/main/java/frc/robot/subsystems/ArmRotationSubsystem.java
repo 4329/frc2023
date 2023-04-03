@@ -72,10 +72,10 @@ public class ArmRotationSubsystem extends SubsystemBase {
         floorPos = 13.5; //was 10.25
         zeroPos = 0;
 
+        // armMotor1.restoreFactoryDefaults();
+        // armMotor2.restoreFactoryDefaults();
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, true);
-        armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2, false);
-        armMotor1.restoreFactoryDefaults();
-        armMotor2.restoreFactoryDefaults();
+        armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2, true);
         armMotor1.setIdleMode(CANSparkMax.IdleMode.kBrake);
         armMotor2.setIdleMode(CANSparkMax.IdleMode.kBrake);
         armMotor2.follow(armMotor1);
