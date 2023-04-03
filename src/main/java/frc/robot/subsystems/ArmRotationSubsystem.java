@@ -72,11 +72,10 @@ public class ArmRotationSubsystem extends SubsystemBase {
         floorPos = 13.5; //was 10.25
         zeroPos = 0;
 
-        armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1);
-        armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2);
-        armMotor1.restoreFactoryDefaults();
-        armMotor2.restoreFactoryDefaults();
-        armMotor1.setInverted(true);
+        // armMotor1.restoreFactoryDefaults();
+        // armMotor2.restoreFactoryDefaults();
+        armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, true);
+        armMotor2 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation2, true);
         armMotor1.setIdleMode(CANSparkMax.IdleMode.kBrake);
         armMotor2.setIdleMode(CANSparkMax.IdleMode.kBrake);
         armMotor2.follow(armMotor1);
@@ -95,7 +94,6 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armPID.setIZone(0);
         armPID.setFF(0);
         armPID.setOutputRange(-0.3, 0.35);
-        armMotor1.setInverted(true); //TODO INVESTIGATE SILLY ARM BOI
         armMotor1.burnFlash();
         armMotor2.burnFlash();
         setpoint = 0;

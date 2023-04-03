@@ -32,15 +32,15 @@ public class ClawSubsystem extends SubsystemBase {
 
         clawOpen = Shuffleboard.getTab("RobotData").add("Pinch Closed", true).withSize(4, 5).withPosition(11, 0).getEntry();
         intakafying = Shuffleboard.getTab("RobotData").add("intaking", false).withSize(4, 5).withPosition(7, 0).getEntry();
-        leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft);
-        rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight);
+        leftMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawLeft, true);
+        rightMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.clawRight, false);
         solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
         this.colorDetector = colorDetector;
-        leftMotor.setInverted(true);
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
         fdjsial = Shuffleboard.getTab("setpoints").add("whynot", 0.285).getEntry();
-
+        leftMotor.burnFlash();
+        rightMotor.burnFlash();
     }
 
     public void intake() {
