@@ -27,11 +27,11 @@ public class LimlighSubsystem extends SubsystemBase {
         RED,
         BLUE
     };
-    public enum LimlighPipeline {
+    // public enum LimlighPipeline {
 
-        FIDUCIAL,
-        RETROREFLECTIVE
-    }
+    //     FIDUCIAL,
+    //     RETROREFLECTIVE
+    // }
 
     Alliance currentAlliance;
 
@@ -49,7 +49,7 @@ public class LimlighSubsystem extends SubsystemBase {
 
             currentAlliance = Alliance.BLUE;
         }
-        jflaiss = Shuffleboard.getTab("ikfsdal").add("pipeline", 0).getEntry();
+        // jflaiss = Shuffleboard.getTab("ikfsdal").add("pipeline", 0).getEntry();
     }
 
     public boolean targetVisible() {
@@ -125,9 +125,9 @@ public class LimlighSubsystem extends SubsystemBase {
         );
     }
 
-    public void switchPipeline(LimlighPipeline pipeline) {
+    public void switchPipeline(double pipeline) {
 
-        limligh.getEntry("pipeline").setDouble(pipeline.ordinal());
+        limligh.getEntry("pipeline").setDouble(pipeline);
     }
 
     public double getPipeline() {
@@ -139,10 +139,10 @@ public class LimlighSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        getPose();
-        pose.setString("" + (hrm[0]) + ", " + (hrm[1]) + ", " + (hrm[5]));
-        asdfg.setDouble(getCalculatedPoseZ());
-        switchPipeline(LimlighPipeline.values()[Math.toIntExact(jflaiss.getInteger(0))]);
+        // //getPose();
+        // pose.setString("" + (hrm[0]) + ", " + (hrm[1]) + ", " + (hrm[5]));
+        // asdfg.setDouble(getCalculatedPoseZ());
+        // // switchPipeline(LimlighPipeline.values()[Math.toIntExact(jflaiss.getInteger(0))]);
     }
 
 }

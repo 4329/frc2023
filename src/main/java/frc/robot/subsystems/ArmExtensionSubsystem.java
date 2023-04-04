@@ -30,6 +30,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private final double startExtend;
     private final double fullRetractLength;
     private final double fullExtendLength;
+    private final double midScoreExtend;
 
     private final float maxValue;
     private final float minValue;
@@ -43,7 +44,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         ZERO,
         MID,
         HIGH,
-        START
+        START,
+        MIDSCORE
     }
     private final Map<ExtendLength, Double> kgndsln;
 
@@ -58,15 +60,20 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         fullExtendLength = maxValue;
         midExtend = 120;
         highExtend = -3;
-        floorExtend = 182;
+        floorExtend = 186.5;
         startExtend = -4;
+        midScoreExtend = 115;
 
         kgndsln = new HashMap<>();
         kgndsln.put(ExtendLength.RETRACTFULL, fullRetractLength);
         kgndsln.put(ExtendLength.EXTENDFULL, fullExtendLength);
+        kgndsln.put(ExtendLength.MID, midExtend);
         kgndsln.put(ExtendLength.FLOOR, floorExtend);
         kgndsln.put(ExtendLength.ZERO, 0.0);
         kgndsln.put(ExtendLength.EXTENDFULL, highExtend);
+        kgndsln.put(ExtendLength.START, startExtend);
+        kgndsln.put(ExtendLength.MIDSCORE, midScoreExtend);
+
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension, false);
         extensionPID = extensionMotor.getPIDController();

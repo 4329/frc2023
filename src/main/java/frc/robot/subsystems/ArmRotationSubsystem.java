@@ -45,6 +45,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final double portalPos;
     private final double zeroPos;
     private final double floorPos;
+    private final double midScore;
 
     private final Map<ArmHeight, Double> armHeights;
     
@@ -59,7 +60,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
         SAFEEXTEND,
         PORTAL,
         FLOOR,
-        ZERO
+        ZERO,
+        MIDSCORE
     }
 
     public ArmRotationSubsystem() {
@@ -74,8 +76,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
         lowPos = 13.5;
         safeExtendPos = 17.5;
         portalPos = 37.75;
-        floorPos = 13.5; //was 10.25
+        floorPos = 10.25; //was 10.25
         zeroPos = 0;
+        midScore = 36.75;
 
         // armMotor1.restoreFactoryDefaults();
         // armMotor2.restoreFactoryDefaults();
@@ -87,6 +90,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armHeights.put(ArmHeight.PORTAL, portalPos);
         armHeights.put(ArmHeight.FLOOR, floorPos);
         armHeights.put(ArmHeight.ZERO, zeroPos);
+        armHeights.put(ArmHeight.MIDSCORE,midScore);
         
 
         armMotor1 = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armRotation1, true);
