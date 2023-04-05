@@ -76,7 +76,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         lowPos = 13.5;
         safeExtendPos = 17.5;
         portalPos = 37.75;
-        floorPos = 10.25; //was 10.25
+        floorPos = 13.5;
         zeroPos = 0;
         midScore = 36.75;
 
@@ -115,7 +115,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         armMotor2.burnFlash();
         setpoint = 0;
         ArmHeightEnum = Shuffleboard.getTab("setpoints").add("where", "Zero").getEntry();
-        brakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);    
+        brakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 2);    
 
         // TODO slow drive speed when arm is extended. Keep arm at minimum possible extension.
 
@@ -155,6 +155,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     private void calcEnums() {
         
+        unBrake();
         setpoint = armHeights.get(currentArmHeight);
     }
 

@@ -23,6 +23,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private double setpoint;
     private GenericEntry extensionMotorSetpoint;
     private GenericEntry tolerance;
+    GenericEntry yihfsd;
 
     private final double highExtend;
     private final double midExtend;
@@ -62,7 +63,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         highExtend = -3;
         floorExtend = 186.5;
         startExtend = -4;
-        midScoreExtend = 115;
+        midScoreExtend = 113;
 
         kgndsln = new HashMap<>();
         kgndsln.put(ExtendLength.RETRACTFULL, fullRetractLength);
@@ -70,9 +71,11 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         kgndsln.put(ExtendLength.MID, midExtend);
         kgndsln.put(ExtendLength.FLOOR, floorExtend);
         kgndsln.put(ExtendLength.ZERO, 0.0);
-        kgndsln.put(ExtendLength.EXTENDFULL, highExtend);
+        kgndsln.put(ExtendLength.HIGH, highExtend);
         kgndsln.put(ExtendLength.START, startExtend);
         kgndsln.put(ExtendLength.MIDSCORE, midScoreExtend);
+
+        yihfsd = Shuffleboard.getTab("setpoints").add("haahhaha", 0).getEntry();
 
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension, false);
@@ -88,7 +91,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
         extensionPID = extensionMotor.getPIDController();
         extensionPID.setP(1);
-        extensionPID.setI(1e-4);
+        extensionPID.setI(0);
         extensionPID.setD(1);
         extensionPID.setIZone(0);
         extensionPID.setFF(0);
@@ -96,7 +99,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.burnFlash();
  
         tolerance = Shuffleboard.getTab("setpoints").add("armex tolerance", 2).getEntry();
-        extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", 1).getEntry();
+        extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", false).getEntry();
     }
 
     public void setExtensionLength(double setpoint) {
@@ -133,8 +136,11 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
         if (extensionEncoder.getPosition() <= setpoint + tolerance.getDouble(0) && extensionEncoder.getPosition() >= setpoint - tolerance.getDouble(0)) {
          
+            extensionMotorSetpoint.setBoolean(true);
             return true;
         } else {
+
+            extensionMotorSetpoint.setBoolean(false);
 
             return false;
         }
@@ -142,14 +148,14 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     private void calcEnums() {
     
-     setpoint = kgndsln.get(currentExtendLength);
+        setpoint = kgndsln.get(currentExtendLength);
         
     }
 
     @Override
     public void periodic() {
 
-        extensionMotorSetpoint.setDouble(extensionEncoder.getPosition());
+        yihfsd.setDouble(extensionEncoder.getPosition() - setpoint);
         extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
     

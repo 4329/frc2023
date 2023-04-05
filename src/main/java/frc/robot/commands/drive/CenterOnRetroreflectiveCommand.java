@@ -22,7 +22,7 @@ public class CenterOnRetroreflectiveCommand extends CommandBase {
         this.drivetrain = m_drivetrain;
         this.xboxController = xboxController;
         rotationPID = new PIDController(0.05, 0, 0);
-        rotationPID.setTolerance(1);
+        rotationPID.setTolerance(0.65);
         rotationPID.setSetpoint(0);
         addRequirements(limlighSubsystem, m_drivetrain);
     }

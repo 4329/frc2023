@@ -126,7 +126,7 @@ public class CommandGroups {
         );
     }
 
-    public static CommandBase midScoreNewJohn(ArmExtensionSubsystem armExtensionSubsystem, ClawSubsystem clawSubsystem,
+    public static CommandBase autoDroptomousPrime(ArmExtensionSubsystem armExtensionSubsystem, ClawSubsystem clawSubsystem,
             LimlighSubsystem limlighSubsystem, Drivetrain drivetrain, double targetId,
             CommandXboxController xboxController, ArmRotationSubsystem armRotationSubsystem) {
 
@@ -134,8 +134,10 @@ public class CommandGroups {
                 new ParallelCommandGroup(
 
                         new ArmExtendMidScoreCommand(armExtensionSubsystem),
-                        new ArmRotateMidScoreCommand(armRotationSubsystem)),
+                        new ArmRotateMidScoreCommand(armRotationSubsystem)
+                ),
                 new CenterOnRetroreflectiveCommand(limlighSubsystem, drivetrain, xboxController),
+                new WaitCommand(0.3),
                 new ReleaseCommand(clawSubsystem),
                 new ArmRetractFullCommand(armExtensionSubsystem));
     }
