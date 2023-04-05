@@ -328,7 +328,6 @@ public class RobotContainer {
 
           trajectories = PathPlanner.loadPathGroup(name, constraints.get(0), constraints.subList(1, constraints.size()).stream().toArray(PathConstraints[]::new));
           
-
         }
 
         Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
