@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ColorDetectorSubsystem;
-import frc.robot.subsystems.ColorDetectorSubsystem;
 
 public class ManualMidShotCommand extends CommandBase {
 

@@ -127,7 +127,7 @@ public class CommandGroups {
     }
 
     public static CommandBase autoDroptomousPrime(ArmExtensionSubsystem armExtensionSubsystem, ClawSubsystem clawSubsystem,
-            LimlighSubsystem limlighSubsystem, Drivetrain drivetrain, double targetId,
+            LimlighSubsystem limlighSubsystem, Drivetrain drivetrain,
             CommandXboxController xboxController, ArmRotationSubsystem armRotationSubsystem) {
 
         return new SequentialCommandGroup(

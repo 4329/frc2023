@@ -73,22 +73,14 @@ public class BalanceCommand extends CommandBase{
         
         System.out.println("output is: " + pidCalc);
         if (!balancePID.atSetpoint()) {
-            balanceSubsystem.atSetpoint.setBoolean(false);
             
+            balanceSubsystem.atSetpoint.setBoolean(false);
             drivetrain.unlock();
             drivetrain.drive(pidCalc, 0, 0, false);
-        }
-        roll = drivetrain.getRoll() / Constants.DriveConstants.maxRampRoll;
-
-        if (Math.abs(roll) <= Constants.DriveConstants.maxRampDeviation || Math.abs(roll) >= Constants.DriveConstants.maxRampRoll + 5) {
-
+        } else {
+            
             drivetrain.lock();
             balanceSubsystem.atSetpoint.setBoolean(true);
-        } else {
-
-            drivetrain.unlock();
-
-            drivetrain.drive(HoorayConfig.gimmeConfig().getRollDirection() * roll * Constants.DriveConstants.maxRampSpeed, 0, 0, false);
         }
 
         balanceSubsystem.happiness.setDouble(balancePID.getPositionError());
