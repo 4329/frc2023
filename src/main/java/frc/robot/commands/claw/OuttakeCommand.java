@@ -4,21 +4,21 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmRotationSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.ColorDetector;
 import frc.robot.subsystems.ArmRotationSubsystem.ArmHeight;
-import frc.robot.subsystems.ColorDetector.FieldElement;
+import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ColorDetectorSubsystem;
+import frc.robot.subsystems.ColorDetectorSubsystem.FieldElement;
 
 public class OuttakeCommand extends CommandBase {
 
     private ClawSubsystem clawSubsystem;
     private ArmRotationSubsystem armRotationSubsystem;
-    ColorDetector colorDetector;
     GenericEntry djsalkf;
+    ColorDetectorSubsystem colorDetector;
 
     FieldElement elly;
 
-    public OuttakeCommand(ClawSubsystem clawSubsystem, ArmRotationSubsystem armRotationSubsystem, ColorDetector colorDetector) {
+    public OuttakeCommand(ClawSubsystem clawSubsystem, ArmRotationSubsystem armRotationSubsystem, ColorDetectorSubsystem colorDetector) {
 
         this.clawSubsystem = clawSubsystem;
         this.armRotationSubsystem = armRotationSubsystem;

@@ -42,6 +42,7 @@ import frc.robot.commands.claw.TogglePinchCommand;
 import frc.robot.commands.claw.ReleaseCommand;
 import frc.robot.commands.claw.ToggleIntakeCommand;
 import frc.robot.commands.drive.BalanceCommand;
+import frc.robot.commands.drive.CenterOnTargetCommand;
 import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
 import frc.robot.commands.drive.DriveByController;
@@ -60,7 +61,8 @@ import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.BalanceSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.ColorDetector;
+import frc.robot.subsystems.ColorDetectorSubsystem;
+import frc.robot.subsystems.LimlighSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
 import frc.robot.utilities.GimmeSwerve;
@@ -77,6 +79,11 @@ public class RobotContainer {
   private final ArmExtensionSubsystem armExtensionSubsystem;
   private final BalanceSubsystem balanceSubsystem;
   
+  private final LimlighSubsystem limlighSubsystem;
+  // CenterOnTargetCommand centerOnTargetCommand;
+  // private final TrackingTurretSubsystem trackingTurretSubsystem;
+  // The driver's controllers
+
   final SendableChooser<Command> m_chooser;
   
   // The driver's controllers
@@ -97,7 +104,7 @@ public class RobotContainer {
   private final OuttakeCommand outtakeCommand;
   private final TogglePinchCommand togglePinchCommand;
   private final ReleaseCommand releaseCommand;
-  private final ColorDetector colorDetector;
+  private final ColorDetectorSubsystem colorDetector;
   private final ArmRotateCommand armRotateCommand;
   private final ArmUnrotateCommand armUnrotateCommand;
   private final ExtendRetractCommand extendRetractCommand;
@@ -111,6 +118,9 @@ public class RobotContainer {
   private final ManualMidShotCommand manualMidShotCommand;
   // private final ManualHighShotCommand manualHighShotCommand;
   private final Command manualHighShotCommand;
+  //private final CenterOnTargetCommand aprilTagMiddleCommand;
+
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -123,7 +133,7 @@ public class RobotContainer {
     // pid = Shuffleboard.getTab("yes").add("name", 0).withWidget(BuiltInWidgets.kGraph)
         // .withProperties(Map.of("Automatic bounds", false, "Upper bound", 20)).getEntry();
     m_robotDrive = drivetrain;
-    colorDetector = new ColorDetector();
+    colorDetector = new ColorDetectorSubsystem();
 
     initializeCamera();
 
@@ -135,6 +145,7 @@ public class RobotContainer {
     wristSubsystem = new WristSubsystem();
     clawSubsystem = new ClawSubsystem(colorDetector);
     balanceSubsystem = new BalanceSubsystem();
+    limlighSubsystem = new LimlighSubsystem(drivetrain);
 
     m_chooser = new SendableChooser<>();
 
@@ -164,12 +175,14 @@ public class RobotContainer {
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
     manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
+    //aprilTagMiddleCommand = new CenterOnTargetCommand(limlighSubsystem, m_robotDrive, 1, driverController);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
                                 * function
                                 */
     configureAutoChooser(drivetrain);
 
+    // centerOnTargetCommand = new CenterOnTargetCommand(limlighSubsystem, 0, m_robotDrive);
   }
 
   /**
@@ -251,7 +264,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(armRotateCommand); //arm up
     driverController.leftBumper().whileTrue(armUnrotateCommand); //arm down
 
-    driverController.start().whileTrue(exampleCommand); //to april tag or conecubetoggle
+    driverController.start().onTrue(CommandGroups.autoDroptomousPrime(armExtensionSubsystem, clawSubsystem, limlighSubsystem, m_robotDrive, driverController, armRotationSubsystem));
     driverController.back().onTrue(changeFieldOrientCommand);
 
     driverController.a().onTrue(toggleIntakeCommand);
@@ -374,6 +387,11 @@ public class RobotContainer {
 
   public void teleopPeriodic() {
 
+    // if (jsdaklfsd.getBoolean(false)) {
+
+    //   aprilTagMiddleCommand.schedule();
+    //   jsdaklfsd.setBoolean(false);
+    // }
   }
 
   /**

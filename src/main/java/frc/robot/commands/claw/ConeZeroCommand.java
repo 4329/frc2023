@@ -2,21 +2,21 @@ package frc.robot.commands.claw;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.ColorDetector;
-import frc.robot.subsystems.ColorDetector.FieldElement;
+import frc.robot.subsystems.ColorDetectorSubsystem;
+import frc.robot.subsystems.ColorDetectorSubsystem.FieldElement;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class ConeZeroCommand extends CommandBase {
 
     private ClawSubsystem clawSubsystem;
-    private ColorDetector colorDetector;
+    private ColorDetectorSubsystem colorDetector;
 
     private boolean finished;
 
     private double waitTime;
 
-    public ConeZeroCommand(ClawSubsystem clawSubsystem, ColorDetector colorDetector) {
+    public ConeZeroCommand(ClawSubsystem clawSubsystem, ColorDetectorSubsystem colorDetector) {
 
         this.colorDetector = colorDetector;
         this.clawSubsystem = clawSubsystem;

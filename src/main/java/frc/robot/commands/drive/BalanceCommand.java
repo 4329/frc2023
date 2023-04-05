@@ -12,19 +12,21 @@ import frc.robot.utilities.HoorayConfig;
 import frc.robot.Constants;
 import frc.robot.subsystems.BalanceSubsystem;
 import frc.robot.subsystems.swerve.Drivetrain;
+import frc.robot.utilities.HoorayConfig;
 
 public class BalanceCommand extends CommandBase{
 
     Drivetrain drivetrain;
     BalanceSubsystem balanceSubsystem;
 
-    private PIDController balancePID;
+    private double roll;
 
     public GenericEntry atSetpoint;
     public GenericEntry dilfs;
     public GenericEntry commandRuningdkj;
     private double pidCalc;
     private double ff = 0;
+    private PIDController balancePID;
    
 
 
@@ -59,7 +61,7 @@ public class BalanceCommand extends CommandBase{
         balancePID.setSetpoint(0);
         balancePID.setIntegratorRange(-balanceSubsystem.irange.getDouble(0.1), balanceSubsystem.irange.getDouble(0.1));
     }
-    
+
     @Override
     public void execute() {
 
@@ -71,14 +73,12 @@ public class BalanceCommand extends CommandBase{
         
         System.out.println("output is: " + pidCalc);
         if (!balancePID.atSetpoint()) {
-            balanceSubsystem.atSetpoint.setBoolean(false);
             
+            balanceSubsystem.atSetpoint.setBoolean(false);
             drivetrain.unlock();
             drivetrain.drive(pidCalc, 0, 0, false);
-        }
-
-        else {
-
+        } else {
+            
             drivetrain.lock();
             balanceSubsystem.atSetpoint.setBoolean(true);
         }
@@ -90,6 +90,7 @@ public class BalanceCommand extends CommandBase{
         // atSetpoint.setBoolean(balancePID.atSetpoint());
         // dilfs.setDouble(balancePID.getPositionError());
     }
+
 
     @Override
     public boolean isFinished() {

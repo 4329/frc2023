@@ -1,9 +1,7 @@
 package frc.robot;
 
-import java.awt.geom.Point2D;
 
 import frc.robot.utilities.HoorayConfig;
-import frc.robot.utilities.LinearInterpolationTable;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -189,5 +187,4 @@ public final class Constants {
     public static final int armExtension = 20;
     public static final int wristRotate = 21;
   }
-
 }

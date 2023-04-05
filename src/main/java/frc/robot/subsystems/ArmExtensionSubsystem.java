@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.RelativeEncoder;
@@ -20,39 +23,60 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private double setpoint;
     private GenericEntry extensionMotorSetpoint;
     private GenericEntry tolerance;
+    GenericEntry yihfsd;
 
     private final double highExtend;
     private final double midExtend;
     private final double floorExtend;
     private final double startExtend;
-    private final double fullExtend;
+    private final double fullRetractLength;
+    private final double fullExtendLength;
+    private final double midScoreExtend;
 
     private final float maxValue;
     private final float minValue;
 
+    
     public enum ExtendLength {
-
+        
         RETRACTFULL,
         EXTENDFULL,
         FLOOR,
         ZERO,
         MID,
         HIGH,
-        START
+        START,
+        MIDSCORE
     }
+    private final Map<ExtendLength, Double> kgndsln;
 
     private ExtendLength currentExtendLength;
 
     public ArmExtensionSubsystem() {
 
-        fullExtend = 220;
-        highExtend = -3;
-        midExtend = 120;
-        floorExtend = 186.5; //was 182
-        startExtend = -4;
-
         maxValue = 220f;
-        minValue = -40f; //it's a float - Matthew
+        minValue = -16f; //it's a float - Matthew
+
+        fullRetractLength = minValue;
+        fullExtendLength = maxValue;
+        midExtend = 120;
+        highExtend = -3;
+        floorExtend = 186.5;
+        startExtend = -4;
+        midScoreExtend = 113;
+
+        kgndsln = new HashMap<>();
+        kgndsln.put(ExtendLength.RETRACTFULL, fullRetractLength);
+        kgndsln.put(ExtendLength.EXTENDFULL, fullExtendLength);
+        kgndsln.put(ExtendLength.MID, midExtend);
+        kgndsln.put(ExtendLength.FLOOR, floorExtend);
+        kgndsln.put(ExtendLength.ZERO, 0.0);
+        kgndsln.put(ExtendLength.HIGH, highExtend);
+        kgndsln.put(ExtendLength.START, startExtend);
+        kgndsln.put(ExtendLength.MIDSCORE, midScoreExtend);
+
+        yihfsd = Shuffleboard.getTab("setpoints").add("haahhaha", 0).getEntry();
+
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension, false);
         extensionPID = extensionMotor.getPIDController();
@@ -67,7 +91,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.enableVoltageCompensation(Constants.DriveConstants.kVoltCompensation);
         extensionPID = extensionMotor.getPIDController();
         extensionPID.setP(1);
-        extensionPID.setI(1e-4);
+        extensionPID.setI(0);
         extensionPID.setD(1);
         extensionPID.setIZone(0);
         extensionPID.setFF(0);
@@ -75,7 +99,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         extensionMotor.burnFlash();
  
         tolerance = Shuffleboard.getTab("setpoints").add("armex tolerance", 2).getEntry();
-        extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", 1).getEntry();
+        extensionMotorSetpoint = Shuffleboard.getTab("setpoints").add("Arm Extension Motor", false).getEntry();
     }
 
     public void setExtensionLength(double setpoint) {
@@ -112,43 +136,26 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
         if (extensionEncoder.getPosition() <= setpoint + tolerance.getDouble(0) && extensionEncoder.getPosition() >= setpoint - tolerance.getDouble(0)) {
          
+            extensionMotorSetpoint.setBoolean(true);
             return true;
         } else {
+
+            extensionMotorSetpoint.setBoolean(false);
 
             return false;
         }
     }
 
     private void calcEnums() {
-
-        if (ExtendLength.EXTENDFULL.equals(currentExtendLength)) {
-
-            setpoint = fullExtend;
-        } else if (ExtendLength.RETRACTFULL.equals(currentExtendLength)) {
-
-            setpoint = minValue;
-        } else if (ExtendLength.ZERO.equals(currentExtendLength)) {
-
-            setpoint = 0.0;
-        } else if (ExtendLength.FLOOR.equals(currentExtendLength)) {
-
-            setpoint = floorExtend;
-        } else if (ExtendLength.START.equals(currentExtendLength)) {
-
-            setpoint = startExtend;
-        } else if (ExtendLength.MID.equals(currentExtendLength)) {
-
-            setpoint = midExtend;
-        } else if (ExtendLength.HIGH.equals(currentExtendLength)) {
-
-            setpoint = highExtend;
-        }
+    
+        setpoint = kgndsln.get(currentExtendLength);
+        
     }
 
     @Override
     public void periodic() {
 
-        extensionMotorSetpoint.setDouble(extensionEncoder.getPosition());
+        yihfsd.setDouble(extensionEncoder.getPosition() - setpoint);
         extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
     

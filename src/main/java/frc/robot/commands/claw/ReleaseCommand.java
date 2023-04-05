@@ -13,18 +13,13 @@ public class ReleaseCommand extends CommandBase {
 
     @Override
     public void execute() {
+
         clawSubsystem.release();
     }
 
     @Override
     public boolean isFinished() {
 
-        return false;
+        return true;
     }
-
-    @Override
-    public void end(boolean interrupted) {
-
-    }
-
 }
