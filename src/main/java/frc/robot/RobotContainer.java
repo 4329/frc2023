@@ -365,6 +365,16 @@ public class RobotContainer {
       listConstraints.add(new PathConstraints(1.75, 1.85)); 
       listConstraints.add(new PathConstraints(3, 3)); 
 
+
+    } else if (name.equalsIgnoreCase("2PieceOpenAuto")) {
+
+      System.out.println("is constrained");
+      listConstraints.add(new PathConstraints(3.25, 2.5));
+      listConstraints.add(new PathConstraints(1, 1)); 
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+    
+
     } else {
 
       System.out.println("==-=-=-=");

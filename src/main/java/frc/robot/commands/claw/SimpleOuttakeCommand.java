@@ -2,8 +2,7 @@ package frc.robot.commands.claw;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.ColorDetector;
-import frc.robot.subsystems.ColorDetector.FieldElement;
+import frc.robot.subsystems.ColorDetectorSubsystem.FieldElement;
 
 public class SimpleOuttakeCommand extends CommandBase {
 
