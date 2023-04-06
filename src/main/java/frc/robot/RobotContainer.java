@@ -35,9 +35,11 @@ import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SwerveAlignZeroCommand;
 import frc.robot.commands.claw.IntakeCommand;
+import frc.robot.commands.claw.IntakeCompleteCommand;
 import frc.robot.commands.claw.ManualHighShotCommand;
 import frc.robot.commands.claw.ManualMidShotCommand;
 import frc.robot.commands.claw.OuttakeCommand;
+import frc.robot.commands.claw.PinchCommand;
 import frc.robot.commands.claw.TogglePinchCommand;
 import frc.robot.commands.claw.ReleaseCommand;
 import frc.robot.commands.claw.ToggleIntakeCommand;
@@ -118,9 +120,9 @@ public class RobotContainer {
   private final ManualMidShotCommand manualMidShotCommand;
   // private final ManualHighShotCommand manualHighShotCommand;
   private final Command manualHighShotCommand;
-  //private final CenterOnTargetCommand aprilTagMiddleCommand;
+  private final Command intakeCompleteCommand;
+  private final Command pinchCommand;
 
-  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -163,6 +165,7 @@ public class RobotContainer {
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector);
     togglePinchCommand = new TogglePinchCommand(clawSubsystem);
+    pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, driverController);
     armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
@@ -171,6 +174,7 @@ public class RobotContainer {
     wristRotateDownCommand = new WristRotateDownCommand(wristSubsystem);
     armRetractFullCommand = new ArmRetractFullCommand(armExtensionSubsystem);
     armExtendToZeroCommand = new ArmExtendToZeroCommand(armExtensionSubsystem);
+    intakeCompleteCommand = new IntakeCompleteCommand(clawSubsystem, colorDetector); 
    // toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
@@ -218,6 +222,9 @@ public class RobotContainer {
     eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("outtakeMid", manualMidShotCommand);
+    eventMap.put("intakeCompleteCommand", intakeCompleteCommand);
+    eventMap.put("pinch", pinchCommand);
+    eventMap.put("lowBoop", CommandGroups.lowBoop(armExtensionSubsystem, clawSubsystem));
     
     return eventMap;
   }

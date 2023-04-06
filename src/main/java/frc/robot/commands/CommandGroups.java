@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.claw.ConeZeroCommand;
 import frc.robot.commands.claw.ReleaseCommand;
 import frc.robot.commands.drive.CenterOnRetroreflectiveCommand;
+import frc.robot.commands.claw.ManualMidShotCommand;
+import frc.robot.commands.claw.OuttakeCommand;
+import frc.robot.commands.claw.SimpleOuttakeCommand;
+import frc.robot.commands.claw.TogglePinchCommand;
 import frc.robot.commands.extend.ArmExtendFloorCommand;
 import frc.robot.commands.extend.ArmExtendHighCommand;
 import frc.robot.commands.extend.ArmExtendMidCommand;
@@ -142,4 +146,15 @@ public class CommandGroups {
                 new ArmRetractFullCommand(armExtensionSubsystem));
     }
 
-}
+
+    public static CommandBase lowBoop(ArmExtensionSubsystem armExtensionSubsystem, ClawSubsystem clawSubsystem) {
+
+        return new ParallelCommandGroup(
+
+            new ArmExtendStartCommand(armExtensionSubsystem),
+            new SimpleOuttakeCommand(clawSubsystem).withTimeout(3)
+        );
+
+    }
+    
+} 

@@ -2,17 +2,16 @@ package frc.robot.commands.claw;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.ColorDetectorSubsystem;
+import frc.robot.subsystems.ColorDetector;
+import frc.robot.subsystems.ColorDetector.FieldElement;
 
-public class IntakeCompleteCommand extends CommandBase {
+public class SimpleOuttakeCommand extends CommandBase {
 
     private ClawSubsystem clawSubsystem;
-    private ColorDetectorSubsystem colorDetector;
 
-    public IntakeCompleteCommand(ClawSubsystem clawSubsystem, ColorDetectorSubsystem colorDetector) {
+    public SimpleOuttakeCommand(ClawSubsystem clawSubsystem) {
 
         this.clawSubsystem = clawSubsystem;
-        this.colorDetector = colorDetector;
         addRequirements(clawSubsystem);
 
     }
@@ -20,28 +19,27 @@ public class IntakeCompleteCommand extends CommandBase {
     @Override
     public void initialize() {
 
-        clawSubsystem.intake();
-
     }
 
     @Override
     public void execute() {
 
+        clawSubsystem.outtakeLow(FieldElement.CONE);
+
     }
 
     @Override
-    public boolean isFinished() {
+   public boolean isFinished() {
 
-        return colorDetector.holdingSomthing();
-
+            return false;
+            
     }
 
     @Override
     public void end(boolean interrupted) {
 
         clawSubsystem.stop();
-    
-    }
 
+    }
 
 }
