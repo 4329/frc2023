@@ -370,7 +370,7 @@ public class RobotContainer {
 
       System.out.println("is constrained");
       listConstraints.add(new PathConstraints(3.25, 2.5));
-      listConstraints.add(new PathConstraints(1, 1)); 
+      listConstraints.add(new PathConstraints(2, 1.5)); 
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
     
