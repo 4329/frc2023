@@ -38,7 +38,7 @@ public class LimlighSubsystem extends SubsystemBase {
     public LimlighSubsystem(Drivetrain drivetrain) {
 
         limligh = NetworkTableInstance.getDefault().getTable("limelight-limligh");
-        pose = Shuffleboard.getTab("ikfsdal").add("pose?", "yes").getEntry();
+        pose = Shuffleboard.getTab("akfsdal").add("pose?", "yes").getEntry();
         asdfg = Shuffleboard.getTab("ikfsdal").add("targetZ?", 0).getEntry();
         this.drivetrain = drivetrain;
 
@@ -117,12 +117,15 @@ public class LimlighSubsystem extends SubsystemBase {
         // }
 
         hrm = limligh.getEntry("botpose").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0});
-
+if (hrm != null && hrm.length > 5) {
         return new Pose2d(
             
             new Translation2d(hrm[0], hrm[1]),
             Rotation2d.fromDegrees(hrm[5])
         );
+} else {
+    return new Pose2d();
+}
     }
 
     public void switchPipeline(double pipeline) {
@@ -139,8 +142,8 @@ public class LimlighSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        // //getPose();
-        // pose.setString("" + (hrm[0]) + ", " + (hrm[1]) + ", " + (hrm[5]));
+        Pose2d p = getPose();
+        pose.setString("" + (p.getX()) + ", " + (p.getY()) + ", " + (p.getRotation()));
         // asdfg.setDouble(getCalculatedPoseZ());
         // // switchPipeline(LimlighPipeline.values()[Math.toIntExact(jflaiss.getInteger(0))]);
     }

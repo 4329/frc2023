@@ -180,12 +180,15 @@ GenericEntry fjsldakjfsd;
     m_backRight.stop();
   }
 
+
+  GenericEntry ha = Shuffleboard.getTab("akfsdal").add("real", "g").getEntry();
   /**
    * Updates odometry for the swerve drivetrain. This should be called
    * once per loop to minimize error.
    */
   public void updateOdometry() {
 
+    ha.setString(m_odometry.getPoseMeters().getX() + ", " + m_odometry.getPoseMeters().getY() + ", " + m_odometry.getPoseMeters().getRotation());
     m_odometry.update(ahrs.getRotation2d(), getModulePositions());
   }
 
