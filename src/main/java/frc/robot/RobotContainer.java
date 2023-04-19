@@ -324,18 +324,9 @@ public class RobotContainer {
 
         String name = pathFile.getName().replace(".path", "");
 
-      List<PathConstraints> constraints = getPathConstraints(name);
+        List<PathConstraints> constraints = getPathConstraints(name);
 
-        List<PathPlannerTrajectory> trajectories = null;
-
-        if (constraints.size() == 1) {
-            trajectories = PathPlanner.loadPathGroup(name, constraints.get(0));
-
-        } else {
-
-          trajectories = PathPlanner.loadPathGroup(name, constraints.get(0), constraints.subList(1, constraints.size()).stream().toArray(PathConstraints[]::new));
-          
-        }
+        List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name, constraints);
 
         Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
         if (name.endsWith("BalanceAuto")) {
@@ -370,7 +361,7 @@ public class RobotContainer {
 
       System.out.println("is constrained");
       listConstraints.add(new PathConstraints(3.25, 2.5));
-      listConstraints.add(new PathConstraints(1, 1)); 
+      listConstraints.add(new PathConstraints(2, 1.5)); 
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
     
