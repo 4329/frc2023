@@ -123,7 +123,7 @@ public class CommandGroups {
                         new ArmRetractFullCommand(armExtensionSubsystem),
                         new WristZeroCommand(wristSubsystem)),
                 new ZeroArmCommand(armRotationSubsystem),
-                new ArmExtendToZeroCommand(armExtensionSubsystem),
+                new ArmExtendToZeroCommand(armExtensionSubsystem, colorDetector),
                 new ConeZeroCommand(clawSubsystem, colorDetector)
 
         // new IntakeCommand(clawSubsystem, colorDetector).withTimeout(10)

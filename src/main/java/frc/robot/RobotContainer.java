@@ -173,7 +173,7 @@ public class RobotContainer {
     wristRotateUpCommand = new WristRotateUpCommand(wristSubsystem);
     wristRotateDownCommand = new WristRotateDownCommand(wristSubsystem);
     armRetractFullCommand = new ArmRetractFullCommand(armExtensionSubsystem);
-    armExtendToZeroCommand = new ArmExtendToZeroCommand(armExtensionSubsystem);
+    armExtendToZeroCommand = new ArmExtendToZeroCommand(armExtensionSubsystem, colorDetector);
     intakeCompleteCommand = new IntakeCompleteCommand(clawSubsystem, colorDetector); 
    // toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
