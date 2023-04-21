@@ -21,15 +21,11 @@ public class CenterOnTargetCommand extends CommandBase {
     private final PIDController rotationPID;
     private CommandXboxController xboxController;
     private Timer timer = new Timer();
-    GenericEntry tGEntry = Shuffleboard.getTab("ikfsdal").add("tG", 1).getEntry();
-    GenericEntry tREntry = Shuffleboard.getTab("ikfsdal").add("tR", 1).getEntry();
     GenericEntry swervepwooo = Shuffleboard.getTab("ikfsdal").add("swervepwooo", 0.000005).getEntry();
     GenericEntry swervetwooo = Shuffleboard.getTab("ikfsdal").add("johnwuzhere", 0).getEntry();
     GenericEntry aprilTagOrLimLigh;
     GenericEntry pointset;
 
-
-    GenericEntry[] go;
 
     private boolean usingAprilTag;
 
@@ -45,16 +41,6 @@ public class CenterOnTargetCommand extends CommandBase {
         addRequirements(limlighSubsystem, m_drivetrain);
         aprilTagOrLimLigh = Shuffleboard.getTab("ikfsdal").add("painhahah", false).getEntry();
         pointset = Shuffleboard.getTab("ikfsdal").add("at", false).getEntry();
-       
-
-
-        go = new GenericEntry[] {
-
-                Shuffleboard.getTab("ikfsdal").add("p1", 0).getEntry(),
-                Shuffleboard.getTab("ikfsdal").add("t1", 0).getEntry(),
-                Shuffleboard.getTab("ikfsdal").add("s1", 0).getEntry()
-
-        };
     }
 
     @Override

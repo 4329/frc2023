@@ -83,7 +83,7 @@ public class BalanceCommand extends CommandBase{
             balanceSubsystem.atSetpoint.setBoolean(true);
         }
 
-        balanceSubsystem.happiness.setDouble(balancePID.getPositionError());
+        // balanceSubsystem.happiness.setDouble(balancePID.getPositionError());
 
 
 

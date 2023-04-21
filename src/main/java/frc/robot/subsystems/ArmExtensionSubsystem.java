@@ -23,7 +23,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private double setpoint;
     private GenericEntry extensionMotorSetpoint;
     private GenericEntry tolerance;
-    GenericEntry yihfsd;
+    GenericEntry extensionSetpointError;
 
     private final double highExtend;
     private final double midExtend;
@@ -66,7 +66,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         floorExtend = 186.5;
         startExtend = -4;
         midScoreExtend = 110;
-        cubeStowExtend = -10;
+        cubeStowExtend = -16;
 
         kgndsln = new HashMap<>();
         kgndsln.put(ExtendLength.RETRACTFULL, fullRetractLength);
@@ -79,7 +79,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         kgndsln.put(ExtendLength.START, startExtend);
         kgndsln.put(ExtendLength.MIDSCORE, midScoreExtend);
 
-        yihfsd = Shuffleboard.getTab("setpoints").add("haahhaha", 0).getEntry();
+        extensionSetpointError = Shuffleboard.getTab("setpoints").add("Extension Setpoint Error", 0).getEntry();
 
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension, false);
@@ -159,7 +159,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        yihfsd.setDouble(extensionEncoder.getPosition() - setpoint);
+        extensionSetpointError.setDouble(extensionEncoder.getPosition() - setpoint);
         extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
     

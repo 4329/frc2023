@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class BalanceSubsystem extends SubsystemBase {
     
     public GenericEntry[] yay;
-    public GenericEntry happiness;
+    // public GenericEntry happiness;
     public GenericEntry irange;
     public GenericEntry out;
     public GenericEntry atSetpoint;
@@ -23,7 +23,7 @@ public class BalanceSubsystem extends SubsystemBase {
             Shuffleboard.getTab("mine").add("t", 0).getEntry(),
             Shuffleboard.getTab("mine").add("ff", 0).getEntry()
         };
-        happiness = Shuffleboard.getTab("mine").add("setpointerror", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
+        // happiness = Shuffleboard.getTab("mine").add("setpointerror", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
         irange = Shuffleboard.getTab("mine").add("irange", 0).getEntry();
         out = Shuffleboard.getTab("mine").add("out", 0).getEntry();
         atSetpoint = Shuffleboard.getTab("mine").add("atsetpoint", false).getEntry();

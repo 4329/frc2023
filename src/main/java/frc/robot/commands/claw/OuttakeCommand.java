@@ -13,7 +13,6 @@ public class OuttakeCommand extends CommandBase {
 
     private ClawSubsystem clawSubsystem;
     private ArmRotationSubsystem armRotationSubsystem;
-    GenericEntry djsalkf;
     ColorDetectorSubsystem colorDetector;
 
     FieldElement elly;
@@ -24,14 +23,12 @@ public class OuttakeCommand extends CommandBase {
         this.armRotationSubsystem = armRotationSubsystem;
         this.colorDetector = colorDetector;
         addRequirements(clawSubsystem);
-        djsalkf = Shuffleboard.getTab("sadjfkas").add("sadjfksd", false).getEntry();
     }
 
     @Override
     public void initialize() {
 
         elly = colorDetector.getCurrentElement();
-        djsalkf.setBoolean(true);
         
     }
 
@@ -57,7 +54,6 @@ public class OuttakeCommand extends CommandBase {
     public void end(boolean interrupted) {
         
         clawSubsystem.stop();
-        djsalkf.setBoolean(false);
     }
 
 }

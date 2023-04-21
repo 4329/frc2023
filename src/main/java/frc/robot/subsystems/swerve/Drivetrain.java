@@ -83,7 +83,7 @@ GenericEntry fjsldakjfsd;
   private FieldRelativeSpeed m_lastFieldRelVel = new FieldRelativeSpeed();
   private FieldRelativeAccel m_fieldRelAccel = new FieldRelativeAccel();
 
-  GenericEntry jdsilsad;
+  GenericEntry rotationMotorPower;
   GenericEntry roll;
   GenericEntry pitch;
   
@@ -98,7 +98,7 @@ GenericEntry fjsldakjfsd;
     keepAngleTimer.start();
     m_keepAnglePID.enableContinuousInput(-Math.PI, Math.PI);
     ahrs.reset();
-    jdsilsad = Shuffleboard.getTab("setpoints").add("dsjafsdlf", 0).getEntry();
+    rotationMotorPower = Shuffleboard.getTab("setpoints").add("Rotation Motor Power", 0).getEntry();
     // roll = Shuffleboard.getTab("RobotData").add("roll", 0).getEntry();
     // pitch = Shuffleboard.getTab("RobotData").add("pitch", 0).getEntry();
 
@@ -127,7 +127,7 @@ GenericEntry fjsldakjfsd;
     xSpeed = slewX.calculate(xSpeed);
     ySpeed = slewY.calculate(ySpeed);
     rot = slewRot.calculate(rot);
-    jdsilsad.setDouble(rot);
+    rotationMotorPower.setDouble(rot);
 
     // creates an array of the desired swerve module states based on driver command
     // and if the commands are field relative or not

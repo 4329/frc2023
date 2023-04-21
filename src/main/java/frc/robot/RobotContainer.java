@@ -49,6 +49,7 @@ import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
 import frc.robot.commands.drive.DriveByController;
 import frc.robot.commands.drive.ResetOdometryCommand;
+import frc.robot.commands.extend.ArmExtendToCubeStow;
 import frc.robot.commands.extend.ArmExtendToZeroCommand;
 import frc.robot.commands.extend.ArmRetractFullCommand;
 import frc.robot.commands.extend.ExtendRetractCommand;
@@ -122,6 +123,7 @@ public class RobotContainer {
   private final Command manualHighShotCommand;
   private final Command intakeCompleteCommand;
   private final Command pinchCommand;
+  private final Command yayOuttake;
 
 
   /**
@@ -179,6 +181,7 @@ public class RobotContainer {
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
     manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
+    yayOuttake = new SequentialCommandGroup(new IntakeCommand(clawSubsystem, colorDetector).withTimeout(0.1), new WaitCommand(0.1), new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector));
     //aprilTagMiddleCommand = new CenterOnTargetCommand(limlighSubsystem, m_robotDrive, 1, driverController);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
@@ -215,16 +218,21 @@ public class RobotContainer {
   /* Autonomous :D */
   private Map<String, Command> createEventMap() {
     Map<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intakeCommand", intakeCommand);
+    eventMap.put("intakeCommand", new IntakeCommand(clawSubsystem, colorDetector));
     eventMap.put("outtake", outtakeCommand);
     eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
     eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("outtakeMid", manualMidShotCommand);
+    eventMap.put("outtakeHigh", manualHighShotCommand);
     eventMap.put("intakeCompleteCommand", intakeCompleteCommand);
     eventMap.put("pinch", pinchCommand);
+    eventMap.put("release", releaseCommand);
+    eventMap.put("outyay", yayOuttake);
     eventMap.put("lowBoop", CommandGroups.lowBoop(armExtensionSubsystem, clawSubsystem));
+    eventMap.put("unstend", new ArmExtendToCubeStow(armExtensionSubsystem, colorDetector));
+
     
     return eventMap;
   }
@@ -350,12 +358,11 @@ public class RobotContainer {
 
     if (name.equalsIgnoreCase("1HighCubeAcrossCenterBalanceAuto")) {
 
-      System.out.println("5879987547894239870789357890");
+      System.out.println("is constrained");
       listConstraints.add(new PathConstraints(3.25, 2.5));
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
       listConstraints.add(new PathConstraints(1.75, 1.85)); 
       listConstraints.add(new PathConstraints(3, 3)); 
-
 
     } else if (name.equalsIgnoreCase("2PieceOpenAuto")) {
 
@@ -365,10 +372,24 @@ public class RobotContainer {
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
     
+    } else if (name.equalsIgnoreCase("1HighConeAcrossCenterBalanceAuto")) {
 
+      System.out.println("is constrained");
+      listConstraints.add(new PathConstraints(3.25, 2.5));
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+      listConstraints.add(new PathConstraints(1.75, 1.85)); 
+      listConstraints.add(new PathConstraints(3, 3)); 
+      
+    } else if (name.equalsIgnoreCase("1MidConeAcrossCenterBalanceAuto")) {
+
+      System.out.println("is constrained");
+      listConstraints.add(new PathConstraints(3.25, 2.5));
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+      listConstraints.add(new PathConstraints(1.75, 1.85)); 
+      listConstraints.add(new PathConstraints(3, 3)); 
     } else {
 
-      System.out.println("==-=-=-=");
+      System.out.println("++++++++++++++++++++++++++++++++++++++++++++");
       listConstraints.add(new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
     }
 
