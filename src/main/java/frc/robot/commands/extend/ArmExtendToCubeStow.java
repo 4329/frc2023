@@ -6,12 +6,12 @@ import frc.robot.subsystems.ArmExtensionSubsystem.ExtendLength;
 import frc.robot.subsystems.ColorDetectorSubsystem;
 import frc.robot.subsystems.ColorDetectorSubsystem.FieldElement;
 
-public class ArmExtendToZeroCommand extends CommandBase {
+public class ArmExtendToCubeStow extends CommandBase {
     private ArmExtensionSubsystem armExtensionSubsystem;
     private ExtendLength setPoint;
     private ColorDetectorSubsystem colorDetectorSubsystem;
 
-    public ArmExtendToZeroCommand(ArmExtensionSubsystem armExtensionSubsystem,
+    public ArmExtendToCubeStow(ArmExtensionSubsystem armExtensionSubsystem,
             ColorDetectorSubsystem colorDetectorSubsystem) {
         this.armExtensionSubsystem = armExtensionSubsystem;
         this.setPoint = setPoint;
@@ -22,15 +22,7 @@ public class ArmExtendToZeroCommand extends CommandBase {
 
     @Override
     public void execute() {
-
-        if (FieldElement.CUBE.equals(colorDetectorSubsystem.getCurrentElement())) {
-
             setPoint = ExtendLength.CUBESTOW;
-
-        } else {
-
-            setPoint = ExtendLength.ZERO;
-        }
 
         armExtensionSubsystem.setExtensionLength(setPoint);
 

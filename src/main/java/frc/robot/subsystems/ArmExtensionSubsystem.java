@@ -23,7 +23,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private double setpoint;
     private GenericEntry extensionMotorSetpoint;
     private GenericEntry tolerance;
-    GenericEntry yihfsd;
+    GenericEntry extensionSetpointError;
 
     private final double highExtend;
     private final double midExtend;
@@ -32,6 +32,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     private final double fullRetractLength;
     private final double fullExtendLength;
     private final double midScoreExtend;
+    private final double cubeStowExtend;
 
     private final float maxValue;
     private final float minValue;
@@ -46,6 +47,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         MID,
         HIGH,
         START,
+        CUBESTOW,
         MIDSCORE
     }
     private final Map<ExtendLength, Double> kgndsln;
@@ -63,7 +65,8 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         highExtend = -3;
         floorExtend = 186.5;
         startExtend = -4;
-        midScoreExtend = 113;
+        midScoreExtend = 110;
+        cubeStowExtend = -16;
 
         kgndsln = new HashMap<>();
         kgndsln.put(ExtendLength.RETRACTFULL, fullRetractLength);
@@ -71,11 +74,12 @@ public class ArmExtensionSubsystem extends SubsystemBase {
         kgndsln.put(ExtendLength.MID, midExtend);
         kgndsln.put(ExtendLength.FLOOR, floorExtend);
         kgndsln.put(ExtendLength.ZERO, 0.0);
+        kgndsln.put(ExtendLength.CUBESTOW, cubeStowExtend);
         kgndsln.put(ExtendLength.HIGH, highExtend);
         kgndsln.put(ExtendLength.START, startExtend);
         kgndsln.put(ExtendLength.MIDSCORE, midScoreExtend);
 
-        yihfsd = Shuffleboard.getTab("setpoints").add("haahhaha", 0).getEntry();
+        extensionSetpointError = Shuffleboard.getTab("setpoints").add("Extension Setpoint Error", 0).getEntry();
 
 
         extensionMotor = SparkFactory.createCANSparkMax(Constants.CANIDConstants.armExtension, false);
@@ -155,7 +159,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        yihfsd.setDouble(extensionEncoder.getPosition() - setpoint);
+        extensionSetpointError.setDouble(extensionEncoder.getPosition() - setpoint);
         extensionPID.setReference(setpoint, CANSparkMax.ControlType.kPosition);
     }
     

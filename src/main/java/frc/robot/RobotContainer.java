@@ -35,9 +35,11 @@ import frc.robot.commands.CommandGroups;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SwerveAlignZeroCommand;
 import frc.robot.commands.claw.IntakeCommand;
+import frc.robot.commands.claw.IntakeCompleteCommand;
 import frc.robot.commands.claw.ManualHighShotCommand;
 import frc.robot.commands.claw.ManualMidShotCommand;
 import frc.robot.commands.claw.OuttakeCommand;
+import frc.robot.commands.claw.PinchCommand;
 import frc.robot.commands.claw.TogglePinchCommand;
 import frc.robot.commands.claw.ReleaseCommand;
 import frc.robot.commands.claw.ToggleIntakeCommand;
@@ -47,6 +49,7 @@ import frc.robot.commands.drive.ChangeFieldOrientCommand;
 import frc.robot.commands.drive.CoastCommand;
 import frc.robot.commands.drive.DriveByController;
 import frc.robot.commands.drive.ResetOdometryCommand;
+import frc.robot.commands.extend.ArmExtendToCubeStow;
 import frc.robot.commands.extend.ArmExtendToZeroCommand;
 import frc.robot.commands.extend.ArmRetractFullCommand;
 import frc.robot.commands.extend.ExtendRetractCommand;
@@ -118,9 +121,10 @@ public class RobotContainer {
   private final ManualMidShotCommand manualMidShotCommand;
   // private final ManualHighShotCommand manualHighShotCommand;
   private final Command manualHighShotCommand;
-  //private final CenterOnTargetCommand aprilTagMiddleCommand;
+  private final Command intakeCompleteCommand;
+  private final Command pinchCommand;
+  private final Command yayOuttake;
 
-  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -163,6 +167,7 @@ public class RobotContainer {
     intakeCommand = new IntakeCommand(clawSubsystem, colorDetector);
     outtakeCommand = new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector);
     togglePinchCommand = new TogglePinchCommand(clawSubsystem);
+    pinchCommand = new PinchCommand(clawSubsystem);
     releaseCommand = new ReleaseCommand(clawSubsystem);
     extendRetractCommand = new ExtendRetractCommand(armExtensionSubsystem, driverController);
     armRotateCommand = new ArmRotateCommand(armRotationSubsystem);
@@ -170,11 +175,13 @@ public class RobotContainer {
     wristRotateUpCommand = new WristRotateUpCommand(wristSubsystem);
     wristRotateDownCommand = new WristRotateDownCommand(wristSubsystem);
     armRetractFullCommand = new ArmRetractFullCommand(armExtensionSubsystem);
-    armExtendToZeroCommand = new ArmExtendToZeroCommand(armExtensionSubsystem);
+    armExtendToZeroCommand = new ArmExtendToZeroCommand(armExtensionSubsystem, colorDetector);
+    intakeCompleteCommand = new IntakeCompleteCommand(clawSubsystem, colorDetector); 
    // toggleElementCommand = new ToggleElementCommand((ManualColorDetector) colorDetector);
     toggleIntakeCommand = new ToggleIntakeCommand(clawSubsystem);
     manualMidShotCommand = new ManualMidShotCommand(clawSubsystem, driverController, colorDetector);
     manualHighShotCommand = new SequentialCommandGroup(intakeCommand.withTimeout(0.1), new WaitCommand(0.1), new ManualHighShotCommand(clawSubsystem, driverController, colorDetector));
+    yayOuttake = new SequentialCommandGroup(new IntakeCommand(clawSubsystem, colorDetector).withTimeout(0.1), new WaitCommand(0.1), new OuttakeCommand(clawSubsystem, armRotationSubsystem, colorDetector));
     //aprilTagMiddleCommand = new CenterOnTargetCommand(limlighSubsystem, m_robotDrive, 1, driverController);
     configureButtonBindings();  /**
                                 * Configure the button bindings to commands using configureButtonBindings
@@ -211,13 +218,21 @@ public class RobotContainer {
   /* Autonomous :D */
   private Map<String, Command> createEventMap() {
     Map<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intakeCommand", intakeCommand);
+    eventMap.put("intakeCommand", new IntakeCommand(clawSubsystem, colorDetector));
     eventMap.put("outtake", outtakeCommand);
     eventMap.put("zero", CommandGroups.totalZero(armExtensionSubsystem, armRotationSubsystem, wristSubsystem, clawSubsystem, colorDetector));
     eventMap.put("highPos", CommandGroups.highScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("floorCommand", CommandGroups.floorSnag(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem, colorDetector));
     eventMap.put("midPos", CommandGroups.midScore(armExtensionSubsystem, armRotationSubsystem, clawSubsystem, wristSubsystem));
     eventMap.put("outtakeMid", manualMidShotCommand);
+    eventMap.put("outtakeHigh", manualHighShotCommand);
+    eventMap.put("intakeCompleteCommand", intakeCompleteCommand);
+    eventMap.put("pinch", pinchCommand);
+    eventMap.put("release", releaseCommand);
+    eventMap.put("outyay", yayOuttake);
+    eventMap.put("lowBoop", CommandGroups.lowBoop(armExtensionSubsystem, clawSubsystem));
+    eventMap.put("unstend", new ArmExtendToCubeStow(armExtensionSubsystem, colorDetector));
+
     
     return eventMap;
   }
@@ -317,19 +332,9 @@ public class RobotContainer {
 
         String name = pathFile.getName().replace(".path", "");
 
-      List<PathConstraints> constraints = getPathConstraints(name);
+        List<PathConstraints> constraints = getPathConstraints(name);
 
-        List<PathPlannerTrajectory> trajectories = null;
-
-        if (constraints.size() == 1) {
-            trajectories = PathPlanner.loadPathGroup(name, constraints.get(0));
-
-        } else {
-
-          trajectories = PathPlanner.loadPathGroup(name, constraints.get(0), constraints.subList(1, constraints.size()).stream().toArray(PathConstraints[]::new));
-          
-
-        }
+        List<PathPlannerTrajectory> trajectories = PathPlanner.loadPathGroup(name, constraints);
 
         Command pathCommand =  swerveAutoBuilder.fullAuto(trajectories);
         if (name.endsWith("BalanceAuto")) {
@@ -353,15 +358,38 @@ public class RobotContainer {
 
     if (name.equalsIgnoreCase("1HighCubeAcrossCenterBalanceAuto")) {
 
-      System.out.println("5879987547894239870789357890");
+      System.out.println("is constrained");
       listConstraints.add(new PathConstraints(3.25, 2.5));
       listConstraints.add(new PathConstraints(3.25, 2.5)); 
       listConstraints.add(new PathConstraints(1.75, 1.85)); 
       listConstraints.add(new PathConstraints(3, 3)); 
 
+    } else if (name.equalsIgnoreCase("2PieceOpenAuto")) {
+
+      System.out.println("is constrained");
+      listConstraints.add(new PathConstraints(3.25, 2.5));
+      listConstraints.add(new PathConstraints(2, 1.5)); 
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+    
+    } else if (name.equalsIgnoreCase("1HighConeAcrossCenterBalanceAuto")) {
+
+      System.out.println("is constrained");
+      listConstraints.add(new PathConstraints(3.25, 2.5));
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+      listConstraints.add(new PathConstraints(1.75, 1.85)); 
+      listConstraints.add(new PathConstraints(3, 3)); 
+      
+    } else if (name.equalsIgnoreCase("1MidConeAcrossCenterBalanceAuto")) {
+
+      System.out.println("is constrained");
+      listConstraints.add(new PathConstraints(3.25, 2.5));
+      listConstraints.add(new PathConstraints(3.25, 2.5)); 
+      listConstraints.add(new PathConstraints(1.75, 1.85)); 
+      listConstraints.add(new PathConstraints(3, 3)); 
     } else {
 
-      System.out.println("==-=-=-=");
+      System.out.println("++++++++++++++++++++++++++++++++++++++++++++");
       listConstraints.add(new PathConstraints(Constants.AutoConstants.kMaxSpeed, Constants.AutoConstants.kMaxAcceleration));
     }
 

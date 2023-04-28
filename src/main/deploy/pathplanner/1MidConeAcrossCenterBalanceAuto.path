@@ -16,10 +16,14 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "names": [
+          "unstend",
+          "pinch",
+          "intakeCommand"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "deadline",
+        "waitTime": 0.6
       }
     },
     {
@@ -51,15 +55,15 @@
     },
     {
       "anchorPoint": {
-        "x": 1.87,
+        "x": 1.94,
         "y": 2.78
       },
       "prevControl": {
-        "x": 1.87,
+        "x": 1.94,
         "y": 2.78
       },
       "nextControl": {
-        "x": 1.87,
+        "x": 1.94,
         "y": 2.78
       },
       "holonomicAngle": 180.0,
@@ -69,11 +73,11 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "outtake"
+          "release"
         ],
         "executionBehavior": "parallel",
-        "waitBehavior": "deadline",
-        "waitTime": 0.75
+        "waitBehavior": "after",
+        "waitTime": 0.3
       }
     },
     {
@@ -126,7 +130,7 @@
   ],
   "markers": [
     {
-      "position": 2.01,
+      "position": 2.157575757575759,
       "names": [
         "zero"
       ]

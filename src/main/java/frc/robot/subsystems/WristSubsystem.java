@@ -70,7 +70,7 @@ public class WristSubsystem extends SubsystemBase {
         wristMotor.burnFlash();
         setpoint = 0;
 
-        tolerance = Shuffleboard.getTab("setpoints").add("wrtol", 0.1).getEntry();
+        tolerance = Shuffleboard.getTab("setpoints").add("Wrist Tolerance", 0.1).getEntry();
         wristMotorSetpoint = Shuffleboard.getTab("setpoints").add("wristMotor", 1).getEntry();
     }
 

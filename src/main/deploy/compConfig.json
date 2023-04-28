@@ -14,7 +14,8 @@
     "frontLeftOffset": -5.82,
     "frontRightOffset": 5.144,
     "backLeftOffset": -0.348,
-    "backRightOffset": 3.633201,
+    "backRightOffset": 6.17867
+    ,
     "extraShuffleBoardToggle": false,
     "limelighturl": "http://10.43.29.11:5800",
     "rollDirection": 1
