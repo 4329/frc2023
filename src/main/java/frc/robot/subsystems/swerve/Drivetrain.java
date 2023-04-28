@@ -86,7 +86,6 @@ GenericEntry fjsldakjfsd;
   GenericEntry rotationMotorPower;
   GenericEntry roll;
   GenericEntry pitch;
-  
 
   double pitchOffset;
   double rollOffset;
