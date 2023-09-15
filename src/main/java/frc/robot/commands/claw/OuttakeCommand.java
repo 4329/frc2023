@@ -35,13 +35,13 @@ public class OuttakeCommand extends CommandBase {
     @Override
     public void execute() {
 
-        if (ArmHeight.HIGH.equals(armRotationSubsystem.getArmPosition())) {
+        if (ArmHeight.HIGH.equals(armRotationSubsystem.getArmSetpointEnum())) {
 
             clawSubsystem.outtakeHigh(elly);
-        } else if (ArmHeight.MID.equals(armRotationSubsystem.getArmPosition())) {
+        } else if (ArmHeight.MID.equals(armRotationSubsystem.getArmSetpointEnum())) {
 
             clawSubsystem.outtakeMid(elly);
-        } else if (ArmHeight.LOW.equals(armRotationSubsystem.getArmPosition())) {
+        } else if (ArmHeight.LOW.equals(armRotationSubsystem.getArmSetpointEnum())) {
 
             clawSubsystem.outtakeLow(elly);
         } else {

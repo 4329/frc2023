@@ -50,7 +50,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     private final Map<ArmHeight, Double> armHeights;
     
     
-    public ArmHeight currentArmHeight;
+    private ArmHeight currentArmHeight;
 
     public enum ArmHeight {
 
@@ -131,14 +131,15 @@ public class ArmRotationSubsystem extends SubsystemBase {
         ArmHeightEnum.setString(armHeight.toString());
     }
 
-    public ArmHeight getArmPosition() {
+    public ArmHeight getArmSetpointEnum() {
 
-        return this.currentArmHeight;
+        return currentArmHeight;
     }
 
     public void armRotate() {
 
         if (setpoint < maxValue) {
+            currentArmHeight=null;
             setpoint += Constants.ArmRotationConstants.armRotateSpeed;
             unBrake();
         }
@@ -147,6 +148,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
     public void armUnrotate() {
 
         if (setpoint > minValue) {
+            currentArmHeight=null;
 
             setpoint -= Constants.ArmRotationConstants.armRotateSpeed;
             unBrake();
@@ -191,6 +193,10 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
             return false;
         }
+    }
+
+    public double getArmSetpoint() {
+        return setpoint;
     }
 
     private void brake() {

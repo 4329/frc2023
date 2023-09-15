@@ -1,6 +1,7 @@
 package frc.robot.commands.drive;
 
 import frc.robot.Constants.*;
+import frc.robot.subsystems.ArmRotationSubsystem;
 import frc.robot.subsystems.swerve.*;
 import frc.robot.utilities.MathUtils;
 import edu.wpi.first.wpilibj.XboxController;
@@ -20,8 +21,10 @@ public class DriveByController extends CommandBase {
   private final Drivetrain m_robotDrive;
   private final CommandXboxController m_controller;
   private boolean fieldOrient = true;
-
-  private GenericEntry fieldOrientStatus = Shuffleboard.getTab("RobotData").add("Field Orient On", true).withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).withSize(3, 3).withPosition(0, 2).getEntry();
+  private final ArmRotationSubsystem m_armRotationSubsystem;
+  private GenericEntry fieldOrientStatus = Shuffleboard.getTab("RobotData").add("Field Orient On", true)
+      .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#000000")).withSize(3, 3)
+      .withPosition(0, 2).getEntry();
 
   /**
    * Contructs a DriveByController object which applys the driver inputs from the
@@ -32,9 +35,11 @@ public class DriveByController extends CommandBase {
    * @param controller is the user input controller object for controlling the
    *                   drivetrain
    */
-  public DriveByController(Drivetrain drive, CommandXboxController controller) {
+  public DriveByController(Drivetrain drive, CommandXboxController controller,
+      ArmRotationSubsystem armRotationSubsystem) {
     m_robotDrive = drive; // Set the private member to the input drivetrain
     m_controller = controller; // Set the private member to the input controller
+    m_armRotationSubsystem = armRotationSubsystem;
     addRequirements(m_robotDrive); // Because this will be used as a default command, add the subsystem which will
                                    // use this as the default
   }
@@ -45,13 +50,20 @@ public class DriveByController extends CommandBase {
    */
   @Override
   public void execute() {
+    double armSafetySpeed;
+    if (ArmRotationSubsystem.ArmHeight.ZERO.equals(m_armRotationSubsystem.getArmSetpointEnum())) {
+      armSafetySpeed = 1;
+    } else {
+      armSafetySpeed = 0;
+    }
+
     m_robotDrive.drive(
-            -inputTransform(m_controller.getLeftY())
-            * DriveConstants.kMaxSpeedMetersPerSecond,
+        -inputTransform(m_controller.getLeftY())
+            * DriveConstants.kMaxSpeedMetersPerSecond * armSafetySpeed,
         -inputTransform(m_controller.getLeftX())
-            * DriveConstants.kMaxSpeedMetersPerSecond,
+            * DriveConstants.kMaxSpeedMetersPerSecond * armSafetySpeed,
         -inputTransform(m_controller.getRightX())
-            * DriveConstants.kMaxAngularSpeed,
+            * DriveConstants.kMaxAngularSpeed * armSafetySpeed,
         fieldOrient);
   }
 
