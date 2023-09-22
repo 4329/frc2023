@@ -50,13 +50,14 @@ public class DriveByController extends CommandBase {
    */
   @Override
   public void execute() {
-    double armSafetySpeed;
-    if (ArmRotationSubsystem.ArmHeight.ZERO.equals(m_armRotationSubsystem.getArmSetpointEnum())) {
-      armSafetySpeed = 1;
+    double armSafetySpeed = 0;
+    if (ArmRotationSubsystem.ArmHeight.ZERO.equals(m_armRotationSubsystem.getArmSetpointEnum())|| ArmRotationSubsystem.ArmHeight.PORTAL.equals(m_armRotationSubsystem.getArmSetpointEnum())) {
+    armSafetySpeed = 1;
     } else {
-      armSafetySpeed = 0;
+      armSafetySpeed = 0.25;
+      System.out.println("were slow and stjdsjflsjlfiaj");
     }
-
+//:3
     m_robotDrive.drive(
         -inputTransform(m_controller.getLeftY())
             * DriveConstants.kMaxSpeedMetersPerSecond * armSafetySpeed,

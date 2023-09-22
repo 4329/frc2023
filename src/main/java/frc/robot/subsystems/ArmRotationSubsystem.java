@@ -163,6 +163,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     public void resetSetpoint() {
 
+        currentArmHeight = ArmHeight.ZERO;
         setpoint = armEncoder.getPosition();
     }
 
