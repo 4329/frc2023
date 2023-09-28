@@ -51,10 +51,10 @@ public class DriveByController extends CommandBase {
   @Override
   public void execute() {
     double armSafetySpeed = 0;
-    if (ArmRotationSubsystem.ArmHeight.ZERO.equals(m_armRotationSubsystem.getArmSetpointEnum())|| ArmRotationSubsystem.ArmHeight.PORTAL.equals(m_armRotationSubsystem.getArmSetpointEnum())) {
+    if (ArmRotationSubsystem.ArmHeight.ZERO.equals(m_armRotationSubsystem.getArmSetpointEnum())) {
     armSafetySpeed = 1;
     } else {
-      armSafetySpeed = 0.25;
+      armSafetySpeed = Math.PI / 10;
       System.out.println("were slow and stjdsjflsjlfiaj");
     }
 //:3
