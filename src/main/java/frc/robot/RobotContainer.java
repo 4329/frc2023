@@ -145,7 +145,7 @@ public class RobotContainer {
     armRotationSubsystem = new ArmRotationSubsystem();
     operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
-    m_drive = new DriveByController(m_robotDrive, driverController);
+    m_drive = new DriveByController(m_robotDrive, driverController, armRotationSubsystem);
     wristSubsystem = new WristSubsystem();
     clawSubsystem = new ClawSubsystem(colorDetector);
     balanceSubsystem = new BalanceSubsystem();
