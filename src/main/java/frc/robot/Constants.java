@@ -165,7 +165,7 @@ public final class Constants {
 
   public static final class ArmExtendConstants {
 
-    public static final double armExtendSpeed = 0.4;
+    public static final double armExtendSpeed = 0.2;
   }
 
   public static final class ArmRotationConstants {

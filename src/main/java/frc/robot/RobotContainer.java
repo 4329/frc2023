@@ -273,8 +273,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controller
-    driverController.rightTrigger().whileTrue(manualHighShotCommand); //arm extend
-    driverController.leftTrigger().whileTrue(manualMidShotCommand); //arm retract
+    // driverController.rightTrigger().whileTrue(manualHighShotCommand); //arm extend
+    // driverController.leftTrigger().whileTrue(manualMidShotCommand); //arm retract
+    driverController.rightTrigger().whileTrue(extendRetractCommand);
+    driverController.leftTrigger().whileTrue(extendRetractCommand);
     
     driverController.rightBumper().whileTrue(armRotateCommand); //arm up
     driverController.leftBumper().whileTrue(armUnrotateCommand); //arm down

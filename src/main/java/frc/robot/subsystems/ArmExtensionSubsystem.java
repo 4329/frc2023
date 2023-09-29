@@ -56,17 +56,17 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     public ArmExtensionSubsystem() {
 
-        maxValue = 220f;
-        minValue = -16f; //it's a float - Matthew
+        maxValue = 10; ///220f
+        minValue = 0; //-16f
 
         fullRetractLength = minValue;
         fullExtendLength = maxValue;
-        midExtend = 120;
-        highExtend = -3;
-        floorExtend = 186.5;
-        startExtend = -4;
-        midScoreExtend = 110;
-        cubeStowExtend = -16;
+        midExtend = 2; //120
+        highExtend = 2; //-3
+        floorExtend = 2; //186.5
+        startExtend = 2; //-4
+        midScoreExtend = 2; //110
+        cubeStowExtend = 2; //-16
 
         kgndsln = new HashMap<>();
         kgndsln.put(ExtendLength.RETRACTFULL, fullRetractLength);

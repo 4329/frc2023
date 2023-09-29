@@ -71,7 +71,7 @@ public class BalanceCommand extends CommandBase{
         pidCalc = balancePID.calculate(drivetrain.getOffsetRoll());
         balanceSubsystem.out.setDouble(pidCalc);
         
-        System.out.println("output is: " + pidCalc);
+        //System.out.println("output is: " + pidCalc);
         if (!balancePID.atSetpoint()) {
             
             balanceSubsystem.atSetpoint.setBoolean(false);

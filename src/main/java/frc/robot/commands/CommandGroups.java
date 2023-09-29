@@ -50,9 +50,9 @@ public class CommandGroups {
 
                 new ArmExtendStartCommand(armExtensionSubsystem),
                 new SafeRotateCommand(armRotationSubsystem),
-                new ArmExtendHighCommand(armExtensionSubsystem),
                 new ParallelCommandGroup(
-
+                        
+                        new ArmExtendHighCommand(armExtensionSubsystem),
                         new HighWristCommand(wristSubsystem),
                         new HighArmCommand(armRotationSubsystem)));
     }
@@ -64,9 +64,9 @@ public class CommandGroups {
 
                 new ArmExtendStartCommand(armExtensionSubsystem),
                 new SafeRotateCommand(armRotationSubsystem),
-                new ArmExtendMidCommand(armExtensionSubsystem),
                 new ParallelCommandGroup(
-
+                        
+                        new ArmExtendMidCommand(armExtensionSubsystem),
                         new MidWristCommand(wristSubsystem),
                         new MidArmCommand(armRotationSubsystem)));
     }
@@ -86,16 +86,14 @@ public class CommandGroups {
     public static CommandBase portalSnag(ArmExtensionSubsystem armExtensionSubsystem,
             ArmRotationSubsystem armRotationSubsystem, ClawSubsystem clawSubsystem, WristSubsystem wristSubsystem) {
 
-        return new SequentialCommandGroup(
-
-                new ArmRetractFullCommand(armExtensionSubsystem),
-                new ParallelCommandGroup(
-
+        return new ParallelCommandGroup(
+                        
+                        new ArmRetractFullCommand(armExtensionSubsystem),
                         new PortalArmCommand(armRotationSubsystem),
                         new SequentialCommandGroup(
 
                                 new WaitCommand(0.125),
-                                new PortalWristCommand(wristSubsystem))));
+                                new PortalWristCommand(wristSubsystem)));
     }
 
     public static CommandBase floorSnag(ArmExtensionSubsystem armExtensionSubsystem,

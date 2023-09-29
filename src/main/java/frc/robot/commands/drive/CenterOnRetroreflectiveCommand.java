@@ -67,7 +67,7 @@ public class CenterOnRetroreflectiveCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         
-        System.out.println(rotationPID.atSetpoint() + "fjskadjfljsdaljflsajlkfjijifjewjlifjilsdjalfjlsdij");
+        //System.out.println(rotationPID.atSetpoint() + "fjskadjfljsdaljflsajlkfjijifjewjlifjilsdjalfjlsdij");
         return rotationPID.atSetpoint() && limlighSubsystem.targetVisible();
     }
 

@@ -39,6 +39,31 @@ public class MathUtils {
   }
 
   /**
+   * Performs linear interpolation from double a to double b at rate t
+   * @param a
+   * @param b
+   * @param t
+   * @return lerp
+   */
+  public static double lerp(double a, double b, double t) {
+    return (a * (1 - t)) + (b * t);
+  }
+
+  /**
+   * Clamps clampValue between minValue and maxValue
+   * 
+   * @param clampValue
+   * @param minValue
+   * @param maxValue
+   * @return
+   */
+  public static double clamp(double clampValue, double minValue, double maxValue) {
+    if (clampValue > maxValue) return maxValue;
+    if (clampValue < minValue) return minValue;
+    return clampValue;
+  }
+
+  /**
    * Applies a simple deadband to input values between -1.0 and 1.0. Makes use of
    * the deadband constants stored in the constants
    * class. Values below the innerDeadband will be set to zero. Values above the

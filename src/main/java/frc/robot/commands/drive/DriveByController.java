@@ -55,7 +55,6 @@ public class DriveByController extends CommandBase {
     armSafetySpeed = 1;
     } else {
       armSafetySpeed = Math.PI / 10;
-      System.out.println("were slow and stjdsjflsjlfiaj");
     }
 //:3
     m_robotDrive.drive(
