@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 //import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -29,13 +30,14 @@ public class SwerveModule {
   // Our swerve modules use NEOs for both translation and rotation motors
   private final CANSparkMax m_driveMotor;
   private final CANSparkMax m_turningMotor;
+  private final double angularOffset;
 
   // Create a RelativeEncoder object for the translation position and velocity
   private final RelativeEncoder m_driveEncoder;
 
   // Create a Potentiometer to store the output of the absolute encoder that
   // tracks the angular position of the swerve module
-  private final AnalogPotentiometer m_turningEncoder;
+  private final SparkMaxAnalogSensor m_turningEncoder;
 
   // Creates a variable to store the moduleID for various tuning and debugging
   // (Currently not being used)
@@ -74,6 +76,9 @@ public class SwerveModule {
   public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoderChannel, double angularOffset,
       double[] tuningVals) {
 
+
+    this.angularOffset = angularOffset;
+
     m_driveMotor = SparkFactory.createCANSparkMax(driveMotorChannel, false); // Define the drive motor as the SparkMAX
                                                                              // with the input driveMotorChannel
     m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveCurrentLimit); // Set current limit for the drive motor
@@ -101,7 +106,9 @@ public class SwerveModule {
     // Creates the analog potentiometer for the tracking of the swerve module
     // position converted to the range of 0-2*PI in radians offset by the tuned
     // module offset
-    m_turningEncoder = new AnalogPotentiometer(turningEncoderChannel, 2.0 * Math.PI, angularOffset);
+    m_turningEncoder = m_turningMotor.getAnalog(SparkMaxAnalogSensor.Mode.kAbsolute);
+
+    m_turningEncoder.setPositionConversionFactor(((Math.PI * 2.0 ) / 3.3));
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous so the PID will command the shortest path.
@@ -164,7 +171,17 @@ public class SwerveModule {
    * @return the modified absolute encoder value.
    */
   public double getTurnEncoder() {
-    return -1.0 * m_turningEncoder.get();
+
+    double position = m_turningEncoder.getPosition();
+
+    position += angularOffset;
+    position %= 2.0 * Math.PI;
+
+    if (position < 0) {
+        position += 2.0 * Math.PI;
+    }
+
+    return position;
   }
 
   public void brakeModeModule() {
