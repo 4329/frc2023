@@ -9,6 +9,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
@@ -18,6 +20,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 //import com.revrobotics.CANEncoder;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.*;
 import frc.robot.utilities.SparkFactory;
@@ -49,6 +53,7 @@ public class SwerveModule {
   // The PID values should be passed into the class constructor via the
   // "tuningVals" array where they will be set
   private final PIDController m_drivePIDController;
+  GenericEntry a;
 
   // Creates a SimpleMotorFeedForward for the translation motor on the swerve
   // module
@@ -108,7 +113,7 @@ public class SwerveModule {
     // module offset
     m_turningEncoder = m_turningMotor.getAnalog(SparkMaxAnalogSensor.Mode.kAbsolute);
 
-    m_turningEncoder.setPositionConversionFactor(((Math.PI * 2.0 ) / 3.3));
+    m_turningEncoder.setPositionConversionFactor((Math.PI * 2.0 ) / 3.3);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous so the PID will command the shortest path.
@@ -117,6 +122,8 @@ public class SwerveModule {
     // Creates the SimpleMotorFeedForward for the swerve module using the static and
     // feedforward gains from the tuningVals array
     driveFeedForward = new SimpleMotorFeedforward(tuningVals[0], tuningVals[1]);
+    a = Shuffleboard.getTab("hfusdhfa").add("" + turningEncoderChannel, 0).withWidget(BuiltInWidgets.kGraph).getEntry();
+
 
     // Creates the drive PIDController using the proportional gain from the
     // tuningVals array
@@ -173,13 +180,17 @@ public class SwerveModule {
   public double getTurnEncoder() {
 
     double position = m_turningEncoder.getPosition();
+    position = position * Math.PI * 2.0 / 3.3;
+    position -= Math.PI;
+    a.setDouble(m_turningPIDController.getPositionError());
 
-    position += angularOffset;
-    position %= 2.0 * Math.PI;
 
-    if (position < 0) {
-        position += 2.0 * Math.PI;
-    }
+    //position += angularOffset;
+    //position %= 2.0 * Math.PI;
+
+    //if (position < 0) {
+      //  position += 2.0 * Math.PI;
+    //}
 
     return position;
   }

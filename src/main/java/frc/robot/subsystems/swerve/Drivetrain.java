@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
@@ -143,7 +144,6 @@ GenericEntry fjsldakjfsd;
       setModuleStates(swerveModuleStates);
     }
   }
-
   @Override
   public void periodic() {
     m_fieldRelVel = new FieldRelativeSpeed(getChassisSpeed(), getGyro());
@@ -157,6 +157,7 @@ GenericEntry fjsldakjfsd;
     // Calls get pose function which sends the Pose information to the
     getPose();
     fjsldakjfsd.setDouble(getGyro().getDegrees());
+    m_frontLeft.getTurnEncoder();
   }
 
   /**
