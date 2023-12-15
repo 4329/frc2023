@@ -65,6 +65,7 @@ public class SwerveModule {
   // swerve module
   private final PIDController m_turningPIDController = new PIDController(ModuleConstants.kTurnPID[0],
       ModuleConstants.kTurnPID[1], ModuleConstants.kTurnPID[2]);
+  int id;
 
   /**
    * Constructs a SwerveModule with a drive motor, turning motor, and turning
@@ -122,7 +123,9 @@ public class SwerveModule {
     // Creates the SimpleMotorFeedForward for the swerve module using the static and
     // feedforward gains from the tuningVals array
     driveFeedForward = new SimpleMotorFeedforward(tuningVals[0], tuningVals[1]);
-    a = Shuffleboard.getTab("hfusdhfa").add("" + turningEncoderChannel, 0).withWidget(BuiltInWidgets.kGraph).getEntry();
+    id = driveMotorChannel;
+    if (id == 3)
+      a = Shuffleboard.getTab("hfusdhfa").add("" + turningEncoderChannel, 0).withWidget(BuiltInWidgets.kGraph).getEntry();
 
 
     // Creates the drive PIDController using the proportional gain from the
@@ -178,20 +181,10 @@ public class SwerveModule {
    * @return the modified absolute encoder value.
    */
   public double getTurnEncoder() {
-
-    double position = m_turningEncoder.getPosition();
-    position = position * Math.PI * 2.0 / 3.3;
-    position -= Math.PI;
-    a.setDouble(m_turningPIDController.getPositionError());
-
-
-    //position += angularOffset;
-    //position %= 2.0 * Math.PI;
-
-    //if (position < 0) {
-      //  position += 2.0 * Math.PI;
-    //}
-
+    double position = -m_turningEncoder.getPosition();
+    position = position * Math.PI * 2.0 / 3.3 + angularOffset;
+    if (id == 3)
+      a.setDouble(position);
     return position;
   }
 
@@ -206,7 +199,6 @@ public class SwerveModule {
   }
 
   public SwerveModulePosition getPosition() {
-
     return new SwerveModulePosition(m_driveEncoder.getPosition(), new Rotation2d(getTurnEncoder()));
   }
 }

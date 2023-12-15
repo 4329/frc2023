@@ -15,7 +15,7 @@ public class BalanceSubsystem extends SubsystemBase {
 
     public BalanceSubsystem() {
 
-        yay = new GenericEntry[] {
+        /*yay = new GenericEntry[] {
 
             Shuffleboard.getTab("mine").add("p", 0.01).getEntry(),
             Shuffleboard.getTab("mine").add("i", 0).getEntry(),
@@ -26,6 +26,6 @@ public class BalanceSubsystem extends SubsystemBase {
         // happiness = Shuffleboard.getTab("mine").add("setpointerror", 0).withWidget(BuiltInWidgets.kGraph).getEntry();
         irange = Shuffleboard.getTab("mine").add("irange", 0).getEntry();
         out = Shuffleboard.getTab("mine").add("out", 0).getEntry();
-        atSetpoint = Shuffleboard.getTab("mine").add("atsetpoint", false).getEntry();
+        atSetpoint = Shuffleboard.getTab("mine").add("atsetpoint", false).getEntry();*/
     }
 }

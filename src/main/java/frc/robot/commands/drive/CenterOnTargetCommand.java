@@ -21,8 +21,8 @@ public class CenterOnTargetCommand extends CommandBase {
     private final PIDController rotationPID;
     private CommandXboxController xboxController;
     private Timer timer = new Timer();
-    GenericEntry swervepwooo = Shuffleboard.getTab("ikfsdal").add("swervepwooo", 0.000005).getEntry();
-    GenericEntry swervetwooo = Shuffleboard.getTab("ikfsdal").add("johnwuzhere", 0).getEntry();
+    //GenericEntry swervepwooo = Shuffleboard.getTab("ikfsdal").add("swervepwooo", 0.000005).getEntry();
+    //GenericEntry swervetwooo = Shuffleboard.getTab("ikfsdal").add("johnwuzhere", 0).getEntry();
     GenericEntry aprilTagOrLimLigh;
     GenericEntry pointset;
 
@@ -39,8 +39,8 @@ public class CenterOnTargetCommand extends CommandBase {
         forwardPID = new PIDController(0, 0, 0);
         rotationPID = new PIDController(0.00002, 0, 0);
         addRequirements(limlighSubsystem, m_drivetrain);
-        aprilTagOrLimLigh = Shuffleboard.getTab("ikfsdal").add("painhahah", false).getEntry();
-        pointset = Shuffleboard.getTab("ikfsdal").add("at", false).getEntry();
+        //aprilTagOrLimLigh = Shuffleboard.getTab("ikfsdal").add("painhahah", false).getEntry();
+        //pointset = Shuffleboard.getTab("ikfsdal").add("at", false).getEntry();
     }
 
     @Override
@@ -89,9 +89,9 @@ public class CenterOnTargetCommand extends CommandBase {
             forwardPID.setSetpoint(0);
 
 
-            rotationPID.setP(swervepwooo.getDouble(0));
+            //rotationPID.setP(swervepwooo.getDouble(0));
 
-            rotationPID.setTolerance(swervetwooo.getDouble(0));
+            //rotationPID.setTolerance(swervetwooo.getDouble(0));
 
             rotationPID.setSetpoint(0);
         }

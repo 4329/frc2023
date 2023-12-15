@@ -121,7 +121,7 @@ public final class Constants {
     public static final int kDriveCurrentLimit = 30;
     public static final int kTurnCurrentLimit = 25;
 
-    public static final double[] kTurnPID = { 0.600, 0, 0 }; // should show some minor oscillation when no weight is
+    public static final double[] kTurnPID = { 0.060, 0, 0 }; // should show some minor oscillation when no weight is
                                                              // loaded on the modules
   }
 

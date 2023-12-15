@@ -17,9 +17,9 @@ public class LimlighSubsystem extends SubsystemBase {
 
     NetworkTable limligh;
     Drivetrain drivetrain;
-    GenericEntry pose;
-    GenericEntry asdfg;
-    GenericEntry jflaiss;
+//    GenericEntry pose;
+//    GenericEntry asdfg;
+//    GenericEntry jflaiss;
     double[] hrm;
 
     public enum Alliance {
@@ -38,8 +38,8 @@ public class LimlighSubsystem extends SubsystemBase {
     public LimlighSubsystem(Drivetrain drivetrain) {
 
         limligh = NetworkTableInstance.getDefault().getTable("limelight-limligh");
-        pose = Shuffleboard.getTab("ikfsdal").add("pose?", "yes").getEntry();
-        asdfg = Shuffleboard.getTab("ikfsdal").add("targetZ?", 0).getEntry();
+//        pose = Shuffleboard.getTab("ikfsdal").add("pose?", "yes").getEntry();
+//        asdfg = Shuffleboard.getTab("ikfsdal").add("targetZ?", 0).getEntry();
         this.drivetrain = drivetrain;
 
         if (NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(false)) {

@@ -151,13 +151,11 @@ GenericEntry fjsldakjfsd;
     m_lastFieldRelVel = m_fieldRelVel;
     // Update swerve drive odometry periodically so robot pose can be tracked
     updateOdometry();
-    // roll.setDouble(getOffsetRoll());
-    // pitch.setDouble(ahrs.getPitch());
 
     // Calls get pose function which sends the Pose information to the
     getPose();
     fjsldakjfsd.setDouble(getGyro().getDegrees());
-    m_frontLeft.getTurnEncoder();
+    getModulePositions();
   }
 
   /**

@@ -139,6 +139,7 @@ public class SwerveAlignment {
                                 .add("BR Test Offset (r)", m_dDrivetrain.getBackRightAngle() - backRightInitialAngle)
                                 .withPosition(4, 3)
                                 .withWidget(BuiltInWidgets.kTextView).getEntry();
+                Shuffleboard.getTab("code").add("why", 0).getEntry();
 
         }
 
