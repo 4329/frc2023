@@ -19,6 +19,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 //import com.ctre.phoenix.motorcontrol.NeutralMode;
 //import com.revrobotics.CANEncoder;
 
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -41,7 +42,7 @@ public class SwerveModule {
 
   // Create a Potentiometer to store the output of the absolute encoder that
   // tracks the angular position of the swerve module
-  private final SparkMaxAnalogSensor m_turningEncoder;
+  private final AnalogEncoder m_turningEncoder;
 
   // Creates a variable to store the moduleID for various tuning and debugging
   // (Currently not being used)
@@ -112,9 +113,10 @@ public class SwerveModule {
     // Creates the analog potentiometer for the tracking of the swerve module
     // position converted to the range of 0-2*PI in radians offset by the tuned
     // module offset
-    m_turningEncoder = m_turningMotor.getAnalog(SparkMaxAnalogSensor.Mode.kAbsolute);
+    //m_turningEncoder = m_turningMotor.getAnalog(SparkMaxAnalogSensor.Mode.kAbsolute);
+    m_turningEncoder = new AnalogEncoder(turningEncoderChannel);
 
-    m_turningEncoder.setPositionConversionFactor((Math.PI * 2.0 ) / 3.3);
+    //m_turningEncoder.setPositionConversionFactor((Math.PI * 2.0 ) / 3.3);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous so the PID will command the shortest path.
@@ -123,7 +125,7 @@ public class SwerveModule {
     // Creates the SimpleMotorFeedForward for the swerve module using the static and
     // feedforward gains from the tuningVals array
     driveFeedForward = new SimpleMotorFeedforward(tuningVals[0], tuningVals[1]);
-    id = driveMotorChannel;
+    id = turningEncoderChannel;
     if (id == 3)
       a = Shuffleboard.getTab("hfusdhfa").add("" + turningEncoderChannel, 0).withWidget(BuiltInWidgets.kGraph).getEntry();
 
@@ -181,8 +183,8 @@ public class SwerveModule {
    * @return the modified absolute encoder value.
    */
   public double getTurnEncoder() {
-    double position = -m_turningEncoder.getPosition();
-    position = position * Math.PI * 2.0 / 3.3 + angularOffset;
+    double position = -m_turningEncoder.getAbsolutePosition();
+    position = position * Math.PI * 2.0 + angularOffset;
     if (id == 3)
       a.setDouble(position);
     return position;
